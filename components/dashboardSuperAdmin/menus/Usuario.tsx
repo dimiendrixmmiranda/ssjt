@@ -238,7 +238,7 @@ export default function Usuario() {
                                 </ul>
                             ) : (
                                 <div>
-                                    <h2>Nenhum Usuario cadastrado</h2>
+                                    <h2>Nenhum Usuario cadastrado...</h2>
                                 </div>
                             )
                         }
