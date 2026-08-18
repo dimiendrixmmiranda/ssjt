@@ -20,7 +20,7 @@ export default function InputTexto({ label, id, nome, valor, icone, placeholder,
                     id={id}
                     value={valor}
                     onChange={(e) => setValor(e.target.value)}
-                    className="shadow-[0px_0px_2px_1px_#999] p-1 rounded-lg pl-8 text-lg transition-all duration-200 focus:outline-verde"
+                    className="shadow-[0px_0px_2px_1px_#999] p-1 rounded-lg pl-8 text-lg transition-all duration-200 focus:outline-verde h-[38px]"
                     placeholder={placeholder}
                 />
                 <div className="absolute top-[50%] left-1 text-xl" style={{transform: 'translate(0,-50%)'}}>
