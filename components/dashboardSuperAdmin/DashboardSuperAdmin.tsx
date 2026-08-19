@@ -13,6 +13,7 @@ import { FaUserDoctor } from "react-icons/fa6";
 import { MdOutlineMedicalServices } from "react-icons/md";
 import { TbReportAnalytics } from "react-icons/tb";
 import { GoGear } from "react-icons/go";
+import Locais from "./menus/Locais";
 
 interface DashboardSuperAdminProps {
     usuario: any
@@ -38,6 +39,10 @@ export default function DashboardSuperAdmin({ usuario }: DashboardSuperAdminProp
             case 'especialidade':
                 return (
                     <Especialidade />
+                )
+            case 'locais':
+                return (
+                    <Locais />
                 )
             default:
                 break;

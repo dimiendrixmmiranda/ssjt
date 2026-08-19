@@ -4,12 +4,18 @@ import { useState } from "react";
 import { AiOutlineSelect, AiOutlineUserAdd } from "react-icons/ai";
 import { IoAdd, IoClose } from "react-icons/io5";
 import { MdDriveFileRenameOutline } from "react-icons/md";
-import { RiMenuSearchLine } from "react-icons/ri";
+import { RiLightbulbLine, RiMenuSearchLine } from "react-icons/ri";
 import { Dialog } from "primereact/dialog";
 import { FiUserPlus } from "react-icons/fi";
 import { FaRegUser } from "react-icons/fa";
 import Image from "next/image";
 import InputCheckbox from "@/components/assets/InputCheckbox";
+import { usePacientes } from "@/hooks/usePacientes";
+import { Paciente } from "@/app/generated/prisma/client";
+import { GiMagnifyingGlass } from "react-icons/gi";
+import { IoIosCheckmarkCircle } from "react-icons/io";
+import { TiDeleteOutline } from "react-icons/ti";
+import calcularIdade from "@/utils/calcularIdade";
 
 enum TipoDeDado {
     NOME = "NOME",
@@ -39,6 +45,8 @@ export default function Pacientes() {
     const [valor, setValor] = useState('')
     const [visible, setVisible] = useState(false);
 
+    const [valorBuscado, setValorBuscado] = useState('')
+
     // INFORMAÇÕES PESSOAIS
     const [nome, setNome] = useState('')
     const [nomeSocial, setNomeSocial] = useState('')
@@ -48,7 +56,7 @@ export default function Pacientes() {
     const [dataDeNascimento, setDataDeNascimento] = useState('')
     const [sexo, setSexo] = useState('')
     const [estadoCivil, setEstadoCivil] = useState('')
-    const [corRaça, setCorRaça] = useState('')
+    const [corRaca, setCorRaca] = useState('')
     const [cpf, setCpf] = useState('')
     const [cartaoSus, setCartaoSus] = useState('')
     const [codigoGsus, setCodigoGsus] = useState('')
@@ -111,6 +119,8 @@ export default function Pacientes() {
     const [zona, setZona] = useState('')
 
 
+    const [buscaRealizada, setBuscaRealizada] = useState(false)
+    const [pacientesEncontrados, setPacientesEncontrados] = useState<any[]>([])
 
     const tiposDeDados: TipoDeDadoOption[] = [
         {
@@ -144,14 +154,12 @@ export default function Pacientes() {
             label: "Menor Que",
         },
     ]
-
     const opcoesSexo = [
         { valor: "MASCULINO", label: "Masculino" },
         { valor: "FEMININO", label: "Feminino" },
         { valor: "OUTRO", label: "Outro" },
         { valor: "NAO_INFORMADO", label: "Não informado" },
     ]
-
     const opcoesEstadoCivil = [
         { valor: "SOLTEIRO", label: "Solteiro(a)" },
         { valor: "CASADO", label: "Casado(a)" },
@@ -160,7 +168,6 @@ export default function Pacientes() {
         { valor: "SEPARADO", label: "Separado(a)" },
         { valor: "UNIAO_ESTAVEL", label: "União estável" },
     ]
-
     const opcoesCorRaca = [
         { valor: "BRANCA", label: "Branca" },
         { valor: "PRETA", label: "Preta" },
@@ -169,24 +176,20 @@ export default function Pacientes() {
         { valor: "INDIGENA", label: "Indígena" },
         { valor: "NAO_INFORMADO", label: "Não informado" },
     ]
-
     const opcoesTipoSanguineo = [
         { valor: "A", label: "A" },
         { valor: "B", label: "B" },
         { valor: "AB", label: "AB" },
         { valor: "O", label: "O" },
     ]
-
     const opcoesRh = [
         { valor: "POSITIVO", label: "Positivo (+)" },
         { valor: "NEGATIVO", label: "Negativo (-)" },
     ]
-
     const opcoesSimNao = [
         { valor: "SIM", label: "Sim" },
         { valor: "NAO", label: "Não" },
     ]
-
     const opcoesUf = [
         { valor: "AC", label: "Acre - AC" },
         { valor: "AL", label: "Alagoas - AL" },
@@ -216,7 +219,6 @@ export default function Pacientes() {
         { valor: "SE", label: "Sergipe - SE" },
         { valor: "TO", label: "Tocantins - TO" },
     ]
-
     const opcoesGrauEscolaridade = [
         { valor: "FUNDAMENTAL_INCOMPLETO", label: "Fundamental incompleto" },
         { valor: "FUNDAMENTAL_COMPLETO", label: "Fundamental completo" },
@@ -229,12 +231,476 @@ export default function Pacientes() {
         { valor: "DOUTORADO", label: "Doutorado" },
     ]
 
-    console.log(tipoDeDado)
+    const handleSubmit = async () => {
+
+        try {
+            // =========================
+            // VALIDAÇÕES
+            // =========================
+
+            if (!nome.trim()) {
+                throw new Error("Informe o nome do paciente.")
+            }
+
+            if (!nomeDaMae.trim()) {
+                throw new Error("Informe o nome da mãe.")
+            }
+
+            if (!dataDeNascimento) {
+                throw new Error("Informe a data de nascimento.")
+            }
+
+            if (!sexo) {
+                throw new Error("Selecione o sexo.")
+            }
+
+            if (!cpf.trim()) {
+                throw new Error("Informe o CPF.")
+            }
+
+            // =========================
+            // OBJETO DO PACIENTE
+            // =========================
+
+            const paciente = {
+
+                // =====================================
+                // INFORMAÇÕES PESSOAIS
+                // =====================================
+
+                nome: nome.trim(),
+
+                nomeSocial: declaroNaoPossuirNomeSocial
+                    ? null
+                    : nomeSocial.trim() || null,
+
+                declaroNaoPossuirNomeSocial,
+
+                nomeDaMae:
+                    nomeDaMae.trim(),
+
+                nomeDoPai:
+                    nomeDoPai.trim() || null,
+
+                dataDeNascimento:
+                    dataDeNascimento,
+
+                sexo:
+                    sexo || null,
+
+                estadoCivil:
+                    estadoCivil || null,
+
+                corRaca:
+                    corRaca || null,
+
+                cpf:
+                    cpf.trim(),
+
+                cartaoSus:
+                    cartaoSus.trim() || null,
+
+                codigoGsus:
+                    codigoGsus.trim() || null,
+
+                codigoIds:
+                    codigoIds.trim() || null,
+
+                nis:
+                    nis.trim() || null,
+
+                unidadeDeSaude:
+                    unidadeDeSaude.trim() || null,
+
+                tipoSanguineo:
+                    tipoSanguineo || null,
+
+                fatorRh:
+                    fatorRh || null,
+
+                situacaoFamiliar:
+                    situacaoFamiliar || null,
+
+                povoTradicional:
+                    povoTradicional || null,
+
+                religiao:
+                    religiao || null,
+
+                observacoes:
+                    observacoes.trim() || null,
+
+
+                // =====================================
+                // DOCUMENTOS
+                // =====================================
+
+                rg:
+                    rg.trim() || null,
+
+                orgaoEmissor:
+                    orgaoEmissor.trim() || null,
+
+                ufRg:
+                    ufRg || null,
+
+                dataEmissaoRg:
+                    dataEmissaoRg || null,
+
+                cpfRegular:
+                    cpfRegular || null,
+
+                cpfCns:
+                    cpfCns.trim() || null,
+
+                cnsMae:
+                    cnsMae.trim() || null,
+
+                orientacaoRegCpf:
+                    orientacaoRegCpf || null,
+
+
+                // =====================================
+                // TÍTULO DE ELEITOR
+                // =====================================
+
+                tituloEleitor:
+                    tituloEleitor.trim() || null,
+
+                zonaEleitoral:
+                    zonaEleitoral.trim() || null,
+
+                secaoEleitoral:
+                    secaoEleitoral.trim() || null,
+
+
+                // =====================================
+                // TRABALHISTA
+                // =====================================
+
+                ctpsNumero:
+                    ctpsNumero.trim() || null,
+
+                ctpsSerie:
+                    ctpsSerie.trim() || null,
+
+                ctpsUf:
+                    ctpsUf || null,
+
+                ctpsDataEmissao:
+                    ctpsDataEmissao || null,
+
+                pisPasep:
+                    pisPasep.trim() || null,
+
+
+                // =====================================
+                // EDUCAÇÃO
+                // =====================================
+
+                frequentaEscola:
+                    frequentaEscola || null,
+
+                escola:
+                    escola.trim() || null,
+
+                serieEscolar:
+                    serieEscolar || null,
+
+                grauEscolaridade:
+                    grauEscolaridade || null,
+
+                cursoProfissionalizante:
+                    cursoProfissionalizante.trim() || null,
+
+
+                // =====================================
+                // NATURALIZAÇÃO
+                // =====================================
+
+                paisOrigem:
+                    paisOrigem.trim() || null,
+
+                entradaBrasil:
+                    entradaBrasil || null,
+
+                numeroPortaria:
+                    numeroPortaria.trim() || null,
+
+                dataNaturalizacao:
+                    dataNaturalizacao || null,
+
+
+                // =====================================
+                // LOCALIDADE
+                // =====================================
+
+                pais:
+                    pais.trim() || null,
+
+                uf:
+                    uf || null,
+
+                municipio:
+                    municipio.trim() || null,
+
+                bairro:
+                    bairro.trim() || null,
+
+                rua:
+                    rua.trim() || null,
+
+                numero:
+                    numero.trim() || null,
+
+                complemento:
+                    complemento.trim() || null,
+
+
+                // =====================================
+                // GEOLOCALIZAÇÃO
+                // =====================================
+
+                latitude:
+                    latitude
+                        ? Number(latitude)
+                        : null,
+
+                longitude:
+                    longitude
+                        ? Number(longitude)
+                        : null,
+
+                zona:
+                    zona || null,
+            }
+
+            console.log("Dados enviados:", paciente)
+
+            // =========================
+            // ENVIA PARA API
+            // =========================
+
+            const response = await fetch("/api/pacientes", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(paciente),
+            })
+
+            const data = await response.json()
+
+            // =========================
+            // TRATA ERRO DA API
+            // =========================
+
+            if (!response.ok) {
+                throw new Error(
+                    data.erro ||
+                    data.error ||
+                    "Erro ao cadastrar paciente."
+                )
+            }
+
+            // =========================
+            // SUCESSO
+            // =========================
+
+            console.log(
+                "Paciente cadastrado:",
+                data
+            )
+
+            alert(
+                "Paciente cadastrado com sucesso!"
+            )
+
+            setVisible(false)
+
+            limparFormulario()
+
+        } catch (error) {
+
+            console.error(
+                "Erro ao cadastrar paciente:",
+                error
+            )
+
+            alert(
+                error instanceof Error
+                    ? error.message
+                    : "Erro ao cadastrar paciente."
+            )
+        }
+    }
+
+    const limparFormulario = () => {
+
+        // =====================================
+        // INFORMAÇÕES PESSOAIS
+        // =====================================
+
+        setNome('')
+        setNomeSocial('')
+        setDeclaroNaoPossuirNomeSocial(false)
+        setNomeDaMae('')
+        setNomeDoPai('')
+        setDataDeNascimento('')
+        setSexo('')
+        setEstadoCivil('')
+        setCorRaca('')
+        setCpf('')
+        setCartaoSus('')
+        setCodigoGsus('')
+        setCodigoIds('')
+        setNis('')
+        setUnidadeDeSaude('')
+        setTipoSanguineo('')
+        setFatorRh('')
+        setSituacaoFamiliar('')
+        setPovoTradicional('')
+        setReligiao('')
+        setObservacoes('')
+
+
+        // =====================================
+        // DOCUMENTOS
+        // =====================================
+
+        setRg('')
+        setOrgaoEmissor('')
+        setUfRg('')
+        setDataEmissaoRg('')
+        setCpfRegular('')
+        setCpfCns('')
+        setCnsMae('')
+        setOrientacaoRegCpf('')
+
+
+        // =====================================
+        // TÍTULO DE ELEITOR
+        // =====================================
+
+        setTituloEleitor('')
+        setZonaEleitoral('')
+        setSecaoEleitoral('')
+
+
+        // =====================================
+        // TRABALHISTA
+        // =====================================
+
+        setCtpsNumero('')
+        setCtpsSerie('')
+        setCtpsUf('')
+        setCtpsDataEmissao('')
+        setPisPasep('')
+
+
+        // =====================================
+        // EDUCAÇÃO
+        // =====================================
+
+        setFrequentaEscola('')
+        setEscola('')
+        setSerieEscolar('')
+        setGrauEscolaridade('')
+        setCursoProfissionalizante('')
+
+
+        // =====================================
+        // NATURALIZAÇÃO
+        // =====================================
+
+        setPaisOrigem('')
+        setEntradaBrasil('')
+        setNumeroPortaria('')
+        setDataNaturalizacao('')
+
+
+        // =====================================
+        // LOCALIDADE
+        // =====================================
+
+        setPais('')
+        setUf('')
+        setMunicipio('')
+        setBairro('')
+        setRua('')
+        setNumero('')
+        setComplemento('')
+
+
+        // =====================================
+        // GEOLOCALIZAÇÃO
+        // =====================================
+
+        setLatitude('')
+        setLongitude('')
+        setZona('')
+    }
+
+    const { pacientes } = usePacientes()
+
+    const handleBuscar = () => {
+        setBuscaRealizada(true)
+        setValorBuscado(valor)
+
+        if (!tipoDeDado) {
+            alert("Selecione o tipo de busca.")
+            return
+        }
+
+        if (!valor.trim()) {
+            alert("Digite um valor para realizar a busca.")
+            setPacientesEncontrados([])
+            return
+        }
+
+        const termo = valor.trim().toLowerCase()
+
+        let resultados: Paciente[] = []
+
+        switch (tipoDeDado) {
+            case TipoDeDado.NOME:
+                resultados = pacientes.filter((paciente) =>
+                    paciente.nome
+                        ?.toLowerCase()
+                        .includes(termo)
+                )
+                break
+
+            case TipoDeDado.CPF:
+                resultados = pacientes.filter((paciente) =>
+                    paciente.cpf
+                        ?.replace(/\D/g, "")
+                        .includes(termo.replace(/\D/g, ""))
+                )
+                break
+
+            case TipoDeDado.CARTAO_SUS:
+                resultados = pacientes.filter((paciente) =>
+                    paciente.cartaoSus
+                        ?.replace(/\D/g, "")
+                        .includes(termo.replace(/\D/g, ""))
+                )
+                break
+
+            default:
+                resultados = []
+        }
+
+        setPacientesEncontrados(resultados)
+    }
+
+    console.log(buscaRealizada)
+    console.log(pacientesEncontrados)
 
     return (
-        <div className="p-4 flex flex-col gap-4 font-arimo text-verde-escuro">
+        <div className="p-4 flex flex-col gap-4 font-arimo text-verde-escuro max-w-[1500px]">
             <div className="flex items-center gap-2">
-                <AiOutlineUserAdd className="text-6xl"/>
+                <AiOutlineUserAdd className="text-6xl" />
                 <div className="">
                     <h3 className="text-2xl font-bold">Pacientes</h3>
                     <span>Busque, adicione, edite um novo paciente.</span>
@@ -282,7 +748,7 @@ export default function Pacientes() {
                     />
                     {/* vai ter que ser um input especial depois */}
                     <InputTexto icone={<MdDriveFileRenameOutline />} id="valor" label="Valor" nome="valor" placeholder="valor..." setValor={setValor} valor={valor} />
-                    <button className="font-bold bg-verde text-white h-fit mt-auto py-2 rounded-lg">Buscar</button>
+                    <button className="font-bold bg-verde text-white h-fit mt-auto py-2 rounded-lg" onClick={handleBuscar}>Buscar</button>
                 </div>
             </div>
             <div className="shadow-[0px_0px_2px_1px_#999] rounded-lg p-4 flex flex-col gap-3">
@@ -292,34 +758,133 @@ export default function Pacientes() {
                         <h2>Resultado da sua busca:</h2>
                     </div>
                 </div>
-                <div className="flex w-full">
-                    <ul className="grid grid-cols-8 w-full">
-                        <li className="text-sm font-semibold border border-verde px-2 py-1">
-                            <p>Nome</p>
-                        </li>
-                        <li className="text-sm font-semibold border border-verde px-2 py-1">
-                            <p>Nascimento</p>
-                        </li>
-                        <li className="text-sm font-semibold border border-verde px-2 py-1">
-                            <p>Idade</p>
-                        </li>
-                        <li className="text-sm font-semibold border border-verde px-2 py-1">
-                            <p>Nome da mãe</p>
-                        </li>
-                        <li className="text-sm font-semibold border border-verde px-2 py-1">
-                            <p>CPF</p>
-                        </li>
-                        <li className="text-sm font-semibold border border-verde px-2 py-1">
-                            <p>Cartão Sus</p>
-                        </li>
-                        <li className="text-sm font-semibold border border-verde px-2 py-1">
-                            <p>Un. do Cliente</p>
-                        </li>
-                        <li className="text-sm font-semibold border border-verde px-2 py-1">
-                            <p>Situação</p>
-                        </li>
-                    </ul>
-                </div>
+                {
+                    pacientesEncontrados.length > 0 ? (
+                        <div className="flex flex-col w-full">
+                            <ul className="grid grid-cols-9 w-full">
+                                <li className="text-sm font-semibold border border-verde px-2 py-1">
+                                    <p>Nome</p>
+                                </li>
+                                <li className="text-sm font-semibold border border-verde px-2 py-1">
+                                    <p>Nascimento</p>
+                                </li>
+                                <li className="text-sm font-semibold border border-verde px-2 py-1">
+                                    <p>Idade</p>
+                                </li>
+                                <li className="text-sm font-semibold border border-verde px-2 py-1">
+                                    <p>Nome da mãe</p>
+                                </li>
+                                <li className="text-sm font-semibold border border-verde px-2 py-1">
+                                    <p>CPF</p>
+                                </li>
+                                <li className="text-sm font-semibold border border-verde px-2 py-1">
+                                    <p>Cartão Sus</p>
+                                </li>
+                                <li className="text-sm font-semibold border border-verde px-2 py-1">
+                                    <p>Un. do Cliente</p>
+                                </li>
+                                <li className="text-sm font-semibold border border-verde px-2 py-1">
+                                    <p>Código IDS</p>
+                                </li>
+                                <li className="text-sm font-semibold border border-verde px-2 py-1">
+                                    <p>Código IMP</p>
+                                </li>
+                            </ul>
+                            <ul className="flex flex-col gap-2">
+                                {
+                                    pacientesEncontrados.map(((paciente: Paciente) => {
+                                        console.log(paciente)
+                                        return (
+                                            <li key={paciente.id} className="grid grid-cols-9 w-full">
+                                                <li className="text-sm font-semibold border border-verde px-2 py-1">
+                                                    <p>{paciente.nome}</p>
+                                                </li>
+                                                <li className="text-sm font-semibold border border-verde px-2 py-1 flex justify-center items-center">
+                                                    <p>
+                                                        {new Date(paciente.dataDeNascimento).toLocaleDateString("pt-BR")}
+                                                    </p>
+                                                </li>
+                                                <li className="text-sm font-semibold border border-verde px-2 py-1 text-center">
+                                                    <p>{calcularIdade(paciente.dataDeNascimento)}</p>
+                                                </li>
+                                                <li className="text-sm font-semibold border border-verde px-2 py-1">
+                                                    <p>{paciente.nomeDaMae}</p>
+                                                </li>
+                                                <li className="text-sm font-semibold border border-verde px-2 py-1 flex justify-center items-center">
+                                                    <p>{paciente.cpf}</p>
+                                                </li>
+                                                <li className="text-sm font-semibold border border-verde px-2 py-1">
+                                                    <p>{paciente.cartaoSus ? paciente.cartaoSus : 'Não Informado'}</p>
+                                                </li>
+                                                <li className="text-sm font-semibold border border-verde px-2 py-1">
+                                                    <p>Un. do Cliente</p>
+                                                </li>
+                                                <li className="text-sm font-semibold border border-verde px-2 py-1 flex items-center justify-center">
+                                                    <p>{paciente.codigoIds}</p>
+                                                </li>
+                                                <li className="text-sm font-semibold border border-verde px-2 py-1 flex items-center justify-center">
+                                                    <p>{paciente.codigoGsus}</p>
+                                                </li>
+                                            </li>
+                                        )
+                                    }))
+                                }
+                            </ul>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-2 gap-6">
+                            <div className="relative w-full h-full">
+                                <Image alt="image" src={'/mulher.png'} fill className="object-contain" />
+                            </div>
+                            <div className="text-verde-escuro flex flex-col gap-4">
+                                <div className="flex items-center gap-2 text-lg">
+                                    <GiMagnifyingGlass />
+                                    <h5>Resultado da busca:</h5>
+                                </div>
+                                <div>
+                                    <h3 className="text-verde-escuro text-3xl font-bold 2xl:text-4xl 3xl:text-[44px]">Nenhum Paciente Encontrado</h3>
+                                    <span className="text-zinc-500 2xl:text-lg">Não encontramos nenhum paciente com os critérios informados: "{valor}"</span>
+                                </div>
+                                <div className="border border-verde-escuro rounded-lg p-4 bg-verde-escuro/10 flex flex-col gap-2">
+                                    <div className="flex items-center text-xl font-bold">
+                                        <RiLightbulbLine />
+                                        <p>Dicas para uma nova busca:</p>
+                                    </div>
+                                    <div>
+                                        <ul>
+                                            <li className="flex items-center gap-2">
+                                                <IoIosCheckmarkCircle />
+                                                <p>Verifique se os dados estão corretos.</p>
+                                            </li>
+                                            <li className="flex items-center gap-2">
+                                                <IoIosCheckmarkCircle />
+                                                <p>Tente usar menos filtros na pesquisa</p>
+                                            </li>
+                                            <li className="flex items-center gap-2">
+                                                <IoIosCheckmarkCircle />
+                                                <p>Utilize parte do nome ou CPF.</p>
+                                            </li>
+                                            <li className="flex items-center gap-2">
+                                                <IoIosCheckmarkCircle />
+                                                <p>Confira se não há espaços extras.</p>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-4 max-w-[600px] ml-auto">
+                                        <button className="flex items-center justify-center cursor-pointer gap-2 text-lg font-bold border border-red-500 p-1 rounded-lg px-3 transition-all duration-300 bg-red-500 text-white hover:bg-white hover:text-red-500">
+                                            <TiDeleteOutline />
+                                            <h2>Limpar Filtros</h2>
+                                        </button>
+                                        <button onClick={() => setVisible(true)} className="flex items-center justify-center cursor-pointer gap-2 text-lg font-bold border border-verde p-1 rounded-lg px-3 transition-all duration-300 hover:bg-verde hover:text-white">
+                                            <IoAdd />
+                                            <h2>Adicionar Cliente</h2>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )
+                }
             </div>
             <div id="dialogNovoPaciente">
                 <Dialog
@@ -410,7 +975,8 @@ export default function Pacientes() {
                                         setValor={setNomeDoPai}
                                         valor={nomeDoPai}
                                     />
-                                    <InputTexto
+                                    <input type="date" name="dataNascimento" id="dataNascimento" value={dataDeNascimento} onChange={(e) => setDataDeNascimento(e.target.value)} />
+                                    {/* <InputTexto
                                         icone={<MdDriveFileRenameOutline />}
                                         id="dataNascimento"
                                         label="Data de Nascimento *"
@@ -418,7 +984,7 @@ export default function Pacientes() {
                                         placeholder="dd/mm/aaaa"
                                         setValor={setDataDeNascimento}
                                         valor={dataDeNascimento}
-                                    />
+                                    /> */}
                                 </div>
                                 <div className="grid grid-cols-3 gap-3">
                                     <InputSelect
@@ -444,8 +1010,8 @@ export default function Pacientes() {
                                         id="corRaca"
                                         label="Cor / Raça"
                                         nome="corRaca"
-                                        setValor={setCorRaça}
-                                        valor={corRaça}
+                                        setValor={setCorRaca}
+                                        valor={corRaca}
                                         opcoes={opcoesCorRaca}
                                     />
                                 </div>
@@ -942,29 +1508,30 @@ export default function Pacientes() {
                                     type="button"
                                     onClick={() => setVisible(false)}
                                     className="
-                                px-5 py-2
-                                rounded-lg
-                                border border-verde
-                                text-verde
-                                font-bold
-                                hover:bg-verde
-                                hover:text-white
-                                transition-all
-                            "
+                                        px-5 py-2
+                                        rounded-lg
+                                        border border-verde
+                                        text-verde
+                                        font-bold
+                                        hover:bg-verde
+                                        hover:text-white
+                                        transition-all
+                                    "
                                 >
                                     Cancelar
                                 </button>
                                 <button
                                     type="button"
+                                    onClick={handleSubmit}
                                     className="
-                                px-6 py-2
-                                rounded-lg
-                                bg-verde
-                                text-white
-                                font-bold
-                                hover:bg-verde-escuro
-                                transition-all
-                            "
+                                        px-6 py-2
+                                        rounded-lg
+                                        bg-verde
+                                        text-white
+                                        font-bold
+                                        hover:bg-verde-escuro
+                                        transition-all
+                                    "
                                 >
                                     Salvar Paciente
                                 </button>

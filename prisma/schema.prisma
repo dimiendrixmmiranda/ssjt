@@ -24,6 +24,88 @@ enum CategoriaAtendimento {
   CIRURGIA
 }
 
+enum Sexo {
+  MASCULINO
+  FEMININO
+  OUTRO
+  NAO_INFORMADO
+}
+
+enum EstadoCivil {
+  SOLTEIRO
+  CASADO
+  DIVORCIADO
+  VIUVO
+  SEPARADO
+  UNIAO_ESTAVEL
+}
+
+enum CorRaca {
+  BRANCA
+  PRETA
+  PARDA
+  AMARELA
+  INDIGENA
+  NAO_INFORMADO
+}
+
+enum TipoSanguineo {
+  A
+  B
+  AB
+  O
+}
+
+enum FatorRh {
+  POSITIVO
+  NEGATIVO
+}
+
+enum SimNao {
+  SIM
+  NAO
+}
+
+enum OrgaoEmissor {
+  SSP
+  DETRAN
+  POLICIA_CIVIL
+  OUTRO
+}
+
+enum GrauEscolaridade {
+  FUNDAMENTAL_INCOMPLETO
+  FUNDAMENTAL_COMPLETO
+  MEDIO_INCOMPLETO
+  MEDIO_COMPLETO
+  SUPERIOR_INCOMPLETO
+  SUPERIOR_COMPLETO
+  POS_GRADUACAO
+  MESTRADO
+  DOUTORADO
+}
+
+enum Pais {
+  BRASIL
+  OUTRO
+}
+
+enum Zona {
+  URBANA
+  RURAL
+}
+
+enum TipoLocal {
+  POSTO_DE_SAUDE
+  CLINICA
+  HOSPITAL
+}
+
+enum StatusLocal {
+  ATIVO
+  INATIVO
+}
+
 model Usuario {
   id        String   @id @default(cuid())
   nome      String
@@ -45,6 +127,8 @@ model TipoAtendimento {
   createdAt   DateTime               @default(now())
   updatedAt   DateTime               @updatedAt
 
+  locais LocalTipoAtendimento[]
+
   @@index([categoria])
   @@index([ativo])
 }
@@ -62,4 +146,121 @@ model Medico {
 
   @@index([especialidadeId])
   @@index([ativo])
+}
+
+
+model Paciente {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  nome                         String
+  nomeSocial                   String?
+  declaroNaoPossuirNomeSocial  Boolean @default(false)
+  nomeDaMae                    String
+  nomeDoPai                    String?
+  dataDeNascimento             DateTime
+  sexo                         Sexo?
+  estadoCivil                  EstadoCivil?
+  corRaca                      CorRaca?
+  cpf                          String   @unique
+  cartaoSus                    String?
+  codigoGsus                   String?
+  codigoIds                    String?
+  nis                          String?
+  unidadeDeSaude               String?
+  tipoSanguineo                TipoSanguineo?
+  fatorRh                      FatorRh?
+  situacaoFamiliar             String?
+  povoTradicional              String?
+  religiao                     String?
+  observacoes                  String?
+
+  rg                           String?
+  orgaoEmissor                 OrgaoEmissor?
+  ufRg                         String?
+  dataEmissaoRg                DateTime?
+
+  cpfRegular                   SimNao?
+  cpfCns                       String?
+  cnsMae                       String?
+  orientacaoRegCpf             SimNao?
+
+  tituloEleitor                String?
+  zonaEleitoral                String?
+  secaoEleitoral               String?
+
+  ctpsNumero                   String?
+  ctpsSerie                    String?
+  ctpsUf                       String?
+  ctpsDataEmissao              DateTime?
+  pisPasep                     String?
+
+  frequentaEscola              SimNao?
+  escola                       String?
+  serieEscolar                 String?
+  grauEscolaridade             GrauEscolaridade?
+  cursoProfissionalizante      String?
+
+  paisOrigem                   String?
+  entradaBrasil                DateTime?
+  numeroPortaria               String?
+  dataNaturalizacao            DateTime?
+
+  pais                         Pais?
+  uf                           String?
+  municipio                    String?
+  bairro                       String?
+  rua                          String?
+  numero                       String?
+  complemento                  String?
+  zona                         Zona?
+
+  latitude                     Float?
+  longitude                    Float?
+}
+
+model Local {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  nome        String
+  tipoDoLocal TipoLocal
+  status      StatusLocal @default(ATIVO)
+
+  cidade      String
+  cep         String?
+  rua         String?
+  numero      String?
+  bairro      String?
+  complemento String?
+
+  telefone1 String?
+  telefone2 String?
+  email     String?
+
+  descricao String?
+
+  tiposDeAtendimento LocalTipoAtendimento[]
+
+  @@index([nome])
+  @@index([cidade])
+  @@index([status])
+}
+
+model LocalTipoAtendimento {
+  id String @id @default(cuid())
+
+  localId           String
+  tipoAtendimentoId String
+
+  local           Local           @relation(fields: [localId], references: [id], onDelete: Cascade)
+  tipoAtendimento TipoAtendimento @relation(fields: [tipoAtendimentoId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([localId, tipoAtendimentoId])
+  @@index([localId])
+  @@index([tipoAtendimentoId])
 }
