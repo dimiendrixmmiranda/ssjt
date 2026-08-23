@@ -26,10 +26,9 @@ export default function InputCheckbox({
                 className="mt-1"
             />
             <div className="flex flex-col">
-
                 <label
                     htmlFor={id}
-                    className="cursor-pointer 2xl:text-lg"
+                    className="cursor-pointer 2xl:text-lg leading-4.5"
                 >
                     {label}
                 </label>

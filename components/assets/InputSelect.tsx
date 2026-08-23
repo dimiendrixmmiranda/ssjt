@@ -12,6 +12,7 @@ interface InputSelectProps<T> {
     valor: T;
     icone: React.ReactNode;
     placeholder?: string;
+    disabled?: boolean;
     opcoes: OpcaoSelect<T>[];
     setValor: (valor: T) => void;
 }
@@ -22,6 +23,7 @@ export default function InputSelect<T>({
     nome,
     valor,
     icone,
+    disabled,
     placeholder = "Selecione",
     opcoes,
     setValor,
@@ -47,6 +49,7 @@ export default function InputSelect<T>({
                     name={nome}
                     id={id}
                     value={String(valor)}
+                    disabled={disabled}
                     onChange={(e) => {
                         const opcaoSelecionada = opcoes.find(
                             (opcao) => String(opcao.valor) === e.target.value
@@ -58,10 +61,6 @@ export default function InputSelect<T>({
                     }}
                     className="shadow-[0px_0px_2px_1px_#999] p-1 py-2 rounded-lg pl-8 text-lg transition-all duration-200 focus:outline-verde w-full"
                 >
-
-                    <option value="">
-                        {placeholder}
-                    </option>
 
                     {opcoes.map((opcao) => (
                         <option

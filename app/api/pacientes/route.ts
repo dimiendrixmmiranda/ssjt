@@ -4,50 +4,53 @@ import { prisma } from "@/lib/prisma"
 export async function POST(req: Request) {
     try {
         const body = await req.json()
-
         console.log("BODY RECEBIDO:", body)
-
-        // =========================
-        // VALIDAÇÕES
-        // =========================
-
+        
         if (!body.nome?.trim()) {
             return NextResponse.json(
                 { erro: "Informe o nome do paciente." },
                 { status: 400 }
             )
         }
-
         if (!body.nomeDaMae?.trim()) {
             return NextResponse.json(
                 { erro: "Informe o nome da mãe." },
                 { status: 400 }
             )
         }
-
         if (!body.dataDeNascimento) {
             return NextResponse.json(
                 { erro: "Informe a data de nascimento." },
                 { status: 400 }
             )
         }
-
         if (!body.cpf?.trim()) {
             return NextResponse.json(
                 { erro: "Informe o CPF." },
                 { status: 400 }
             )
         }
+        if (!body.telefone1?.trim()) {
+            return NextResponse.json(
+                { erro: "Informe o telefone principal." },
+                { status: 400 }
+            )
+        }
 
-        // =========================
-        // CRIA PACIENTE
-        // =========================
+        const dataDeNascimento = new Date(body.dataDeNascimento)
+
+        if (isNaN(dataDeNascimento.getTime())) {
+            return NextResponse.json(
+                { erro: "Data de nascimento inválida." },
+                { status: 400 }
+            )
+        }
 
         const paciente = await prisma.paciente.create({
             data: {
-                // =====================================
+                // ==========================================
                 // INFORMAÇÕES PESSOAIS
-                // =====================================
+                // ==========================================
 
                 nome: body.nome.trim(),
 
@@ -63,8 +66,7 @@ export async function POST(req: Request) {
                 nomeDoPai:
                     body.nomeDoPai?.trim() || null,
 
-                dataDeNascimento:
-                    new Date(body.dataDeNascimento),
+                dataDeNascimento,
 
                 sexo:
                     body.sexo || null,
@@ -81,17 +83,17 @@ export async function POST(req: Request) {
                 cartaoSus:
                     body.cartaoSus?.trim() || null,
 
-                codigoGsus:
-                    body.codigoGsus?.trim() || null,
-
-                codigoIds:
-                    body.codigoIds?.trim() || null,
-
                 nis:
                     body.nis?.trim() || null,
 
                 unidadeDeSaude:
                     body.unidadeDeSaude?.trim() || null,
+
+                codigoGsus:
+                    body.codigoGsus?.trim() || null,
+
+                codigoIds:
+                    body.codigoIds?.trim() || null,
 
                 tipoSanguineo:
                     body.tipoSanguineo || null,
@@ -99,21 +101,25 @@ export async function POST(req: Request) {
                 fatorRh:
                     body.fatorRh || null,
 
-                situacaoFamiliar:
-                    body.situacaoFamiliar || null,
-
-                povoTradicional:
-                    body.povoTradicional || null,
-
-                religiao:
-                    body.religiao || null,
-
                 observacoes:
                     body.observacoes?.trim() || null,
 
-                // =====================================
+                // ==========================================
+                // CONTATO
+                // ==========================================
+
+                telefone1:
+                    body.telefone1.trim(),
+
+                telefone2:
+                    body.telefone2?.trim() || null,
+
+                email:
+                    body.email?.trim() || null,
+
+                // ==========================================
                 // DOCUMENTOS
-                // =====================================
+                // ==========================================
 
                 rg:
                     body.rg?.trim() || null,
@@ -122,7 +128,7 @@ export async function POST(req: Request) {
                     body.orgaoEmissor || null,
 
                 ufRg:
-                    body.ufRg || null,
+                    body.ufRg?.trim() || null,
 
                 dataEmissaoRg:
                     body.dataEmissaoRg
@@ -141,9 +147,9 @@ export async function POST(req: Request) {
                 orientacaoRegCpf:
                     body.orientacaoRegCpf || null,
 
-                // =====================================
+                // ==========================================
                 // TÍTULO DE ELEITOR
-                // =====================================
+                // ==========================================
 
                 tituloEleitor:
                     body.tituloEleitor?.trim() || null,
@@ -154,9 +160,9 @@ export async function POST(req: Request) {
                 secaoEleitoral:
                     body.secaoEleitoral?.trim() || null,
 
-                // =====================================
+                // ==========================================
                 // TRABALHISTA
-                // =====================================
+                // ==========================================
 
                 ctpsNumero:
                     body.ctpsNumero?.trim() || null,
@@ -165,7 +171,7 @@ export async function POST(req: Request) {
                     body.ctpsSerie?.trim() || null,
 
                 ctpsUf:
-                    body.ctpsUf || null,
+                    body.ctpsUf?.trim() || null,
 
                 ctpsDataEmissao:
                     body.ctpsDataEmissao
@@ -175,9 +181,9 @@ export async function POST(req: Request) {
                 pisPasep:
                     body.pisPasep?.trim() || null,
 
-                // =====================================
+                // ==========================================
                 // EDUCAÇÃO
-                // =====================================
+                // ==========================================
 
                 frequentaEscola:
                     body.frequentaEscola || null,
@@ -194,9 +200,9 @@ export async function POST(req: Request) {
                 cursoProfissionalizante:
                     body.cursoProfissionalizante?.trim() || null,
 
-                // =====================================
+                // ==========================================
                 // NATURALIZAÇÃO
-                // =====================================
+                // ==========================================
 
                 paisOrigem:
                     body.paisOrigem?.trim() || null,
@@ -214,18 +220,21 @@ export async function POST(req: Request) {
                         ? new Date(body.dataNaturalizacao)
                         : null,
 
-                // =====================================
-                // LOCALIDADE
-                // =====================================
+                // ==========================================
+                // ENDEREÇO
+                // ==========================================
 
                 pais:
                     body.pais || null,
 
                 uf:
-                    body.uf || null,
+                    body.uf?.trim() || null,
 
                 municipio:
                     body.municipio?.trim() || null,
+
+                cep:
+                    body.cep?.trim() || null,
 
                 bairro:
                     body.bairro?.trim() || null,
@@ -242,19 +251,21 @@ export async function POST(req: Request) {
                 zona:
                     body.zona || null,
 
-                // =====================================
+                // ==========================================
                 // GEOLOCALIZAÇÃO
-                // =====================================
+                // ==========================================
 
                 latitude:
                     body.latitude !== null &&
-                    body.latitude !== undefined
+                    body.latitude !== undefined &&
+                    body.latitude !== ""
                         ? Number(body.latitude)
                         : null,
 
                 longitude:
                     body.longitude !== null &&
-                    body.longitude !== undefined
+                    body.longitude !== undefined &&
+                    body.longitude !== ""
                         ? Number(body.longitude)
                         : null,
             },
@@ -273,12 +284,25 @@ export async function POST(req: Request) {
             { status: 201 }
         )
 
-    } catch (error) {
+    } catch (error: any) {
 
         console.error(
             "ERRO AO CADASTRAR PACIENTE:",
             error
         )
+
+        // ==========================================
+        // CPF DUPLICADO
+        // ==========================================
+
+        if (error?.code === "P2002") {
+            return NextResponse.json(
+                {
+                    erro: "Já existe um paciente cadastrado com este CPF.",
+                },
+                { status: 409 }
+            )
+        }
 
         return NextResponse.json(
             {
@@ -299,12 +323,22 @@ export async function GET() {
                 nome: "asc",
             },
         })
+
         return NextResponse.json(pacientes)
+
     } catch (error) {
-        console.error("ERRO AO BUSCAR PACIENTES:", error)
+
+        console.error(
+            "ERRO REAL AO BUSCAR PACIENTES:",
+            error
+        )
+
         return NextResponse.json(
             {
-                erro: "Erro ao buscar pacientes.",
+                erro:
+                    error instanceof Error
+                        ? error.message
+                        : "Erro desconhecido ao buscar pacientes.",
             },
             {
                 status: 500,

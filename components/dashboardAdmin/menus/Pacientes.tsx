@@ -16,32 +16,15 @@ import { GiMagnifyingGlass } from "react-icons/gi";
 import { IoIosCheckmarkCircle } from "react-icons/io";
 import { TiDeleteOutline } from "react-icons/ti";
 import calcularIdade from "@/utils/calcularIdade";
+import { useLocais } from "@/hooks/useLocais";
+import { Condicao, CondicaoOption, TipoDeDado, TipoDeDadoOption } from "@/enum/enums";
+import InputData from "@/components/assets/InputData";
+import { HiOutlineCalendarDateRange } from "react-icons/hi2";
 
-enum TipoDeDado {
-    NOME = "NOME",
-    DATA_DE_NASCIMENTO = "DATA_DE_NASCIMENTO",
-    CPF = "CPF",
-    CARTAO_SUS = "CARTAO_SUS",
-    NOME_DA_MAE = "NOME_DA_MAE",
-}
-enum Condicao {
-    CONTEM = "CONTEM",
-    MAIOR_QUE = "MAIOR_QUE",
-    MENOR_QUE = "MENOR_QUE",
-    IGUAL = "IGUAL",
-}
-
-interface TipoDeDadoOption {
-    valor: TipoDeDado;
-    label: string;
-}
-interface CondicaoOption {
-    valor: Condicao;
-    label: string;
-}
 export default function Pacientes() {
-    const [tipoDeDado, setTipoDeDado] = useState<TipoDeDado>()
-    const [condicao, setCondicao] = useState<Condicao>()
+    const [tipoDeDado, setTipoDeDado] = useState<TipoDeDado>(TipoDeDado.NOME)
+    const [condicao, setCondicao] = useState<Condicao>(Condicao.IGUAL)
+    const [unidadeCliente, setUnidadeCliente] = useState("")
     const [valor, setValor] = useState('')
     const [visible, setVisible] = useState(false);
 
@@ -50,7 +33,7 @@ export default function Pacientes() {
     // INFORMAÇÕES PESSOAIS
     const [nome, setNome] = useState('')
     const [nomeSocial, setNomeSocial] = useState('')
-    const [declaroNaoPossuirNomeSocial, setDeclaroNaoPossuirNomeSocial] = useState(false)
+    const [declaroNaoPossuirNomeSocial, setDeclaroNaoPossuirNomeSocial] = useState(true)
     const [nomeDaMae, setNomeDaMae] = useState('')
     const [nomeDoPai, setNomeDoPai] = useState('')
     const [dataDeNascimento, setDataDeNascimento] = useState('')
@@ -69,6 +52,11 @@ export default function Pacientes() {
     const [povoTradicional, setPovoTradicional] = useState('')
     const [religiao, setReligiao] = useState('')
     const [observacoes, setObservacoes] = useState('')
+
+    // Contato
+    const [telefone1, setTelefone1] = useState('')
+    const [telefone2, setTelefone2] = useState('')
+    const [email, setEmail] = useState('')
 
     // DOCUMENTOS
     const [rg, setRg] = useState('')
@@ -232,11 +220,10 @@ export default function Pacientes() {
     ]
 
     const handleSubmit = async () => {
-
         try {
-            // =========================
+            // =====================================
             // VALIDAÇÕES
-            // =========================
+            // =====================================
 
             if (!nome.trim()) {
                 throw new Error("Informe o nome do paciente.")
@@ -258,21 +245,26 @@ export default function Pacientes() {
                 throw new Error("Informe o CPF.")
             }
 
-            // =========================
+            if (!telefone1.trim()) {
+                throw new Error("Informe o telefone principal.")
+            }
+
+            // =====================================
             // OBJETO DO PACIENTE
-            // =========================
+            // Compatível com o schema.prisma atual
+            // =====================================
 
             const paciente = {
-
                 // =====================================
                 // INFORMAÇÕES PESSOAIS
                 // =====================================
 
                 nome: nome.trim(),
 
-                nomeSocial: declaroNaoPossuirNomeSocial
-                    ? null
-                    : nomeSocial.trim() || null,
+                nomeSocial:
+                    declaroNaoPossuirNomeSocial
+                        ? null
+                        : nomeSocial.trim() || null,
 
                 declaroNaoPossuirNomeSocial,
 
@@ -300,17 +292,17 @@ export default function Pacientes() {
                 cartaoSus:
                     cartaoSus.trim() || null,
 
+                nis:
+                    nis.trim() || null,
+
+                unidadeDeSaude:
+                    unidadeDeSaude || null,
+
                 codigoGsus:
                     codigoGsus.trim() || null,
 
                 codigoIds:
                     codigoIds.trim() || null,
-
-                nis:
-                    nis.trim() || null,
-
-                unidadeDeSaude:
-                    unidadeDeSaude.trim() || null,
 
                 tipoSanguineo:
                     tipoSanguineo || null,
@@ -318,18 +310,21 @@ export default function Pacientes() {
                 fatorRh:
                     fatorRh || null,
 
-                situacaoFamiliar:
-                    situacaoFamiliar || null,
-
-                povoTradicional:
-                    povoTradicional || null,
-
-                religiao:
-                    religiao || null,
-
                 observacoes:
                     observacoes.trim() || null,
 
+                // =====================================
+                // CONTATO
+                // =====================================
+
+                telefone1:
+                    telefone1.trim(),
+
+                telefone2:
+                    telefone2.trim() || null,
+
+                email:
+                    email.trim() || null,
 
                 // =====================================
                 // DOCUMENTOS
@@ -339,7 +334,7 @@ export default function Pacientes() {
                     rg.trim() || null,
 
                 orgaoEmissor:
-                    orgaoEmissor.trim() || null,
+                    orgaoEmissor || null,
 
                 ufRg:
                     ufRg || null,
@@ -359,7 +354,6 @@ export default function Pacientes() {
                 orientacaoRegCpf:
                     orientacaoRegCpf || null,
 
-
                 // =====================================
                 // TÍTULO DE ELEITOR
                 // =====================================
@@ -372,7 +366,6 @@ export default function Pacientes() {
 
                 secaoEleitoral:
                     secaoEleitoral.trim() || null,
-
 
                 // =====================================
                 // TRABALHISTA
@@ -393,7 +386,6 @@ export default function Pacientes() {
                 pisPasep:
                     pisPasep.trim() || null,
 
-
                 // =====================================
                 // EDUCAÇÃO
                 // =====================================
@@ -405,14 +397,13 @@ export default function Pacientes() {
                     escola.trim() || null,
 
                 serieEscolar:
-                    serieEscolar || null,
+                    serieEscolar.trim() || null,
 
                 grauEscolaridade:
                     grauEscolaridade || null,
 
                 cursoProfissionalizante:
                     cursoProfissionalizante.trim() || null,
-
 
                 // =====================================
                 // NATURALIZAÇÃO
@@ -430,19 +421,21 @@ export default function Pacientes() {
                 dataNaturalizacao:
                     dataNaturalizacao || null,
 
-
                 // =====================================
-                // LOCALIDADE
+                // ENDEREÇO / LOCALIDADE
                 // =====================================
 
                 pais:
-                    pais.trim() || null,
+                    pais || null,
 
                 uf:
                     uf || null,
 
                 municipio:
                     municipio.trim() || null,
+
+                cep:
+                    null,
 
                 bairro:
                     bairro.trim() || null,
@@ -456,30 +449,29 @@ export default function Pacientes() {
                 complemento:
                     complemento.trim() || null,
 
+                zona:
+                    zona || null,
 
                 // =====================================
                 // GEOLOCALIZAÇÃO
                 // =====================================
 
                 latitude:
-                    latitude
+                    latitude.trim()
                         ? Number(latitude)
                         : null,
 
                 longitude:
-                    longitude
+                    longitude.trim()
                         ? Number(longitude)
                         : null,
-
-                zona:
-                    zona || null,
             }
 
-            console.log("Dados enviados:", paciente)
+            console.log("DADOS ENVIADOS:", paciente)
 
-            // =========================
+            // =====================================
             // ENVIA PARA API
-            // =========================
+            // =====================================
 
             const response = await fetch("/api/pacientes", {
                 method: "POST",
@@ -491,9 +483,9 @@ export default function Pacientes() {
 
             const data = await response.json()
 
-            // =========================
-            // TRATA ERRO DA API
-            // =========================
+            // =====================================
+            // ERRO DA API
+            // =====================================
 
             if (!response.ok) {
                 throw new Error(
@@ -503,12 +495,12 @@ export default function Pacientes() {
                 )
             }
 
-            // =========================
+            // =====================================
             // SUCESSO
-            // =========================
+            // =====================================
 
             console.log(
-                "Paciente cadastrado:",
+                "PACIENTE CADASTRADO:",
                 data
             )
 
@@ -523,7 +515,7 @@ export default function Pacientes() {
         } catch (error) {
 
             console.error(
-                "Erro ao cadastrar paciente:",
+                "ERRO AO CADASTRAR PACIENTE:",
                 error
             )
 
@@ -642,6 +634,19 @@ export default function Pacientes() {
     }
 
     const { pacientes } = usePacientes()
+    const { locais } = useLocais()
+
+    const locaisFiltrados = locais.filter(local => local.cep === '86455000')
+    const opcoesUnidades = locaisFiltrados.map(local => ({
+        label: local.nome,
+        valor: local.id
+    }))
+    const opcoesUnidadeDeSaudePaciente = locaisFiltrados.map(local => ({
+        label: local.nome,
+        valor: local.id
+    }))
+
+
 
     const handleBuscar = () => {
         setBuscaRealizada(true)
@@ -694,8 +699,6 @@ export default function Pacientes() {
         setPacientesEncontrados(resultados)
     }
 
-    console.log(buscaRealizada)
-    console.log(pacientesEncontrados)
 
     return (
         <div className="p-4 flex flex-col gap-4 font-arimo text-verde-escuro max-w-[1500px]">
@@ -717,7 +720,7 @@ export default function Pacientes() {
                         <h2>Adicionar Cliente</h2>
                     </button>
                 </div>
-                <div className="grid grid-cols-[160px_160px_160px_1fr_140px] gap-2">
+                <div className="grid grid-cols-[160px_160px_200px_1fr_140px] gap-2">
                     <InputSelect
                         icone={<AiOutlineSelect />}
                         id="tipoDeDado"
@@ -736,15 +739,14 @@ export default function Pacientes() {
                         valor={condicao}
                         opcoes={tiposDeCondicoes}
                     />
-                    {/* falta o select de unidade do cliente */}
                     <InputSelect
                         icone={<AiOutlineSelect />}
-                        id="condicao"
-                        label="Condição"
-                        nome="condicao"
-                        setValor={setCondicao}
-                        valor={condicao}
-                        opcoes={tiposDeCondicoes}
+                        id="unidadeCliente"
+                        label="Unidade do cliente"
+                        nome="unidadeCliente"
+                        setValor={setUnidadeCliente}
+                        valor={unidadeCliente}
+                        opcoes={opcoesUnidades}
                     />
                     {/* vai ter que ser um input especial depois */}
                     <InputTexto icone={<MdDriveFileRenameOutline />} id="valor" label="Valor" nome="valor" placeholder="valor..." setValor={setValor} valor={valor} />
@@ -899,12 +901,12 @@ export default function Pacientes() {
                     closeIcon={
                         <IoClose
                             size={45}
-                            className="text-white my-auto pt-4 pr-4"
+                            className="text-verde-escuro my-auto"
                         />
                     }
                     header={
-                        <div className="flex items-center gap-3 font-oswald px-6 py-3 text-white">
-                            <FiUserPlus className="text-2xl" />
+                        <div className="flex items-center gap-3 font-oswald px-6 py-3 text-verde-escuro">
+                            <FiUserPlus className="text-5xl" />
                             <div>
                                 <h3 className="text-2xl font-bold">
                                     Adicionar Paciente
@@ -937,23 +939,27 @@ export default function Pacientes() {
                                     />
 
                                     <div className="grid grid-cols-[1fr_170px] gap-2 items-center">
-                                        <InputTexto
-                                            icone={<MdDriveFileRenameOutline />}
-                                            id="nomeSocial"
-                                            label="Nome Social"
-                                            nome="nomeSocial"
-                                            placeholder="Informe o nome social..."
-                                            setValor={setNomeSocial}
-                                            valor={nomeSocial}
-                                        />
-
-                                        <InputCheckbox
-                                            id="declaroNomeSocial"
-                                            label="Declaro não possuir nome social"
-                                            nome="declaroNomeSocial"
-                                            setValor={setDeclaroNaoPossuirNomeSocial}
-                                            valor={declaroNaoPossuirNomeSocial}
-                                        />
+                                        <div className={`${declaroNaoPossuirNomeSocial ? 'opacity-35' : ''}`}>
+                                            <InputTexto
+                                                icone={<MdDriveFileRenameOutline />}
+                                                id="nomeSocial"
+                                                label="Nome Social"
+                                                nome="nomeSocial"
+                                                placeholder="Informe o nome social..."
+                                                setValor={setNomeSocial}
+                                                disabled={declaroNaoPossuirNomeSocial}
+                                                valor={nomeSocial}
+                                            />
+                                        </div>
+                                        <div className="flex justify-center items-center mt-auto">
+                                            <InputCheckbox
+                                                id="declaroNomeSocial"
+                                                label="Declaro não possuir nome social"
+                                                nome="declaroNomeSocial"
+                                                setValor={setDeclaroNaoPossuirNomeSocial}
+                                                valor={declaroNaoPossuirNomeSocial}
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-3 gap-3">
@@ -975,16 +981,15 @@ export default function Pacientes() {
                                         setValor={setNomeDoPai}
                                         valor={nomeDoPai}
                                     />
-                                    <input type="date" name="dataNascimento" id="dataNascimento" value={dataDeNascimento} onChange={(e) => setDataDeNascimento(e.target.value)} />
-                                    {/* <InputTexto
-                                        icone={<MdDriveFileRenameOutline />}
-                                        id="dataNascimento"
-                                        label="Data de Nascimento *"
-                                        nome="dataNascimento"
-                                        placeholder="dd/mm/aaaa"
+                                    <InputData
+                                        icone={<HiOutlineCalendarDateRange />}
+                                        id="dataDeNascimento"
+                                        label="Data de Nascimento"
+                                        nome="dataDeNascimento"
+                                        placeholder="Data de Nascimento"
                                         setValor={setDataDeNascimento}
                                         valor={dataDeNascimento}
-                                    /> */}
+                                    />
                                 </div>
                                 <div className="grid grid-cols-3 gap-3">
                                     <InputSelect
@@ -1045,16 +1050,16 @@ export default function Pacientes() {
                                     />
                                 </div>
                                 <div className="grid grid-cols-[1fr_150px_150px_160px_160px] gap-3">
-                                    {/* Vai ser um select depois */}
-                                    <InputTexto
-                                        icone={<MdDriveFileRenameOutline />}
+                                    <InputSelect
+                                        icone={<AiOutlineSelect />}
                                         id="unidadeSaude"
                                         label="Unidade de Saúde"
                                         nome="unidadeSaude"
-                                        placeholder="Unidade de saúde..."
                                         setValor={setUnidadeDeSaude}
                                         valor={unidadeDeSaude}
+                                        opcoes={opcoesUnidadeDeSaudePaciente}
                                     />
+
                                     <InputTexto
                                         icone={<MdDriveFileRenameOutline />}
                                         id="codigoGsus"
@@ -1107,6 +1112,42 @@ export default function Pacientes() {
                             </div>
                         </section>
 
+                        {/* Contato */}
+                        <section className="p-5 px-8 border-b border-gray-400">
+                            <div className="flex items-center gap-2 text-xl font-bold mb-4">
+                                <span className="text-2xl">▣</span>
+                                <h3>Contato</h3>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                                <InputTexto
+                                    icone={<MdDriveFileRenameOutline />}
+                                    id="telefone1"
+                                    label="Telefone 1"
+                                    nome="telefone1"
+                                    placeholder="Informe o telefone principal..."
+                                    setValor={setTelefone1}
+                                    valor={telefone1}
+                                />
+                                <InputTexto
+                                    icone={<MdDriveFileRenameOutline />}
+                                    id="telefone2"
+                                    label="Telefone 2"
+                                    nome="telefone2"
+                                    placeholder="Informe o telefone secundário..."
+                                    setValor={setTelefone2}
+                                    valor={telefone2}
+                                />
+                                <InputTexto
+                                    icone={<MdDriveFileRenameOutline />}
+                                    id="email"
+                                    label="admin@ssjt.com"
+                                    nome="email"
+                                    placeholder="Informe seu email..."
+                                    setValor={setEmail}
+                                    valor={email}
+                                />
+                            </div>
+                        </section>
                         {/* Documentos */}
                         <section className="p-5 px-8 border-b border-gray-400">
                             <div className="flex items-center gap-2 text-xl font-bold mb-4">
@@ -1146,15 +1187,17 @@ export default function Pacientes() {
                                     valor={ufRg}
                                     opcoes={opcoesUf}
                                 />
-                                <InputTexto
+
+                                <InputData
                                     icone={<MdDriveFileRenameOutline />}
                                     id="dataEmissaoRg"
                                     label="Data de Emissão"
                                     nome="dataEmissaoRg"
-                                    placeholder="dd/mm/aaaa"
+                                    placeholder=""
                                     setValor={setDataEmissaoRg}
                                     valor={dataEmissaoRg}
                                 />
+
                                 <InputSelect
                                     icone={<AiOutlineSelect />}
                                     id="cpfRegular"

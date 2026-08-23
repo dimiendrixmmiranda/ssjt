@@ -7,6 +7,7 @@ import { useState } from "react";
 import Inicio from "./menus/Inicio";
 import Pacientes from "./menus/Pacientes";
 import { FaUserPlus } from "react-icons/fa";
+import ConsultasEExames from "./menus/ConsultasEExames";
 
 interface DashboardAdminProps {
     usuario: any
@@ -24,6 +25,10 @@ export default function DashboardAdmin({ usuario }: DashboardAdminProps) {
             case 'pacientes':
                 return (
                     <Pacientes />
+                )
+            case 'consultas-e-exames':
+                return (
+                    <ConsultasEExames />
                 )
             default:
                 break;
@@ -64,10 +69,15 @@ export default function DashboardAdmin({ usuario }: DashboardAdminProps) {
             valor: "pacientes",
             icone: <FaUserPlus />,
         },
+        {
+            nome: "Consultas e Exames",
+            valor: "consultas-e-exames",
+            icone: <FaUserPlus />,
+        },
     ]
 
     return (
-        <main className="grid grid-cols-[250px_1fr] w-full min-h-screen">
+        <main className="grid grid-cols-[270px_1fr] w-full min-h-screen">
             <div className="w-full h-full grid grid-rows-[180px_1fr] border-r border-verde">
                 <div className="p-4">
                     <div className="relative w-full h-full bg-white">

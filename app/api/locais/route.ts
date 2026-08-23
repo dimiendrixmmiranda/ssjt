@@ -110,3 +110,42 @@ export async function POST(req: Request) {
         )
     }
 }
+
+export async function GET() {
+    try {
+        const locais = await prisma.local.findMany({
+            include: {
+                tiposDeAtendimento: {
+                    include: {
+                        tipoAtendimento: true
+                    }
+                }
+            },
+            orderBy: {
+                nome: "asc"
+            }
+        })
+
+        return NextResponse.json(locais, {
+            status: 200
+        })
+
+    } catch (error) {
+        console.error(
+            "ERRO AO BUSCAR LOCAIS:",
+            error
+        )
+
+        return NextResponse.json(
+            {
+                erro:
+                    error instanceof Error
+                        ? error.message
+                        : "Erro ao buscar locais."
+            },
+            {
+                status: 500
+            }
+        )
+    }
+}

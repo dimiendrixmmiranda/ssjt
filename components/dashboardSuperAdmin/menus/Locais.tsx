@@ -3,10 +3,22 @@ import InputSelect from "@/components/assets/InputSelect";
 import InputTextArea from "@/components/assets/InputTextArea";
 import InputTexto from "@/components/assets/InputTexto";
 import { useEspecialidades } from "@/hooks/useEspecialidades";
-import { useState } from "react";
+import { useLocais } from "@/hooks/useLocais";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import { AiOutlineSelect } from "react-icons/ai";
-import { BsBuildingAdd } from "react-icons/bs";
+import { BsBuildingAdd, BsBuildingDash, BsFillBuildingsFill } from "react-icons/bs";
+import { FaRegEdit, FaRegEye, FaRegTrashAlt } from "react-icons/fa";
+import { GiMagnifyingGlass } from "react-icons/gi";
+import { IoIosCheckmarkCircle } from "react-icons/io";
+import { IoAdd } from "react-icons/io5";
 import { MdDriveFileRenameOutline } from "react-icons/md";
+import { RiLightbulbLine } from "react-icons/ri";
+import { TbListDetails } from "react-icons/tb";
+import { TiDeleteOutline } from "react-icons/ti";
+import { Paginator, PaginatorPageChangeEvent } from "primereact/paginator";
+
 
 export default function Locais() {
     const [nome, setNome] = useState('')
@@ -25,6 +37,23 @@ export default function Locais() {
     const [tiposDeAtendimento, setTiposDeAtendimento] = useState<string[]>([])
     const [descricao, setDescricao] = useState('')
     const { especialidades } = useEspecialidades()
+
+    const { locais } = useLocais()
+
+    // Filtros para busca
+    const [buscarLocal, setBuscarLocal] = useState('')
+    const [filtroStatus, setFiltroStatus] = useState('')
+    const [filtroCidade, setFiltroCidade] = useState('')
+    const [first, setFirst] = useState(0)
+    const [rows] = useState(5)
+
+    useEffect(() => {
+        setFirst(0)
+    }, [
+        buscarLocal,
+        filtroCidade,
+        filtroStatus
+    ])
 
     const adicionarTipoDeAtendimento = () => {
         if (!tipoDeAtendimento) {
@@ -152,6 +181,34 @@ export default function Locais() {
         }
     }
 
+    const locaisFiltrados = locais.filter((local) => {
+        const correspondeStatus =
+            !filtroStatus ||
+            local.status === filtroStatus
+
+        const correspondeCidade =
+            !filtroCidade ||
+            local.cidade
+                .toLowerCase()
+                .includes(filtroCidade.toLowerCase())
+
+        const correspondeNome =
+            !buscarLocal ||
+            local.nome
+                .toLowerCase()
+                .includes(buscarLocal.toLowerCase())
+
+        return (
+            correspondeStatus &&
+            correspondeCidade &&
+            correspondeNome
+        )
+    })
+
+    const locaisPaginados = locaisFiltrados.slice(
+        first,
+        first + rows
+    )
     // no banco de dados colocar na cidade ou fora da cidade
     const tiposDeLocal = [
         {
@@ -180,16 +237,15 @@ export default function Locais() {
 
     console.log(tiposDeAtendimento)
     return (
-        <div className="p-4">
+        <div className="p-4 overflow-x-hidden" id="adicionarLocal">
             <div className="mb-4">
                 <h3 className="text-2xl font-bold">Locais de Atendimento</h3>
                 <span>Gerencie e cadastre locais de atendimento.</span>
             </div>
-
-            <div>
+            <div className="flex flex-col gap-6">
                 <form
                     onSubmit={handleSubmit}
-                    className="shadow-[0px_0px_2px_1px_#999] rounded-lg p-5 flex flex-col gap-5"
+                    className="shadow-[0px_0px_2px_1px_var(--verde-escuro)] rounded-lg p-5 flex flex-col gap-5"
                 >
                     <div className="flex items-center gap-2 text-xl font-bold text-verde border-b border-gray-300 pb-3">
                         <BsBuildingAdd />
@@ -262,7 +318,7 @@ export default function Locais() {
                                 valor={cep}
                             />
                         </div>
-                        <div className="grid grid-cols-[1fr_140px_1fr_1fr] gap-3">
+                        <div className="grid grid-cols-[1fr_140px_1fr] gap-3">
                             <InputTexto
                                 icone={<MdDriveFileRenameOutline />}
                                 id="rua"
@@ -290,15 +346,17 @@ export default function Locais() {
                                 setValor={setBairro}
                                 valor={bairro}
                             />
-                            <InputTexto
-                                icone={<MdDriveFileRenameOutline />}
-                                id="complemento"
-                                label="Complemento"
-                                nome="complemento"
-                                placeholder="Sala, bloco, etc..."
-                                setValor={setComplemento}
-                                valor={complemento}
-                            />
+                            <div className="col-span-3">
+                                <InputTexto
+                                    icone={<MdDriveFileRenameOutline />}
+                                    id="complemento"
+                                    label="Complemento"
+                                    nome="complemento"
+                                    placeholder="Sala, bloco, etc..."
+                                    setValor={setComplemento}
+                                    valor={complemento}
+                                />
+                            </div>
                         </div>
                     </section>
                     <section className="flex flex-col gap-4">
@@ -341,12 +399,6 @@ export default function Locais() {
 
                     </section>
                     <section className="flex flex-col gap-3">
-                        <div className="flex items-center gap-2 text-lg font-bold">
-                            <span className="text-xl">▤</span>
-                            <h3>
-                                Descrição
-                            </h3>
-                        </div>
                         <section className="flex flex-col gap-3">
                             <div className="flex items-center gap-2 text-lg font-bold">
                                 <span className="text-xl">▤</span>
@@ -374,14 +426,14 @@ export default function Locais() {
                                     type="button"
                                     onClick={adicionarTipoDeAtendimento}
                                     className="
-                bg-verde
-                text-white
-                font-bold
-                rounded-lg
-                py-2
-                hover:bg-verde-escuro
-                transition-all
-            "
+                                        bg-verde
+                                        text-white
+                                        font-bold
+                                        rounded-lg
+                                        py-2
+                                        hover:bg-verde-escuro
+                                        transition-all
+                                    "
                                 >
                                     Adicionar
                                 </button>
@@ -438,16 +490,24 @@ export default function Locais() {
                                 </div>
                             )}
                         </section>
-                        <InputTextArea
-                            id="descricao"
-                            label="Descrição do Local"
-                            nome="descricao"
-                            placeholder="Informe observações ou informações adicionais sobre o local..."
-                            setValor={setDescricao}
-                            valor={descricao}
-                            icone={<MdDriveFileRenameOutline />}
-                            altura="h-[200px]"
-                        />
+                        <div>
+                            <div className="flex items-center gap-2 text-lg font-bold">
+                                <span className="text-xl">▤</span>
+                                <h3>
+                                    Descrição
+                                </h3>
+                            </div>
+                            <InputTextArea
+                                id="descricao"
+                                label="Descrição do Local"
+                                nome="descricao"
+                                placeholder="Informe observações ou informações adicionais sobre o local..."
+                                setValor={setDescricao}
+                                valor={descricao}
+                                icone={<MdDriveFileRenameOutline />}
+                                altura="h-[200px]"
+                            />
+                        </div>
                     </section>
                     {/* BOTÕES */}
                     <div className="flex justify-end gap-3 border-t border-gray-300 pt-4">
@@ -488,6 +548,194 @@ export default function Locais() {
                         </button>
                     </div>
                 </form>
+                <div className="shadow-[0px_0px_2px_1px_var(--verde-escuro)] rounded-lg p-5 flex flex-col gap-5 h-[550px] overflow-x-hidden">
+                    <div className="flex items-center gap-2 text-xl font-bold text-verde border-b border-gray-300 pb-3">
+                        <BsFillBuildingsFill />
+                        <h2>
+                            Lista de Locais de Atendimento
+                        </h2>
+                    </div>
+                    <div className="grid grid-cols-3 gap-3">
+                        <InputTexto
+                            icone={<MdDriveFileRenameOutline />}
+                            id="buscarLocal"
+                            label="Buscar local"
+                            nome="buscarLocal"
+                            placeholder="Digite o nome do local..."
+                            setValor={setBuscarLocal}
+                            valor={buscarLocal}
+                        />
+                        <InputTexto
+                            icone={<MdDriveFileRenameOutline />}
+                            id="filtroCidade"
+                            label="Cidade"
+                            nome="filtroCidade"
+                            placeholder="Digite a cidade..."
+                            setValor={setFiltroCidade}
+                            valor={filtroCidade}
+                        />
+                        <InputSelect
+                            icone={<AiOutlineSelect />}
+                            id="filtroStatus"
+                            label="Status"
+                            nome="filtroStatus"
+                            setValor={setFiltroStatus}
+                            valor={filtroStatus}
+                            opcoes={[
+                                {
+                                    valor: "",
+                                    label: "Todos"
+                                },
+                                {
+                                    valor: "ATIVO",
+                                    label: "Ativo"
+                                },
+                                {
+                                    valor: "INATIVO",
+                                    label: "Inativo"
+                                }
+                            ]}
+                        />
+                    </div>
+                    {
+                        locaisPaginados.length > 0 ? (
+                            <div className="flex flex-col overflow-x-scroll">
+                                <ul className="grid grid-cols-[200px_170px_120px_180px_100px_100px_140px] w-full font-bold border-b">
+                                    <li className="p-3">
+                                        <p>Nome do Local</p>
+                                    </li>
+                                    <li className="p-3 text-center">
+                                        <p>Tipo do Local</p>
+                                    </li>
+                                    <li className="p-3 text-center">
+                                        <p>Cidade</p>
+                                    </li>
+                                    <li className="p-3 text-center">
+                                        <p>Endereço</p>
+                                    </li>
+                                    <li className="p-3 text-center">
+                                        <p>Telefone</p>
+                                    </li>
+                                    <li className="p-3 text-center">
+                                        <p>Status</p>
+                                    </li>
+                                    <li className="p-3 text-center">
+                                        <p>Ações</p>
+                                    </li>
+                                </ul>
+                                <ul>
+                                    {
+                                        locaisPaginados.map((local) => {
+                                            return (
+                                                <li key={local.id} className="border-b">
+                                                    <ul className="grid grid-cols-[200px_170px_120px_180px_100px_100px_140px]">
+                                                        <li className="p-3">
+                                                            <p>{local.nome}</p>
+                                                        </li>
+                                                        <li className="p-3 text-center">
+                                                            <p className="capitalize">{local.tipoDoLocal.replaceAll('_', ' ').toLowerCase()}</p>
+                                                        </li>
+                                                        <li className="p-3 text-center">
+                                                            <p>{local.cidade}</p>
+                                                        </li>
+                                                        <li className="p-3 text-center line-clamp-2 overflow-hidden">
+                                                            <p className="line-clamp-2 overflow-hidden">{local.rua}, {local.numero} - {local.bairro} {local.complemento ? `(${local.complemento})` : ''}</p>
+                                                        </li>
+                                                        <li className="p-3 text-center">
+                                                            <p>{local.telefone1}</p>
+                                                        </li>
+                                                        <li className="p-3 text-center">
+                                                            <p>{local.status}</p>
+                                                        </li>
+                                                        <li className="p-3 text-center">
+                                                            <button>
+                                                                <BsBuildingDash />
+                                                            </button>
+                                                            <button>
+                                                                <FaRegTrashAlt />
+                                                            </button>
+                                                            <button>
+                                                                <FaRegEdit />
+                                                            </button>
+                                                            <button>
+                                                                <FaRegEye />
+                                                            </button>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                            )
+                                        })
+                                    }
+                                </ul>
+
+                            </div>
+                        ) : (
+                            <div className="grid grid-cols-2 gap-6">
+                                <div className="relative w-full h-full">
+                                    <Image alt="image" src={'/mulher.png'} fill className="object-contain" />
+                                </div>
+                                <div className="text-verde-escuro flex flex-col gap-4">
+                                    <div className="flex items-center gap-2 text-lg">
+                                        <GiMagnifyingGlass />
+                                        <h5>Resultado da busca:</h5>
+                                    </div>
+                                    <div>
+                                        <h3 className="text-verde-escuro text-3xl font-bold 2xl:text-4xl 3xl:text-[44px]">Nenhum resultado encontrado</h3>
+                                        <span className="text-zinc-500 2xl:text-lg">Não encontramos nenhum registro com os criterios informados: "{buscarLocal}"</span>
+                                    </div>
+                                    <div className="border border-verde-escuro rounded-lg p-4 bg-verde-escuro/10 flex flex-col gap-2">
+                                        <div className="flex items-center text-xl font-bold">
+                                            <RiLightbulbLine />
+                                            <p>Dicas para uma nova busca:</p>
+                                        </div>
+                                        <div>
+                                            <ul>
+                                                <li className="flex items-center gap-2">
+                                                    <IoIosCheckmarkCircle />
+                                                    <p>Verifique se os dados estão corretos.</p>
+                                                </li>
+                                                <li className="flex items-center gap-2">
+                                                    <IoIosCheckmarkCircle />
+                                                    <p>Tente usar menos filtros na pesquisa</p>
+                                                </li>
+                                                <li className="flex items-center gap-2">
+                                                    <IoIosCheckmarkCircle />
+                                                    <p>Utilize parte do nome ou CPF.</p>
+                                                </li>
+                                                <li className="flex items-center gap-2">
+                                                    <IoIosCheckmarkCircle />
+                                                    <p>Confira se não há espaços extras.</p>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-4 max-w-[700px] ml-auto">
+                                            <button className="flex items-center justify-center cursor-pointer gap-2 font-bold border border-red-500 p-1 rounded-lg px-3 transition-all duration-300 bg-red-500 text-white hover:bg-white hover:text-red-500">
+                                                <TiDeleteOutline />
+                                                <h2>Limpar Filtros</h2>
+                                            </button>
+                                            <Link href={'#adicionarLocal'} className="flex items-center justify-center cursor-pointer gap-2 font-bold border border-verde p-1 rounded-lg px-3 transition-all duration-300 hover:bg-verde hover:text-white">
+                                                <IoAdd />
+                                                <h2>Adicionar novo Local</h2>
+                                            </Link>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )
+                    }
+                    <div className="grid grid-cols-[300px_1fr] mt-auto -mb-2">
+                        <p className="my-auto">Mostrando 1 a 5 de 5 registros</p>
+                        <Paginator
+                            first={first}
+                            rows={rows}
+                            totalRecords={locaisFiltrados.length}
+                            onPageChange={(event: PaginatorPageChangeEvent) => {
+                                setFirst(event.first)
+                            }}
+                            className="my-auto"
+                        />
+                    </div>
+                </div>
             </div>
         </div>
     )
