@@ -12,6 +12,7 @@ export async function POST(request: NextRequest) {
             senha,
             role,
             contaAtiva,
+            localId,
         } = body;
 
         if (!nome || !email || !senha || !role) {
@@ -38,6 +39,24 @@ export async function POST(request: NextRequest) {
             );
         }
 
+        // Se foi informado um local, verifica se ele existe
+        if (localId) {
+            const localExistente = await prisma.local.findUnique({
+                where: {
+                    id: localId,
+                },
+            });
+
+            if (!localExistente) {
+                return NextResponse.json(
+                    {
+                        erro: "O local informado não existe.",
+                    },
+                    { status: 400 }
+                );
+            }
+        }
+
         const senhaHash = await bcrypt.hash(senha, 10);
 
         const usuario = await prisma.usuario.create({
@@ -47,6 +66,11 @@ export async function POST(request: NextRequest) {
                 senha: senhaHash,
                 role,
                 ativo: contaAtiva ?? true,
+                localId: localId || null,
+            },
+
+            include: {
+                local: true,
             },
         });
 
@@ -59,6 +83,9 @@ export async function POST(request: NextRequest) {
                     email: usuario.email,
                     role: usuario.role,
                     ativo: usuario.ativo,
+
+                    localId: usuario.localId,
+                    local: usuario.local,
                 },
             },
             { status: 201 }
@@ -98,6 +125,8 @@ export async function GET(request: NextRequest) {
                 role: true,
                 ativo: true,
                 createdAt: true,
+
+                localId: true,
             },
 
             orderBy: {

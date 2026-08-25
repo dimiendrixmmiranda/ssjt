@@ -127,8 +127,12 @@ model Usuario {
   nome      String
   email     String   @unique
   senha     String
-  role      Role     
+  role      Role
   ativo     Boolean  @default(true)
+
+  localId   String?
+  local     Local?   @relation(fields: [localId], references: [id])
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -268,6 +272,7 @@ model Local {
 
   descricao String?
 
+  usuarios Usuario[]
   tiposDeAtendimento LocalTipoAtendimento[]
   atendimentosOrigem Atendimento[] @relation("AtendimentoUnidadeOrigem")
 

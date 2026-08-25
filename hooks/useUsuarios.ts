@@ -1,18 +1,30 @@
+import { Usuario } from "@/app/generated/prisma/client";
 import { useCallback, useEffect, useState } from "react";
-export interface Usuario {
+
+type UsuarioComLocal = {
     id: string;
     nome: string;
     email: string;
-    role: "SUPER_ADMIN" | "ADMIN" | "ESTAGIARIO";
+    role: Usuario["role"];
     ativo: boolean;
-    createdAt: string;
-}
+    createdAt: Date | string;
+
+    localId: string | null;
+
+    local: {
+        id: string;
+        nome: string;
+        tipoDoLocal: string;
+        status: string;
+        cidade: string;
+    } | null;
+};
 
 export function useUsuarios(usuarioAtualId?: string) {
-    const [usuarios, setUsuarios] = useState<Usuario[]>([]);
+    const [usuarios, setUsuarios] = useState<UsuarioComLocal[]>([]);
     const [loading, setLoading] = useState(true);
     const [erro, setErro] = useState("");
-    
+
     const buscarUsuarios = useCallback(async () => {
         try {
             setLoading(true);
@@ -25,6 +37,8 @@ export function useUsuarios(usuarioAtualId?: string) {
             const response = await fetch(url);
 
             const data = await response.json();
+
+            console.log("USUARIOS DA API:", data);
 
             if (!response.ok) {
                 throw new Error(

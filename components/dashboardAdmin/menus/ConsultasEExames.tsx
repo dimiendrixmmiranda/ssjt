@@ -60,11 +60,13 @@ export default function ConsultasEExames() {
     const [especialidadeDoPrestador, setEspecialidadeDoPrestador] = useState<string>('')
 
     // Destino
-    const [categoriaAtendimento, setCategoriaDeAtendimento] = useState<CategoriaAtendimento | null>(null)
+    const [categoriaAtendimento, setCategoriaDeAtendimento] = useState('')
     const [especialidadeEncaminhada, setEspecialidadeEncaminhada] = useState('')
+    const [buscarEspecialidadeEncaminhada, setBuscarEspecialidadeEncaminhada] = useState('')
     const [tipoDeConsulta, setTipoDeConsulta] = useState('')
     const [situacao, setSituacao] = useState('')
-
+    const [dataDoRetorno, setDataDoRetorno] = useState('')
+    const [condicaoDeRetorno, setCondicaoDeRetorno] = useState('')
     console.log(categoriaAtendimento)
 
     const normalizarTexto = (texto: string) =>
@@ -72,6 +74,19 @@ export default function ConsultasEExames() {
             .normalize("NFD")
             .replace(/[\u0300-\u036f]/g, "")
             .toLowerCase()
+
+    const especialidadesEncaminhadasFiltradas = especialidades
+        .filter((especialidade) => {
+            if (!categoriaAtendimento) return false
+
+            return especialidade.categoria === categoriaAtendimento
+        })
+        .filter((especialidade) =>
+            normalizarTexto(especialidade.nome).includes(
+                normalizarTexto(buscarEspecialidadeEncaminhada)
+            )
+        )
+        .slice(0, 8)
 
     const prestadoresFiltrados = prestadores.filter((prestador) =>
         normalizarTexto(prestador.nome).includes(
@@ -117,12 +132,25 @@ export default function ConsultasEExames() {
         label: local.nome,
         valor: local.id
     }))
-    const opcoesUnidadesDeOrigem = unidadesSolicitantesDaCidade.map(local => ({
-        label: local.nome,
-        valor: local.id
-    }))
+
+    console.log(opcoesUnidades)
+
+    const opcoesUnidadesDeOrigem = [
+        {
+            label: 'Selecione',
+            valor: ''
+        },
+        ...unidadesSolicitantesDaCidade.map(local => ({
+            label: local.nome,
+            valor: local.id
+        }))
+    ]
 
     const opcoesEspecialidade = [
+        {
+            valor: '',
+            label: "Selecione"
+        },
         ...especialidades
             .filter((esp) => esp.id === prestadorAtual?.especialidadeId)
             .map((esp) => ({
@@ -131,36 +159,48 @@ export default function ConsultasEExames() {
             }))
     ]
 
-    const opcoesEspecialidadesFiltradas = especialidades
-        .filter((esp) => {
-            if (!categoriaAtendimento) return false
+    const opcoesEspecialidadesFiltradas = [
+        {
+            valor: '',
+            label: "Selecione"
+        },
+        ...especialidades
+            .filter((esp) => {
+                if (!categoriaAtendimento) return false
 
-            return esp.categoria === categoriaAtendimento
-        })
-        .map((esp) => ({
-            valor: esp.id,
-            label: esp.nome
-        }))
+                return esp.categoria === categoriaAtendimento
+            })
+            .map((esp) => ({
+                valor: esp.id,
+                label: esp.nome
+            }))
+    ]
+    console.log(condicaoDeRetorno)
 
-    const opcoesCategoriaDeAtendimento: {
-        valor: CategoriaAtendimento
-        label: string
-    }[] = [
-            {
-                valor: 'CONSULTA' as CategoriaAtendimento,
-                label: 'Consulta'
-            },
-            {
-                valor: 'PROCEDIMENTO' as CategoriaAtendimento,
-                label: 'Procedimento'
-            },
-            {
-                valor: 'CIRURGIA' as CategoriaAtendimento,
-                label: 'Cirurgia'
-            }
-        ]
+    const opcoesCategoriaDeAtendimento = [
+        {
+            valor: '',
+            label: 'Selecione'
+        },
+        {
+            valor: 'CONSULTA' as CategoriaAtendimento,
+            label: 'Consulta'
+        },
+        {
+            valor: 'PROCEDIMENTO' as CategoriaAtendimento,
+            label: 'Procedimento'
+        },
+        {
+            valor: 'CIRURGIA' as CategoriaAtendimento,
+            label: 'Cirurgia'
+        }
+    ]
 
     const opcoesDePrioridade = [
+        {
+            valor: '',
+            label: 'Selecione'
+        },
         {
             valor: 'URGENTE',
             label: 'Urgente'
@@ -176,6 +216,10 @@ export default function ConsultasEExames() {
     ]
     const opcoesTipoDeConsulta = [
         {
+            valor: '',
+            label: 'Selecione'
+        },
+        {
             valor: 'PRIMEIRA_CONSULTA',
             label: '1º Consulta'
         },
@@ -183,6 +227,22 @@ export default function ConsultasEExames() {
             valor: 'RETORNO',
             label: 'Retorno'
         },
+    ]
+
+    const opcoesCondicaoDeRetorno = [
+        {
+            label: 'Selecione',
+            valor: ''
+        },
+        {
+            label: 'Com exames prontos',
+            valor: 'COM_EXAMES_PRONTOS'
+        },
+        {
+            label: 'Determinado periodo de tempo',
+            valor: 'DETERMINADO_PERIODO_DE_TEMPO'
+        },
+
     ]
 
     const getPrioridadeClass = (prioridade: string) => {
@@ -327,7 +387,7 @@ export default function ConsultasEExames() {
                 </div>
                 <div className="mt-4">
                     <div className="w-full overflow-x-auto border border-zinc-200 rounded-t-lg rounded-b-lg text-sm">
-                        <ul className="grid grid-cols-[100px_160px_130px_240px_120px_130px_180px_250px_100px_250px_250px_150px_190px_180px_190px_120px] min-w-max">
+                        <ul className="grid grid-cols-[100px_160px_130px_240px_160px_130px_180px_250px_100px_250px_250px_150px_190px_180px_190px_120px] min-w-max">
                             <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
                                 <p>ID</p>
                             </li>
@@ -386,12 +446,12 @@ export default function ConsultasEExames() {
                                 return (
                                     <li key={i}>
                                         <ul className={`
-                                                grid grid-cols-[100px_160px_130px_240px_120px_130px_180px_250px_100px_250px_250px_150px_190px_180px_190px_120px] min-w-max
-                                                transition-all duration-200 font-semibold
-                                                ${item.categoriaAtendimento === 'CONSULTA' ? 'bg-blue-100 hover:bg-blue-200' : ''}
-                                                ${item.categoriaAtendimento === 'PROCEDIMENTO' ? 'bg-orange-100 hover:bg-orange-200' : ''}
-                                                ${item.categoriaAtendimento === 'CIRURGIA' ? 'bg-red-100 hover:bg-red-200' : ''}
-                                            `}>
+                                                    grid grid-cols-[100px_160px_130px_240px_160px_130px_180px_250px_100px_250px_250px_150px_190px_180px_190px_120px] min-w-max
+                                                    transition-all duration-200 font-semibold
+                                                    ${item.categoriaAtendimento === 'CONSULTA' ? 'bg-blue-100 hover:bg-blue-200' : ''}
+                                                    ${item.categoriaAtendimento === 'PROCEDIMENTO' ? 'bg-orange-100 hover:bg-orange-200' : ''}
+                                                    ${item.categoriaAtendimento === 'CIRURGIA' ? 'bg-red-100 hover:bg-red-200' : ''}
+                                                `}>
                                             <li className="truncate p-3 text-center border border-zinc-200">
                                                 {item.id}
                                             </li>
@@ -493,7 +553,7 @@ export default function ConsultasEExames() {
                         </div>
                     }
                     visible={visible}
-                    className="max-w-[95%] w-full"
+                    className="max-w-[95%] w-full 2xl:max-w-[1200px]"
                     onHide={() => {
                         if (!visible) return
                         setVisible(false)
@@ -525,34 +585,34 @@ export default function ConsultasEExames() {
                                 placeholder="Digite o nome, CPF ou Cartão SUS..."
                                 autoComplete="off"
                                 className="
-                                    w-full
-                                    border border-zinc-300
-                                    rounded-lg
-                                    px-3 py-2
-                                    outline-none
-                                    focus:border-verde
-                                    focus:ring-1
-                                    focus:ring-verde
-                                "
+                                        w-full
+                                        border border-zinc-300
+                                        rounded-lg
+                                        px-3 py-2
+                                        outline-none
+                                        focus:border-verde
+                                        focus:ring-1
+                                        focus:ring-verde
+                                    "
                             />
                             {/* RESULTADOS */}
                             {!pacienteAtual &&
                                 buscarPaciente.trim() !== '' &&
                                 (
                                     <div className="
-                                        absolute
-                                        top-full
-                                        left-0
-                                        right-0
-                                        z-50
-                                        mt-1
-                                        bg-white
-                                        border
-                                        border-zinc-200
-                                        rounded-lg
-                                        shadow-lg
-                                        overflow-hidden
-                                    ">
+                                            absolute
+                                            top-full
+                                            left-0
+                                            right-0
+                                            z-50
+                                            mt-1
+                                            bg-white
+                                            border
+                                            border-zinc-200
+                                            rounded-lg
+                                            shadow-lg
+                                            overflow-hidden
+                                        ">
                                         {pacientesFiltrados.length > 0 ? (
                                             pacientesFiltrados.map((paciente) => (
                                                 <button
@@ -563,14 +623,14 @@ export default function ConsultasEExames() {
                                                         setBuscarPaciente('')
                                                     }}
                                                     className="
-                                                        w-full
-                                                        text-left
-                                                        px-4 py-3
-                                                        hover:bg-green-50
-                                                        border-b
-                                                        border-zinc-100
-                                                        transition
-                                                    "
+                                                            w-full
+                                                            text-left
+                                                            px-4 py-3
+                                                            hover:bg-green-50
+                                                            border-b
+                                                            border-zinc-100
+                                                            transition
+                                                        "
                                                 >
                                                     <p className="font-semibold text-zinc-800">
                                                         {paciente.nome}
@@ -597,7 +657,6 @@ export default function ConsultasEExames() {
 
                         </div>
                         {/* DADOS DO PACIENTE SELECIONADO */}
-
                         <div className="border border-zinc-200 flex flex-col gap-4 mt-4 p-4 rounded-lg w-full">
                             <div className="flex items-center gap-2 text-xl font-bold">
                                 <FaUserPen className="text-3xl" />
@@ -664,17 +723,16 @@ export default function ConsultasEExames() {
                                             setBuscarPaciente('')
                                         }}
                                         className="
-                                                text-red-500
-                                                font-bold
-                                                hover:text-red-700
-                                            "
+                                                    text-red-500
+                                                    font-bold
+                                                    hover:text-red-700
+                                                "
                                     >
                                         Alterar
                                     </button>
                                 </ul>
                             </div>
                         </div>
-
                         {/* Origem */}
                         <div className="border border-zinc-200 flex flex-col gap-4 mt-4 p-4 rounded-lg w-full">
                             <div className="flex items-center gap-2 text-xl font-bold">
@@ -721,33 +779,33 @@ export default function ConsultasEExames() {
                                         placeholder="Digite o nome do prestador..."
                                         autoComplete="off"
                                         className="
-                                            w-full
-                                            border border-zinc-300
-                                            rounded-lg
-                                            px-3 py-2
-                                            outline-none
-                                            focus:border-verde
-                                            focus:ring-1
-                                            focus:ring-verde
-                                        "
+                                                w-full
+                                                border border-zinc-300
+                                                rounded-lg
+                                                px-3 py-2
+                                                outline-none
+                                                focus:border-verde
+                                                focus:ring-1
+                                                focus:ring-verde
+                                            "
                                     />
                                     {!prestadorAtual &&
                                         buscarPrestador.trim() !== '' && (
                                             <div
                                                 className="
-                                                absolute
-                                                top-full
-                                                left-0
-                                                right-0
-                                                z-50
-                                                mt-1
-                                                bg-white
-                                                border
-                                                border-zinc-200
-                                                rounded-lg
-                                                shadow-lg
-                                                overflow-hidden
-                                            "
+                                                    absolute
+                                                    top-full
+                                                    left-0
+                                                    right-0
+                                                    z-50
+                                                    mt-1
+                                                    bg-white
+                                                    border
+                                                    border-zinc-200
+                                                    rounded-lg
+                                                    shadow-lg
+                                                    overflow-hidden
+                                                "
                                             >
                                                 {prestadoresFiltrados.length > 0 ? (
                                                     prestadoresFiltrados.map((prestador) => (
@@ -759,14 +817,14 @@ export default function ConsultasEExames() {
                                                                 setBuscarPrestador('')
                                                             }}
                                                             className="
-                                                                w-full
-                                                                text-left
-                                                                px-4 py-3
-                                                                hover:bg-green-50
-                                                                border-b
-                                                                border-zinc-100
-                                                                transition
-                                                            "
+                                                                    w-full
+                                                                    text-left
+                                                                    px-4 py-3
+                                                                    hover:bg-green-50
+                                                                    border-b
+                                                                    border-zinc-100
+                                                                    transition
+                                                                "
                                                         >
                                                             <p className="font-semibold text-zinc-800">
                                                                 {prestador.nome}
@@ -816,17 +874,92 @@ export default function ConsultasEExames() {
                                     />
                                 </div>
                                 {/* Especialidade encaminhada */}
+                                {/* Vamos ter que trocar para um input de texto semelhante ao de medico solicitante */}
                                 <div>
-                                    <InputSelect
-                                        icone={<AiOutlineSelect />}
-                                        id="especialidadeEncaminhada"
-                                        label="Encaminho para especialidade:"
-                                        nome="especialidadeEncaminhada"
-                                        setValor={setEspecialidadeEncaminhada}
-                                        valor={especialidadeEncaminhada}
-                                        opcoes={opcoesEspecialidadesFiltradas}
-                                    // opcoesEncaminhoProcedimentos
-                                    />
+                                    <div className="flex flex-col gap-1 relative">
+                                        <label
+                                            htmlFor="buscarEspecialidadeEncaminhada"
+                                            className="font-semibold text-zinc-700"
+                                        >
+                                            Encaminho para especialidade:
+                                        </label>
+                                        <input
+                                            id="buscarEspecialidadeEncaminhada"
+                                            type="text"
+                                            value={
+                                                especialidadeEncaminhada
+                                                    ? especialidades.find(
+                                                        esp => esp.id === especialidadeEncaminhada
+                                                    )?.nome ?? ''
+                                                    : buscarEspecialidadeEncaminhada
+                                            }
+                                            onChange={(e) => {
+                                                setBuscarEspecialidadeEncaminhada(e.target.value)
+                                                setEspecialidadeEncaminhada('')
+                                            }}
+                                            placeholder="Digite a especialidade..."
+                                            autoComplete="off"
+                                            className="
+                                                w-full
+                                                border border-zinc-300
+                                                rounded-lg
+                                                px-3 py-2
+                                                outline-none
+                                                focus:border-verde
+                                                focus:ring-1
+                                                focus:ring-verde
+                                            "
+                                        />
+                                        {!especialidadeEncaminhada &&
+                                            buscarEspecialidadeEncaminhada.trim() !== '' && (
+                                                <div
+                                                    className="
+                                                        absolute
+                                                        top-full
+                                                        left-0
+                                                        right-0
+                                                        z-50
+                                                        mt-1
+                                                        bg-white
+                                                        border
+                                                        border-zinc-200
+                                                        rounded-lg
+                                                        shadow-lg
+                                                        overflow-hidden
+                                                    "
+                                                >
+                                                    {especialidadesEncaminhadasFiltradas.length > 0 ? (
+                                                        especialidadesEncaminhadasFiltradas.map((especialidade) => (
+                                                            <button
+                                                                type="button"
+                                                                key={especialidade.id}
+                                                                onClick={() => {
+                                                                    setEspecialidadeEncaminhada(especialidade.id)
+                                                                    setBuscarEspecialidadeEncaminhada('')
+                                                                }}
+                                                                className="
+                                                                    w-full
+                                                                    text-left
+                                                                    px-4 py-3
+                                                                    hover:bg-green-50
+                                                                    border-b
+                                                                    border-zinc-100
+                                                                    transition
+                                                                "
+                                                            >
+                                                                <p className="font-semibold text-zinc-800">
+                                                                    {especialidade.nome}
+                                                                </p>
+                                                            </button>
+                                                        ))
+                                                    ) : (
+                                                        <div className="px-4 py-3 text-sm text-zinc-500">
+                                                            Nenhuma especialidade encontrada.
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
+                                    </div>
                                 </div>
                                 <div>
                                     <InputSelect
@@ -852,6 +985,20 @@ export default function ConsultasEExames() {
                                         disabled={categoriaAtendimento !== 'CONSULTA'}
                                     />
                                 </div>
+                                <div className="mt-auto">
+                                    <InputSelect
+                                        icone={<AiOutlineSelect />}
+                                        id="condicaoDeRetorno"
+                                        label="Condição de Retorno"
+                                        nome="condicaoDeRetorno"
+                                        setValor={setCondicaoDeRetorno}
+                                        valor={condicaoDeRetorno}
+                                        opcoes={opcoesCondicaoDeRetorno}
+                                        disabled={tipoDeConsulta !== 'RETORNO'}
+                                    />
+                                </div>
+                                <InputData icone={<HiOutlineCalendarDateRange />} id="dataDoRetorno" label="Data do Retorno" nome="dataDoRetorno" placeholder="Data do Retorno" setValor={setDataDoRetorno} valor={dataDoRetorno} disabled={tipoDeConsulta !== 'RETORNO'}
+                                />
                                 {/* Falta data de retorno em caso de ser retorno */}
                             </div>
                         </div>
@@ -865,15 +1012,15 @@ export default function ConsultasEExames() {
                                     type="button"
                                     onClick={() => setVisible(false)}
                                     className="
-                                        px-5 py-2
-                                        rounded-lg
-                                        border border-verde
-                                        text-verde
-                                        font-bold
-                                        hover:bg-verde
-                                        hover:text-white
-                                        transition-all
-                                    "
+                                            px-5 py-2
+                                            rounded-lg
+                                            border border-verde
+                                            text-verde
+                                            font-bold
+                                            hover:bg-verde
+                                            hover:text-white
+                                            transition-all
+                                        "
                                 >
                                     Cancelar
                                 </button>
@@ -881,14 +1028,14 @@ export default function ConsultasEExames() {
                                     type="button"
                                     onClick={handleSubmit}
                                     className="
-                                        px-6 py-2
-                                        rounded-lg
-                                        bg-verde
-                                        text-white
-                                        font-bold
-                                        hover:bg-verde-escuro
-                                        transition-all
-                                    "
+                                            px-6 py-2
+                                            rounded-lg
+                                            bg-verde
+                                            text-white
+                                            font-bold
+                                            hover:bg-verde-escuro
+                                            transition-all
+                                        "
                                 >
                                     Salvar Atendimento
                                 </button>

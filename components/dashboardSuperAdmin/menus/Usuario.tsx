@@ -1,8 +1,11 @@
 import InputEmail from "@/components/assets/inputEmail";
 import InputNome from "@/components/assets/inputNome";
+import InputSelect from "@/components/assets/InputSelect";
 import InputSenha from "@/components/assets/inputSenha";
+import { useLocais } from "@/hooks/useLocais";
 import { useUsuarios } from "@/hooks/useUsuarios";
 import { FormEvent, useState } from "react";
+import { AiOutlineSelect } from "react-icons/ai";
 import { CiLock } from "react-icons/ci";
 import { FaRegTrashAlt, FaRegUser } from "react-icons/fa";
 import { FiUserPlus } from "react-icons/fi";
@@ -21,9 +24,12 @@ export default function Usuario() {
     const [erro, setErro] = useState("");
     const [sucesso, setSucesso] = useState("");
 
-    const usuarioAtualId = "ID_DO_USUARIO_LOGADO";
+    const { usuarios, loading } = useUsuarios();
+    const { locais } = useLocais()
+    const [unidadeDeTrabalho, setUnidadeDeTrabalho] = useState("")
 
-    const { usuarios, loading } = useUsuarios(usuarioAtualId);
+    console.log(unidadeDeTrabalho)
+
 
     if (loading) {
         return (
@@ -32,6 +38,19 @@ export default function Usuario() {
             </div>
         )
     }
+
+    const unidadesSolicitantesDaCidade = locais.filter(local => local.cep == '86455000')
+    const opcoesUnidadesDeOrigem = [
+        {
+            label: 'Selecione',
+            valor: ''
+        },
+        ...unidadesSolicitantesDaCidade.map(local => ({
+            label: local.nome,
+            valor: local.id
+        }))
+    ]
+
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -66,8 +85,11 @@ export default function Usuario() {
                     senha,
                     role: perfil,
                     contaAtiva,
+                    localId: unidadeDeTrabalho || null,
                 }),
             });
+
+            console.log(response)
 
             const data = await response.json();
 
@@ -112,26 +134,41 @@ export default function Usuario() {
                     <div className="flex flex-col gap-2">
                         <InputNome id="nome" label="Nome" nome="nome" valor={nome} setValor={setNome} icone={<MdDriveFileRenameOutline />} placeholder="Nome..." />
                         <InputEmail id="email" label="Email" nome="email" valor={email} setValor={setEmail} icone={<MdOutlineEmail />} placeholder="seuemail@gmail.com" />
-                        <div>
-                            <label htmlFor="perfil" className="2xl:text-lg">Tipo de conta</label>
-                            <div className="relative">
-                                <div className="absolute left-2 top-[50%]" style={{ transform: 'translate(0,-50%)' }}>
-                                    <ImProfile />
+
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                <label htmlFor="perfil" className="2xl:text-lg">Tipo de conta</label>
+                                <div className="relative">
+                                    <div className="absolute left-2 top-[50%]" style={{ transform: 'translate(0,-50%)' }}>
+                                        <ImProfile />
+                                    </div>
+                                    <select
+                                        name="perfil"
+                                        id="perfil"
+                                        value={perfil}
+                                        onChange={(e) => setPerfil(e.target.value)}
+                                        className="shadow-[0px_0px_2px_1px_#999] p-1 rounded-lg pl-8 text-lg transition-all duration-200 focus:outline-verde w-full"
+                                    >
+                                        <option value="">Selecione</option>
+                                        <option value="SUPER_ADMIN">Super Administrador</option>
+                                        <option value="ADMIN">Administrador</option>
+                                        <option value="ESTAGIARIO">Estagiário</option>
+                                    </select>
                                 </div>
-                                <select
-                                    name="perfil"
-                                    id="perfil"
-                                    value={perfil}
-                                    onChange={(e) => setPerfil(e.target.value)}
-                                    className="shadow-[0px_0px_2px_1px_#999] p-1 rounded-lg pl-8 text-lg transition-all duration-200 focus:outline-verde w-full"
-                                >
-                                    <option value="">Selecione</option>
-                                    <option value="SUPER_ADMIN">Super Administrador</option>
-                                    <option value="ADMIN">Administrador</option>
-                                    <option value="ESTAGIARIO">Estagiário</option>
-                                </select>
+                            </div>
+                            <div>
+                                <InputSelect
+                                    icone={<AiOutlineSelect />}
+                                    id="unidadeDeTrabalho"
+                                    label="Unidade de Origem"
+                                    nome="unidadeDeTrabalho"
+                                    setValor={setUnidadeDeTrabalho}
+                                    valor={unidadeDeTrabalho}
+                                    opcoes={opcoesUnidadesDeOrigem}
+                                />
                             </div>
                         </div>
+
                         <div className="grid grid-cols-2 gap-4">
                             <InputSenha id="senha" label="Senha" nome="senha" valor={senha} setValor={setSenha} icone={<CiLock />} placeholder="*********" />
                             <InputSenha id="confirmarSenha" label="Confirmar Senha" nome="confirmarSenha" valor={confirmarSenha} setValor={setConfirmarSenha} icone={<CiLock />} placeholder="*********" />
@@ -218,12 +255,12 @@ export default function Usuario() {
                                                     </div>
                                                     <div className="px-2 py-1 border border-[#306D29] flex items-center min-w-0 w-full">
                                                         <span className="truncate block w-full text-center">
-                                                            {user.ativo ? 'Ativo': 'Inativo'}
+                                                            {user.ativo ? 'Ativo' : 'Inativo'}
                                                         </span>
                                                     </div>
                                                     <div className="px-2 py-1 border border-[#306D29] flex items-center min-w-0 w-full">
                                                         <span className="truncate block w-full text-center">
-                                                            {user.ativo ? 'Ativo': 'Inativo'}
+                                                            {user.ativo ? 'Ativo' : 'Inativo'}
                                                         </span>
                                                     </div>
                                                     <div className="px-2 py-1 border border-[#306D29] truncate max-w-full grid grid-cols-3 gap-2">
