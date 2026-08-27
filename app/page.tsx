@@ -88,9 +88,9 @@ export default function Home() {
 				<Vortex
 					backgroundColor="#ffffff"
 					particleColor="#156B3A"
-					particleCount={1500}
+					particleCount={3000}
 					rangeY={400}
-					baseSpeed={0.1}
+					baseSpeed={5}
 					rangeSpeed={1}
 					baseRadius={2}
 					rangeRadius={1}
