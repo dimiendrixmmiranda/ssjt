@@ -181,6 +181,7 @@ model Paciente {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  idPaciente                   String?
   nome                         String
   nomeSocial                   String?
   declaroNaoPossuirNomeSocial  Boolean @default(false)

@@ -103,7 +103,7 @@ export default function DashboardAdmin({ usuario }: DashboardAdminProps) {
     return (
         <>
             <div className="grid grid-cols-[270px_1fr] grid-rows-[1fr_75px] w-full min-h-screen">
-                <nav className="w-full h-full grid grid-rows-[180px_1fr] border-r border-verde">
+                <nav className="w-full h-full row-span-2 grid grid-rows-[180px_1fr] border-r border-verde">
                     <div className="p-4">
                         <div className="relative w-full h-full bg-white">
                             <Image alt="Logo do sistema SSJT" src={'/logo/logo-sistema.png'} fill className="object-contain" />

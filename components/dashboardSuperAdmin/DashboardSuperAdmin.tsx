@@ -141,7 +141,7 @@ export default function DashboardSuperAdmin({ usuario }: DashboardSuperAdminProp
                         </div>
                     </div>
                     <div className="text-white w-full h-full p-4 flex flex-col gap-4 bg-verde-escuro">
-                        <div className="bg-verde-escuro text-white w-full h-full p-4 flex flex-col gap-4">
+                        <div className="bg-verde-escuro text-white w-full p-4 flex flex-col gap-4">
                             <div className="flex items-center gap-2 font-oswald ml-3 -mb-2">
                                 <p>Menu Principal</p>
                             </div>

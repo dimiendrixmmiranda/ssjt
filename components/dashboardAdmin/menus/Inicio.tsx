@@ -9,7 +9,7 @@ interface InicioProps {
 
 export default function Inicio({ usuario }: InicioProps) {
     return (
-        <div className="p-4 flex flex-col gap-4">
+        <div className="p-4 flex flex-col gap-4 max-h-[100vh]">
             <div className="mb-4">
                 <h3 className="text-2xl font-bold">Painel do {usuario.role}</h3>
             </div>
@@ -18,7 +18,7 @@ export default function Inicio({ usuario }: InicioProps) {
                     <Image alt="Brasao SSJT" src={'/logo/brasao.png'} fill className="object-contain" />
                 </div>
                 <div>
-                    <h4 className="text-2xl">Bem Vindoa, <b>{usuario.name}</b></h4>
+                    <h4 className="text-2xl">Bem Vindo (a), <b>{usuario.name}</b></h4>
                     <span>Gerencie todos os recursos do sistema de saúde.</span>
                 </div>
             </div>

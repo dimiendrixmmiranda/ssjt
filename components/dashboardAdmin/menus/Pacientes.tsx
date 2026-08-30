@@ -20,14 +20,21 @@ import { useLocais } from "@/hooks/useLocais";
 import { Condicao, CondicaoOption, TipoDeDado, TipoDeDadoOption } from "@/enum/enums";
 import InputData from "@/components/assets/InputData";
 import { HiOutlineCalendarDateRange } from "react-icons/hi2";
+import { Paginator, PaginatorPageChangeEvent } from "primereact/paginator";
+import { opcoesCorRaca, opcoesEstadoCivil, opcoesGrauEscolaridade, opcoesOrgaoEmissor, opcoesRh, opcoesSexo, opcoesSimNao, opcoesTipoSanguineo, opcoesUf, tiposDeCondicoes, tiposDeDados } from "@/utils/opcoesDeDados";
+import { limparCampos } from "@/utils/limparCampos";
 
 export default function Pacientes() {
+    const { pacientes } = usePacientes()
+    const { locais } = useLocais()
+
+    const locaisJoaquimTavora = locais.filter(local => local.cep === '86455000')
+
     const [tipoDeDado, setTipoDeDado] = useState<TipoDeDado>(TipoDeDado.NOME)
     const [condicao, setCondicao] = useState<Condicao>(Condicao.IGUAL)
     const [unidadeCliente, setUnidadeCliente] = useState("")
     const [valor, setValor] = useState('')
     const [visible, setVisible] = useState(false);
-
     const [valorBuscado, setValorBuscado] = useState('')
 
     // INFORMAÇÕES PESSOAIS
@@ -110,368 +117,202 @@ export default function Pacientes() {
     const [buscaRealizada, setBuscaRealizada] = useState(false)
     const [pacientesEncontrados, setPacientesEncontrados] = useState<any[]>([])
 
-    const tiposDeDados: TipoDeDadoOption[] = [
+    const [first, setFirst] = useState(0)
+    const [rows, setRows] = useState(5)
+
+    const pacientesDaPagina = pacientesEncontrados.slice(
+        first,
+        first + rows
+    )
+
+    const limparFormulario = () => {
+        limparCampos(
+            [setNome, ''],
+            [setNomeSocial, ''],
+            [setDeclaroNaoPossuirNomeSocial, false],
+            [setNomeDaMae, ''],
+            [setNomeDoPai, ''],
+            [setDataDeNascimento, ''],
+            [setSexo, ''],
+            [setEstadoCivil, ''],
+            [setCorRaca, ''],
+            [setCpf, ''],
+            [setCartaoSus, ''],
+            [setCodigoGsus, ''],
+            [setCodigoIds, ''],
+            [setNis, ''],
+            [setUnidadeDeSaude, ''],
+            [setTipoSanguineo, ''],
+            [setFatorRh, ''],
+            [setSituacaoFamiliar, ''],
+            [setPovoTradicional, ''],
+            [setReligiao, ''],
+            [setObservacoes, ''],
+
+            [setRg, ''],
+            [setOrgaoEmissor, ''],
+            [setUfRg, ''],
+            [setDataEmissaoRg, ''],
+            [setCpfRegular, ''],
+            [setCpfCns, ''],
+            [setCnsMae, ''],
+            [setOrientacaoRegCpf, ''],
+
+            [setTituloEleitor, ''],
+            [setZonaEleitoral, ''],
+            [setSecaoEleitoral, ''],
+
+            [setCtpsNumero, ''],
+            [setCtpsSerie, ''],
+            [setCtpsUf, ''],
+            [setCtpsDataEmissao, ''],
+            [setPisPasep, ''],
+
+            [setFrequentaEscola, ''],
+            [setEscola, ''],
+            [setSerieEscolar, ''],
+            [setGrauEscolaridade, ''],
+            [setCursoProfissionalizante, ''],
+
+            [setPaisOrigem, ''],
+            [setEntradaBrasil, ''],
+            [setNumeroPortaria, ''],
+            [setDataNaturalizacao, ''],
+
+            [setPais, ''],
+            [setUf, ''],
+            [setMunicipio, ''],
+            [setBairro, ''],
+            [setRua, ''],
+            [setNumero, ''],
+            [setComplemento, ''],
+
+            [setLatitude, ''],
+            [setLongitude, ''],
+            [setZona, ''],
+        )
+    }
+
+    const opcoesUnidades = [
         {
-            valor: TipoDeDado.NOME,
-            label: "Nome",
+            label: "Selecione",
+            valor: '',
         },
+        ...locaisJoaquimTavora.map(local => ({
+            label: local.nome,
+            valor: local.id
+        }))
+    ]
+    
+    const opcoesUnidadeDeSaudePaciente = [
         {
-            valor: TipoDeDado.CPF,
-            label: "CPF",
+            label: "Selecione",
+            valor: ''
         },
-        {
-            valor: TipoDeDado.CARTAO_SUS,
-            label: "Cartão SUS",
-        },
-    ]
-    const tiposDeCondicoes: CondicaoOption[] = [
-        {
-            valor: Condicao.CONTEM,
-            label: "Contem",
-        },
-        {
-            valor: Condicao.IGUAL,
-            label: "Igual",
-        },
-        {
-            valor: Condicao.MAIOR_QUE,
-            label: "Maior Que",
-        },
-        {
-            valor: Condicao.MENOR_QUE,
-            label: "Menor Que",
-        },
-    ]
-    const opcoesSexo = [
-        { valor: "MASCULINO", label: "Masculino" },
-        { valor: "FEMININO", label: "Feminino" },
-        { valor: "OUTRO", label: "Outro" },
-        { valor: "NAO_INFORMADO", label: "Não informado" },
-    ]
-    const opcoesEstadoCivil = [
-        { valor: "SOLTEIRO", label: "Solteiro(a)" },
-        { valor: "CASADO", label: "Casado(a)" },
-        { valor: "DIVORCIADO", label: "Divorciado(a)" },
-        { valor: "VIUVO", label: "Viúvo(a)" },
-        { valor: "SEPARADO", label: "Separado(a)" },
-        { valor: "UNIAO_ESTAVEL", label: "União estável" },
-    ]
-    const opcoesCorRaca = [
-        { valor: "BRANCA", label: "Branca" },
-        { valor: "PRETA", label: "Preta" },
-        { valor: "PARDA", label: "Parda" },
-        { valor: "AMARELA", label: "Amarela" },
-        { valor: "INDIGENA", label: "Indígena" },
-        { valor: "NAO_INFORMADO", label: "Não informado" },
-    ]
-    const opcoesTipoSanguineo = [
-        { valor: "A", label: "A" },
-        { valor: "B", label: "B" },
-        { valor: "AB", label: "AB" },
-        { valor: "O", label: "O" },
-    ]
-    const opcoesRh = [
-        { valor: "POSITIVO", label: "Positivo (+)" },
-        { valor: "NEGATIVO", label: "Negativo (-)" },
-    ]
-    const opcoesSimNao = [
-        { valor: "SIM", label: "Sim" },
-        { valor: "NAO", label: "Não" },
-    ]
-    const opcoesUf = [
-        { valor: "AC", label: "Acre - AC" },
-        { valor: "AL", label: "Alagoas - AL" },
-        { valor: "AP", label: "Amapá - AP" },
-        { valor: "AM", label: "Amazonas - AM" },
-        { valor: "BA", label: "Bahia - BA" },
-        { valor: "CE", label: "Ceará - CE" },
-        { valor: "DF", label: "Distrito Federal - DF" },
-        { valor: "ES", label: "Espírito Santo - ES" },
-        { valor: "GO", label: "Goiás - GO" },
-        { valor: "MA", label: "Maranhão - MA" },
-        { valor: "MT", label: "Mato Grosso - MT" },
-        { valor: "MS", label: "Mato Grosso do Sul - MS" },
-        { valor: "MG", label: "Minas Gerais - MG" },
-        { valor: "PA", label: "Pará - PA" },
-        { valor: "PB", label: "Paraíba - PB" },
-        { valor: "PR", label: "Paraná - PR" },
-        { valor: "PE", label: "Pernambuco - PE" },
-        { valor: "PI", label: "Piauí - PI" },
-        { valor: "RJ", label: "Rio de Janeiro - RJ" },
-        { valor: "RN", label: "Rio Grande do Norte - RN" },
-        { valor: "RS", label: "Rio Grande do Sul - RS" },
-        { valor: "RO", label: "Rondônia - RO" },
-        { valor: "RR", label: "Roraima - RR" },
-        { valor: "SC", label: "Santa Catarina - SC" },
-        { valor: "SP", label: "São Paulo - SP" },
-        { valor: "SE", label: "Sergipe - SE" },
-        { valor: "TO", label: "Tocantins - TO" },
-    ]
-    const opcoesGrauEscolaridade = [
-        { valor: "FUNDAMENTAL_INCOMPLETO", label: "Fundamental incompleto" },
-        { valor: "FUNDAMENTAL_COMPLETO", label: "Fundamental completo" },
-        { valor: "MEDIO_INCOMPLETO", label: "Médio incompleto" },
-        { valor: "MEDIO_COMPLETO", label: "Médio completo" },
-        { valor: "SUPERIOR_INCOMPLETO", label: "Superior incompleto" },
-        { valor: "SUPERIOR_COMPLETO", label: "Superior completo" },
-        { valor: "POS_GRADUACAO", label: "Pós-graduação" },
-        { valor: "MESTRADO", label: "Mestrado" },
-        { valor: "DOUTORADO", label: "Doutorado" },
+        ...locaisJoaquimTavora.map(local => ({
+            label: local.nome,
+            valor: local.id
+        }))
     ]
 
     const handleSubmit = async () => {
         try {
-            // =====================================
-            // VALIDAÇÕES
-            // =====================================
 
             if (!nome.trim()) {
                 throw new Error("Informe o nome do paciente.")
             }
-
             if (!nomeDaMae.trim()) {
                 throw new Error("Informe o nome da mãe.")
             }
-
             if (!dataDeNascimento) {
                 throw new Error("Informe a data de nascimento.")
             }
-
             if (!sexo) {
                 throw new Error("Selecione o sexo.")
             }
-
             if (!cpf.trim()) {
                 throw new Error("Informe o CPF.")
             }
-
             if (!telefone1.trim()) {
                 throw new Error("Informe o telefone principal.")
             }
 
-            // =====================================
-            // OBJETO DO PACIENTE
-            // Compatível com o schema.prisma atual
-            // =====================================
-
             const paciente = {
-                // =====================================
-                // INFORMAÇÕES PESSOAIS
-                // =====================================
-
                 nome: nome.trim(),
-
                 nomeSocial:
                     declaroNaoPossuirNomeSocial
                         ? null
                         : nomeSocial.trim() || null,
-
                 declaroNaoPossuirNomeSocial,
+                nomeDaMae: nomeDaMae.trim(),
+                nomeDoPai: nomeDoPai.trim() || null,
+                dataDeNascimento: dataDeNascimento,
+                sexo: sexo || null,
+                estadoCivil: estadoCivil || null,
+                corRaca: corRaca || null,
+                cpf: cpf.trim(),
+                cartaoSus: cartaoSus.trim() || null,
+                nis: nis.trim() || null,
+                unidadeDeSaude: unidadeDeSaude || null,
+                codigoGsus: codigoGsus.trim() || null,
+                codigoIds: codigoIds.trim() || null,
+                tipoSanguineo: tipoSanguineo || null,
+                fatorRh: fatorRh || null,
+                observacoes: observacoes.trim() || null,
 
-                nomeDaMae:
-                    nomeDaMae.trim(),
+                telefone1: telefone1.trim(),
+                telefone2: telefone2.trim() || null,
+                email: email.trim() || null,
 
-                nomeDoPai:
-                    nomeDoPai.trim() || null,
+                rg: rg.trim() || null,
+                orgaoEmissor: orgaoEmissor || null,
+                ufRg: ufRg || null,
+                dataEmissaoRg: dataEmissaoRg || null,
+                cpfRegular: cpfRegular || null,
+                cpfCns: cpfCns.trim() || null,
+                cnsMae: cnsMae.trim() || null,
+                orientacaoRegCpf: orientacaoRegCpf || null,
 
-                dataDeNascimento:
-                    dataDeNascimento,
+                tituloEleitor: tituloEleitor.trim() || null,
+                zonaEleitoral: zonaEleitoral.trim() || null,
+                secaoEleitoral: secaoEleitoral.trim() || null,
 
-                sexo:
-                    sexo || null,
+                ctpsNumero: ctpsNumero.trim() || null,
+                ctpsSerie: ctpsSerie.trim() || null,
+                ctpsUf: ctpsUf || null,
+                ctpsDataEmissao: ctpsDataEmissao || null,
+                pisPasep: pisPasep.trim() || null,
 
-                estadoCivil:
-                    estadoCivil || null,
+                frequentaEscola: frequentaEscola || null,
+                escola: escola.trim() || null,
+                serieEscolar: serieEscolar.trim() || null,
+                grauEscolaridade: grauEscolaridade || null,
+                cursoProfissionalizante: cursoProfissionalizante.trim() || null,
 
-                corRaca:
-                    corRaca || null,
+                paisOrigem: paisOrigem.trim() || null,
+                entradaBrasil: entradaBrasil || null,
+                numeroPortaria: numeroPortaria.trim() || null,
+                dataNaturalizacao: dataNaturalizacao || null,
 
-                cpf:
-                    cpf.trim(),
-
-                cartaoSus:
-                    cartaoSus.trim() || null,
-
-                nis:
-                    nis.trim() || null,
-
-                unidadeDeSaude:
-                    unidadeDeSaude || null,
-
-                codigoGsus:
-                    codigoGsus.trim() || null,
-
-                codigoIds:
-                    codigoIds.trim() || null,
-
-                tipoSanguineo:
-                    tipoSanguineo || null,
-
-                fatorRh:
-                    fatorRh || null,
-
-                observacoes:
-                    observacoes.trim() || null,
-
-                // =====================================
-                // CONTATO
-                // =====================================
-
-                telefone1:
-                    telefone1.trim(),
-
-                telefone2:
-                    telefone2.trim() || null,
-
-                email:
-                    email.trim() || null,
-
-                // =====================================
-                // DOCUMENTOS
-                // =====================================
-
-                rg:
-                    rg.trim() || null,
-
-                orgaoEmissor:
-                    orgaoEmissor || null,
-
-                ufRg:
-                    ufRg || null,
-
-                dataEmissaoRg:
-                    dataEmissaoRg || null,
-
-                cpfRegular:
-                    cpfRegular || null,
-
-                cpfCns:
-                    cpfCns.trim() || null,
-
-                cnsMae:
-                    cnsMae.trim() || null,
-
-                orientacaoRegCpf:
-                    orientacaoRegCpf || null,
-
-                // =====================================
-                // TÍTULO DE ELEITOR
-                // =====================================
-
-                tituloEleitor:
-                    tituloEleitor.trim() || null,
-
-                zonaEleitoral:
-                    zonaEleitoral.trim() || null,
-
-                secaoEleitoral:
-                    secaoEleitoral.trim() || null,
-
-                // =====================================
-                // TRABALHISTA
-                // =====================================
-
-                ctpsNumero:
-                    ctpsNumero.trim() || null,
-
-                ctpsSerie:
-                    ctpsSerie.trim() || null,
-
-                ctpsUf:
-                    ctpsUf || null,
-
-                ctpsDataEmissao:
-                    ctpsDataEmissao || null,
-
-                pisPasep:
-                    pisPasep.trim() || null,
-
-                // =====================================
-                // EDUCAÇÃO
-                // =====================================
-
-                frequentaEscola:
-                    frequentaEscola || null,
-
-                escola:
-                    escola.trim() || null,
-
-                serieEscolar:
-                    serieEscolar.trim() || null,
-
-                grauEscolaridade:
-                    grauEscolaridade || null,
-
-                cursoProfissionalizante:
-                    cursoProfissionalizante.trim() || null,
-
-                // =====================================
-                // NATURALIZAÇÃO
-                // =====================================
-
-                paisOrigem:
-                    paisOrigem.trim() || null,
-
-                entradaBrasil:
-                    entradaBrasil || null,
-
-                numeroPortaria:
-                    numeroPortaria.trim() || null,
-
-                dataNaturalizacao:
-                    dataNaturalizacao || null,
-
-                // =====================================
-                // ENDEREÇO / LOCALIDADE
-                // =====================================
-
-                pais:
-                    pais || null,
-
-                uf:
-                    uf || null,
-
-                municipio:
-                    municipio.trim() || null,
-
-                cep:
-                    null,
-
-                bairro:
-                    bairro.trim() || null,
-
-                rua:
-                    rua.trim() || null,
-
-                numero:
-                    numero.trim() || null,
-
-                complemento:
-                    complemento.trim() || null,
-
-                zona:
-                    zona || null,
-
-                // =====================================
-                // GEOLOCALIZAÇÃO
-                // =====================================
+                pais: pais || null,
+                uf: uf || null,
+                municipio: municipio.trim() || null,
+                cep: null,
+                bairro: bairro.trim() || null,
+                rua: rua.trim() || null,
+                numero: numero.trim() || null,
+                complemento: complemento.trim() || null,
+                zona: zona || null,
 
                 latitude:
                     latitude.trim()
                         ? Number(latitude)
                         : null,
-
                 longitude:
                     longitude.trim()
                         ? Number(longitude)
                         : null,
             }
-
-            console.log("DADOS ENVIADOS:", paciente)
-
-            // =====================================
-            // ENVIA PARA API
-            // =====================================
 
             const response = await fetch("/api/pacientes", {
                 method: "POST",
@@ -482,11 +323,6 @@ export default function Pacientes() {
             })
 
             const data = await response.json()
-
-            // =====================================
-            // ERRO DA API
-            // =====================================
-
             if (!response.ok) {
                 throw new Error(
                     data.erro ||
@@ -494,31 +330,20 @@ export default function Pacientes() {
                     "Erro ao cadastrar paciente."
                 )
             }
-
-            // =====================================
-            // SUCESSO
-            // =====================================
-
             console.log(
                 "PACIENTE CADASTRADO:",
                 data
             )
-
             alert(
                 "Paciente cadastrado com sucesso!"
             )
-
             setVisible(false)
-
             limparFormulario()
-
         } catch (error) {
-
             console.error(
                 "ERRO AO CADASTRAR PACIENTE:",
                 error
             )
-
             alert(
                 error instanceof Error
                     ? error.message
@@ -527,136 +352,15 @@ export default function Pacientes() {
         }
     }
 
-    const limparFormulario = () => {
-
-        // =====================================
-        // INFORMAÇÕES PESSOAIS
-        // =====================================
-
-        setNome('')
-        setNomeSocial('')
-        setDeclaroNaoPossuirNomeSocial(false)
-        setNomeDaMae('')
-        setNomeDoPai('')
-        setDataDeNascimento('')
-        setSexo('')
-        setEstadoCivil('')
-        setCorRaca('')
-        setCpf('')
-        setCartaoSus('')
-        setCodigoGsus('')
-        setCodigoIds('')
-        setNis('')
-        setUnidadeDeSaude('')
-        setTipoSanguineo('')
-        setFatorRh('')
-        setSituacaoFamiliar('')
-        setPovoTradicional('')
-        setReligiao('')
-        setObservacoes('')
-
-
-        // =====================================
-        // DOCUMENTOS
-        // =====================================
-
-        setRg('')
-        setOrgaoEmissor('')
-        setUfRg('')
-        setDataEmissaoRg('')
-        setCpfRegular('')
-        setCpfCns('')
-        setCnsMae('')
-        setOrientacaoRegCpf('')
-
-
-        // =====================================
-        // TÍTULO DE ELEITOR
-        // =====================================
-
-        setTituloEleitor('')
-        setZonaEleitoral('')
-        setSecaoEleitoral('')
-
-
-        // =====================================
-        // TRABALHISTA
-        // =====================================
-
-        setCtpsNumero('')
-        setCtpsSerie('')
-        setCtpsUf('')
-        setCtpsDataEmissao('')
-        setPisPasep('')
-
-
-        // =====================================
-        // EDUCAÇÃO
-        // =====================================
-
-        setFrequentaEscola('')
-        setEscola('')
-        setSerieEscolar('')
-        setGrauEscolaridade('')
-        setCursoProfissionalizante('')
-
-
-        // =====================================
-        // NATURALIZAÇÃO
-        // =====================================
-
-        setPaisOrigem('')
-        setEntradaBrasil('')
-        setNumeroPortaria('')
-        setDataNaturalizacao('')
-
-
-        // =====================================
-        // LOCALIDADE
-        // =====================================
-
-        setPais('')
-        setUf('')
-        setMunicipio('')
-        setBairro('')
-        setRua('')
-        setNumero('')
-        setComplemento('')
-
-
-        // =====================================
-        // GEOLOCALIZAÇÃO
-        // =====================================
-
-        setLatitude('')
-        setLongitude('')
-        setZona('')
-    }
-
-    const { pacientes } = usePacientes()
-    const { locais } = useLocais()
-
-    const locaisFiltrados = locais.filter(local => local.cep === '86455000')
-    const opcoesUnidades = locaisFiltrados.map(local => ({
-        label: local.nome,
-        valor: local.id
-    }))
-    const opcoesUnidadeDeSaudePaciente = locaisFiltrados.map(local => ({
-        label: local.nome,
-        valor: local.id
-    }))
-
-
-
     const handleBuscar = () => {
         setBuscaRealizada(true)
         setValorBuscado(valor)
+        setFirst(0)
 
         if (!tipoDeDado) {
             alert("Selecione o tipo de busca.")
             return
         }
-
         if (!valor.trim()) {
             alert("Digite um valor para realizar a busca.")
             setPacientesEncontrados([])
@@ -664,17 +368,23 @@ export default function Pacientes() {
         }
 
         const termo = valor.trim().toLowerCase()
-
         let resultados: Paciente[] = []
-
         switch (tipoDeDado) {
-            case TipoDeDado.NOME:
-                resultados = pacientes.filter((paciente) =>
-                    paciente.nome
-                        ?.toLowerCase()
-                        .includes(termo)
-                )
+            case TipoDeDado.NOME: {
+                const termos = termo
+                    .split(/\s+/)
+                    .filter(Boolean)
+
+                resultados = pacientes.filter((paciente) => {
+                    const nome = paciente.nome?.toLowerCase() ?? ""
+
+                    return termos.every((palavra) =>
+                        nome.includes(palavra)
+                    )
+                })
+
                 break
+            }
 
             case TipoDeDado.CPF:
                 resultados = pacientes.filter((paciente) =>
@@ -696,197 +406,244 @@ export default function Pacientes() {
                 resultados = []
         }
 
+        if (unidadeCliente) {
+            resultados = resultados.filter(
+                (paciente) =>
+                    paciente.unidadeDeSaude === unidadeCliente
+            )
+        }
+
         setPacientesEncontrados(resultados)
     }
 
-
     return (
-        <div className="p-4 flex flex-col gap-4 font-arimo text-verde-escuro max-w-[1500px]">
-            <div className="flex items-center gap-2">
-                <AiOutlineUserAdd className="text-6xl" />
-                <div className="">
-                    <h3 className="text-2xl font-bold">Pacientes</h3>
-                    <span>Busque, adicione, edite um novo paciente.</span>
-                </div>
-            </div>
-            <div className="shadow-[0px_0px_2px_1px_#999] rounded-lg p-4 flex flex-col gap-3">
-                <div className="flex justify-between">
-                    <div className="flex items-center gap-2 text-xl font-bold">
-                        <RiMenuSearchLine />
-                        <h2>Realize uma nova busca</h2>
-                    </div>
-                    <button onClick={() => setVisible(true)} className="flex items-center cursor-pointer gap-2 text-xl font-bold border border-verde p-1 rounded-lg px-3 transition-all duration-300 hover:bg-verde hover:text-white">
-                        <IoAdd />
-                        <h2>Adicionar Cliente</h2>
-                    </button>
-                </div>
-                <div className="grid grid-cols-[160px_160px_200px_1fr_140px] gap-2">
-                    <InputSelect
-                        icone={<AiOutlineSelect />}
-                        id="tipoDeDado"
-                        label="Tipo de busca"
-                        nome="tipoDeDado"
-                        setValor={setTipoDeDado}
-                        valor={tipoDeDado}
-                        opcoes={tiposDeDados}
-                    />
-                    <InputSelect
-                        icone={<AiOutlineSelect />}
-                        id="condicao"
-                        label="Condição"
-                        nome="condicao"
-                        setValor={setCondicao}
-                        valor={condicao}
-                        opcoes={tiposDeCondicoes}
-                    />
-                    <InputSelect
-                        icone={<AiOutlineSelect />}
-                        id="unidadeCliente"
-                        label="Unidade do cliente"
-                        nome="unidadeCliente"
-                        setValor={setUnidadeCliente}
-                        valor={unidadeCliente}
-                        opcoes={opcoesUnidades}
-                    />
-                    {/* vai ter que ser um input especial depois */}
-                    <InputTexto icone={<MdDriveFileRenameOutline />} id="valor" label="Valor" nome="valor" placeholder="valor..." setValor={setValor} valor={valor} />
-                    <button className="font-bold bg-verde text-white h-fit mt-auto py-2 rounded-lg" onClick={handleBuscar}>Buscar</button>
-                </div>
-            </div>
-            <div className="shadow-[0px_0px_2px_1px_#999] rounded-lg p-4 flex flex-col gap-3">
-                <div>
-                    <div className="flex items-center gap-2 text-xl font-bold">
-                        <RiMenuSearchLine />
-                        <h2>Resultado da sua busca:</h2>
+        <div className="row-span-2 overflow-hidden">
+            <div className="p-4 flex flex-col gap-4 font-arimo text-verde-escuro h-full">
+                <div className="flex items-center gap-2">
+                    <AiOutlineUserAdd className="text-6xl" />
+                    <div className="">
+                        <h3 className="text-2xl font-bold">Pacientes</h3>
+                        <span>Busque, adicione, edite um novo paciente.</span>
                     </div>
                 </div>
-                {
-                    pacientesEncontrados.length > 0 ? (
-                        <div className="flex flex-col w-full">
-                            <ul className="grid grid-cols-9 w-full">
-                                <li className="text-sm font-semibold border border-verde px-2 py-1">
-                                    <p>Nome</p>
-                                </li>
-                                <li className="text-sm font-semibold border border-verde px-2 py-1">
-                                    <p>Nascimento</p>
-                                </li>
-                                <li className="text-sm font-semibold border border-verde px-2 py-1">
-                                    <p>Idade</p>
-                                </li>
-                                <li className="text-sm font-semibold border border-verde px-2 py-1">
-                                    <p>Nome da mãe</p>
-                                </li>
-                                <li className="text-sm font-semibold border border-verde px-2 py-1">
-                                    <p>CPF</p>
-                                </li>
-                                <li className="text-sm font-semibold border border-verde px-2 py-1">
-                                    <p>Cartão Sus</p>
-                                </li>
-                                <li className="text-sm font-semibold border border-verde px-2 py-1">
-                                    <p>Un. do Cliente</p>
-                                </li>
-                                <li className="text-sm font-semibold border border-verde px-2 py-1">
-                                    <p>Código IDS</p>
-                                </li>
-                                <li className="text-sm font-semibold border border-verde px-2 py-1">
-                                    <p>Código IMP</p>
-                                </li>
-                            </ul>
-                            <ul className="flex flex-col gap-2">
-                                {
-                                    pacientesEncontrados.map(((paciente: Paciente) => {
-                                        console.log(paciente)
-                                        return (
-                                            <li key={paciente.id} className="grid grid-cols-9 w-full">
-                                                <li className="text-sm font-semibold border border-verde px-2 py-1">
-                                                    <p>{paciente.nome}</p>
-                                                </li>
-                                                <li className="text-sm font-semibold border border-verde px-2 py-1 flex justify-center items-center">
-                                                    <p>
-                                                        {new Date(paciente.dataDeNascimento).toLocaleDateString("pt-BR")}
-                                                    </p>
-                                                </li>
-                                                <li className="text-sm font-semibold border border-verde px-2 py-1 text-center">
-                                                    <p>{calcularIdade(paciente.dataDeNascimento)}</p>
-                                                </li>
-                                                <li className="text-sm font-semibold border border-verde px-2 py-1">
-                                                    <p>{paciente.nomeDaMae}</p>
-                                                </li>
-                                                <li className="text-sm font-semibold border border-verde px-2 py-1 flex justify-center items-center">
-                                                    <p>{paciente.cpf}</p>
-                                                </li>
-                                                <li className="text-sm font-semibold border border-verde px-2 py-1">
-                                                    <p>{paciente.cartaoSus ? paciente.cartaoSus : 'Não Informado'}</p>
-                                                </li>
-                                                <li className="text-sm font-semibold border border-verde px-2 py-1">
-                                                    <p>Un. do Cliente</p>
-                                                </li>
-                                                <li className="text-sm font-semibold border border-verde px-2 py-1 flex items-center justify-center">
-                                                    <p>{paciente.codigoIds}</p>
-                                                </li>
-                                                <li className="text-sm font-semibold border border-verde px-2 py-1 flex items-center justify-center">
-                                                    <p>{paciente.codigoGsus}</p>
-                                                </li>
-                                            </li>
-                                        )
-                                    }))
-                                }
-                            </ul>
+                <div className="shadow-[0px_0px_2px_1px_var(--verde-escuro)] rounded-lg p-4 flex flex-col gap-3">
+                    <div className="flex justify-between">
+                        <div className="flex items-center gap-2 text-xl font-bold">
+                            <RiMenuSearchLine />
+                            <h2>Realize uma nova busca</h2>
                         </div>
-                    ) : (
-                        <div className="grid grid-cols-2 gap-6">
-                            <div className="relative w-full h-full">
-                                <Image alt="image" src={'/mulher.png'} fill className="object-contain" />
-                            </div>
-                            <div className="text-verde-escuro flex flex-col gap-4">
-                                <div className="flex items-center gap-2 text-lg">
-                                    <GiMagnifyingGlass />
-                                    <h5>Resultado da busca:</h5>
+                        <button onClick={() => setVisible(true)} className="flex items-center cursor-pointer gap-2 text-xl font-bold border border-verde p-1 rounded-lg px-3 transition-all duration-300 hover:bg-verde hover:text-white">
+                            <IoAdd />
+                            <h2>Adicionar Cliente</h2>
+                        </button>
+                    </div>
+                    <div className="grid grid-cols-[160px_160px_200px_1fr_140px] gap-2">
+                        <InputSelect
+                            icone={<AiOutlineSelect />}
+                            id="tipoDeDado"
+                            label="Tipo de busca"
+                            nome="tipoDeDado"
+                            setValor={setTipoDeDado}
+                            valor={tipoDeDado}
+                            opcoes={tiposDeDados}
+                        />
+                        <InputSelect
+                            icone={<AiOutlineSelect />}
+                            id="condicao"
+                            label="Condição"
+                            nome="condicao"
+                            setValor={setCondicao}
+                            valor={condicao}
+                            opcoes={tiposDeCondicoes}
+                        />
+                        <InputSelect
+                            icone={<AiOutlineSelect />}
+                            id="unidadeCliente"
+                            label="Unidade do cliente"
+                            nome="unidadeCliente"
+                            setValor={setUnidadeCliente}
+                            valor={unidadeCliente}
+                            opcoes={opcoesUnidades}
+                        />
+                        {/* vai ter que ser um input especial depois */}
+                        <InputTexto icone={<MdDriveFileRenameOutline />} id="valor" label="Valor" nome="valor" placeholder={`${tipoDeDado}`} setValor={setValor} valor={valor} />
+                        <button className="font-bold bg-verde text-white h-fit mt-auto py-2 rounded-lg" onClick={handleBuscar}>Buscar</button>
+                    </div>
+                </div>
+                <div className="shadow-[0px_0px_2px_1px_var(--verde-escuro)] rounded-lg p-4 flex flex-col gap-3 h-full">
+                    <div>
+                        <div className="flex items-center gap-2 text-xl font-bold">
+                            <RiMenuSearchLine />
+                            <h2>Resultado da sua busca:</h2>
+                        </div>
+                    </div>
+                    {
+                        pacientesDaPagina.length > 0 ? (
+                            <>
+                                <div className="flex flex-col w-full rounded-t-lg overflow-x-scroll pb-3 h-full">
+                                    <ul className="grid grid-cols-[130px_170px_110px_140px_170px_130px_130px_150px_170px_110px_110px_180px] w-full h-fit">
+                                        <li className="text-sm font-semibold border border-zinc-200 px-2 py-1 rounded-tl-lg text-center">
+                                            <p>ID</p>
+                                        </li>
+                                        <li className="text-sm font-semibold border border-zinc-200 px-2 py-1">
+                                            <p>Nome</p>
+                                        </li>
+                                        <li className="text-sm font-semibold border border-zinc-200 px-2 py-1 text-center">
+                                            <p>Nascimento</p>
+                                        </li>
+                                        <li className="text-sm font-semibold border border-zinc-200 px-2 py-1 text-center">
+                                            <p>Idade</p>
+                                        </li>
+                                        <li className="text-sm font-semibold border border-zinc-200 px-2 py-1">
+                                            <p>Nome da mãe</p>
+                                        </li>
+                                        <li className="text-sm font-semibold border border-zinc-200 px-2 py-1">
+                                            <p>Sexo</p>
+                                        </li>
+                                        <li className="text-sm font-semibold border border-zinc-200 px-2 py-1 text-center">
+                                            <p>CPF</p>
+                                        </li>
+                                        <li className="text-sm font-semibold border border-zinc-200 px-2 py-1 text-center">
+                                            <p>Cartão Sus</p>
+                                        </li>
+                                        <li className="text-sm font-semibold border border-zinc-200 px-2 py-1 text-center">
+                                            <p>Un. do Cliente</p>
+                                        </li>
+                                        <li className="text-sm font-semibold border border-zinc-200 px-2 py-1 text-center">
+                                            <p>Código IDS</p>
+                                        </li>
+                                        <li className="text-sm font-semibold border border-zinc-200 px-2 py-1">
+                                            <p>Código GSUS</p>
+                                        </li>
+                                        <li className="text-sm font-semibold border border-zinc-200 px-2 py-1 rounded-tr-lg">
+                                            <p>Endereço do Paciente</p>
+                                        </li>
+                                    </ul>
+                                    <ul className="flex flex-col h-full">
+                                        {
+                                            pacientesEncontrados.map(((paciente: Paciente) => {
+                                                const unidadeDoCliente = locais.find(local => local.id === paciente.unidadeDeSaude)
+                                                return (
+                                                    <li key={paciente.id} className="grid grid-cols-[130px_170px_110px_140px_170px_130px_130px_150px_170px_110px_110px_180px] w-full duration-200 cursor-pointer transition-all hover:bg-verde-escuro/20">
+                                                        <div className="text-sm font-semibold border border-zinc-200 px-2 py-1 flex items-center justify-center">
+                                                            <p>{paciente.idPaciente}</p>
+                                                        </div>
+                                                        <div className="text-sm font-semibold border border-zinc-200 px-2 py-1 flex items-center">
+                                                            <p className="leading-4 uppercase">{paciente.nome}</p>
+                                                        </div>
+                                                        <div className="text-sm font-semibold border border-zinc-200 px-2 py-1 flex justify-center items-center">
+                                                            <p>
+                                                                {new Date(paciente.dataDeNascimento).toLocaleDateString("pt-BR")}
+                                                            </p>
+                                                        </div>
+                                                        <div className="text-sm font-semibold border border-zinc-200 px-2 py-1 text-center">
+                                                            <p>{calcularIdade(paciente.dataDeNascimento)}</p>
+                                                        </div>
+                                                        <div className="text-sm font-semibold border border-zinc-200 px-2 py-1 flex items-center">
+                                                            <p className="leading-4 uppercase">{paciente.nomeDaMae}</p>
+                                                        </div>
+                                                        <div className="text-sm font-semibold border border-zinc-200 px-2 py-1 flex items-center">
+                                                            <p>{paciente.sexo}</p>
+                                                        </div>
+                                                        <div className="text-sm font-semibold border border-zinc-200 px-2 py-1 flex justify-center items-center">
+                                                            <p>{paciente.cpf}</p>
+                                                        </div>
+                                                        <div className="text-sm font-semibold border border-zinc-200 px-2 py-1 flex justify-center items-center">
+                                                            <p>{paciente.cartaoSus ? paciente.cartaoSus : 'Não Informado'}</p>
+                                                        </div>
+                                                        <div className="text-sm font-semibold border border-zinc-200 px-2 py-1 flex items-center justify-center text-center">
+                                                            <p>{unidadeDoCliente?.nome}</p>
+                                                        </div>
+                                                        <div className="text-sm font-semibold border border-zinc-200 px-2 py-1 flex items-center justify-center">
+                                                            <p>{paciente.codigoIds}</p>
+                                                        </div>
+                                                        <div className="text-sm font-semibold border border-zinc-200 px-2 py-1 flex items-center justify-center">
+                                                            <p>{paciente.codigoGsus}</p>
+                                                        </div>
+                                                        <div className="text-sm font-semibold border border-zinc-200 px-2 py-1 flex items-center justify-center">
+                                                            <p className="leading-4 line-clamp-2">Rua das Hortências, 100 - Centro de Eventosaaaaaaaaaaaaaaaa</p>
+                                                        </div>
+                                                    </li>
+                                                )
+                                            }))
+                                        }
+                                    </ul>
                                 </div>
-                                <div>
-                                    <h3 className="text-verde-escuro text-3xl font-bold 2xl:text-4xl 3xl:text-[44px]">Nenhum Paciente Encontrado</h3>
-                                    <span className="text-zinc-500 2xl:text-lg">Não encontramos nenhum paciente com os critérios informados: "{valor}"</span>
+                                {/* Paginator */}
+                                <div className="relative w-full">
+                                    {pacientesEncontrados.length > 0 && (
+                                        <div className="border-t border-zinc-200">
+                                            <Paginator
+                                                first={first}
+                                                rows={rows}
+                                                totalRecords={pacientesEncontrados.length}
+                                                rowsPerPageOptions={[5, 10, 20, 50]}
+                                                onPageChange={(event: PaginatorPageChangeEvent) => {
+                                                    setFirst(event.first)
+                                                    setRows(event.rows)
+                                                }}
+                                                template="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown CurrentPageReport"
+                                                currentPageReportTemplate="{first} até {last} de {totalRecords} pacientes"
+                                            />
+                                        </div>
+                                    )}
                                 </div>
-                                <div className="border border-verde-escuro rounded-lg p-4 bg-verde-escuro/10 flex flex-col gap-2">
-                                    <div className="flex items-center text-xl font-bold">
-                                        <RiLightbulbLine />
-                                        <p>Dicas para uma nova busca:</p>
+                            </>
+                        ) : (
+                            <div className="grid grid-cols-2 gap-6 my-auto row-span-2 2xl:px-10 3xl:px-16 4xl:px-30">
+                                <div className="relative w-full h-full">
+                                    <Image alt="image" src={'/mulher.png'} fill className="object-contain" />
+                                </div>
+                                <div className="text-verde-escuro flex flex-col gap-4">
+                                    <div className="flex items-center gap-2 text-lg">
+                                        <GiMagnifyingGlass />
+                                        <h5>Resultado da busca:</h5>
                                     </div>
                                     <div>
-                                        <ul>
-                                            <li className="flex items-center gap-2">
-                                                <IoIosCheckmarkCircle />
-                                                <p>Verifique se os dados estão corretos.</p>
-                                            </li>
-                                            <li className="flex items-center gap-2">
-                                                <IoIosCheckmarkCircle />
-                                                <p>Tente usar menos filtros na pesquisa</p>
-                                            </li>
-                                            <li className="flex items-center gap-2">
-                                                <IoIosCheckmarkCircle />
-                                                <p>Utilize parte do nome ou CPF.</p>
-                                            </li>
-                                            <li className="flex items-center gap-2">
-                                                <IoIosCheckmarkCircle />
-                                                <p>Confira se não há espaços extras.</p>
-                                            </li>
-                                        </ul>
+                                        <h3 className="text-verde-escuro text-3xl font-bold 2xl:text-4xl 3xl:text-[44px]">Nenhum Paciente Encontrado</h3>
+                                        <span className="text-zinc-500 flex flex-col 2xl:text-lg">Não encontramos nenhum paciente com os critérios informados: <b>"{valor}"</b></span>
                                     </div>
-                                    <div className="grid grid-cols-2 gap-4 max-w-[600px] ml-auto">
-                                        <button className="flex items-center justify-center cursor-pointer gap-2 text-lg font-bold border border-red-500 p-1 rounded-lg px-3 transition-all duration-300 bg-red-500 text-white hover:bg-white hover:text-red-500">
-                                            <TiDeleteOutline />
-                                            <h2>Limpar Filtros</h2>
-                                        </button>
-                                        <button onClick={() => setVisible(true)} className="flex items-center justify-center cursor-pointer gap-2 text-lg font-bold border border-verde p-1 rounded-lg px-3 transition-all duration-300 hover:bg-verde hover:text-white">
-                                            <IoAdd />
-                                            <h2>Adicionar Cliente</h2>
-                                        </button>
+                                    <div className="border border-verde-escuro rounded-lg p-4 bg-verde-escuro/10 flex flex-col gap-2">
+                                        <div className="flex items-center text-xl font-bold">
+                                            <RiLightbulbLine />
+                                            <p>Dicas para uma nova busca:</p>
+                                        </div>
+                                        <div>
+                                            <ul>
+                                                <li className="flex items-center gap-2">
+                                                    <IoIosCheckmarkCircle />
+                                                    <p>Verifique se os dados estão corretos.</p>
+                                                </li>
+                                                <li className="flex items-center gap-2">
+                                                    <IoIosCheckmarkCircle />
+                                                    <p>Tente usar menos filtros na pesquisa</p>
+                                                </li>
+                                                <li className="flex items-center gap-2">
+                                                    <IoIosCheckmarkCircle />
+                                                    <p>Utilize parte do nome ou CPF.</p>
+                                                </li>
+                                                <li className="flex items-center gap-2">
+                                                    <IoIosCheckmarkCircle />
+                                                    <p>Confira se não há espaços extras.</p>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-4 max-w-[600px] ml-auto">
+                                            <button className="flex items-center justify-center cursor-pointer gap-2 text-lg font-bold border border-red-500 p-1 rounded-lg px-3 transition-all duration-300 bg-red-500 text-white hover:bg-white hover:text-red-500">
+                                                <TiDeleteOutline />
+                                                <h2>Limpar Filtros</h2>
+                                            </button>
+                                            <button onClick={() => setVisible(true)} className="flex items-center justify-center cursor-pointer gap-2 text-lg font-bold border border-verde p-1 rounded-lg px-3 transition-all duration-300 hover:bg-verde hover:text-white">
+                                                <IoAdd />
+                                                <h2>Adicionar Cliente</h2>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    )
-                }
+                        )
+                    }
+                </div>
             </div>
             <div id="dialogNovoPaciente">
                 <Dialog
@@ -1171,12 +928,7 @@ export default function Pacientes() {
                                     nome="orgaoEmissor"
                                     setValor={setOrgaoEmissor}
                                     valor={orgaoEmissor}
-                                    opcoes={[
-                                        { valor: "SSP", label: "SSP" },
-                                        { valor: "DETRAN", label: "DETRAN" },
-                                        { valor: "POLICIA_CIVIL", label: "Polícia Civil" },
-                                        { valor: "OUTRO", label: "Outro" },
-                                    ]}
+                                    opcoes={opcoesOrgaoEmissor}
                                 />
                                 <InputSelect
                                     icone={<AiOutlineSelect />}

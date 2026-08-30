@@ -53,6 +53,8 @@ export async function POST(req: Request) {
                 // ==========================================
 
                 nome: body.nome.trim(),
+                
+                idPaciente: body.codigoIds.trim(),
 
                 nomeSocial:
                     body.nomeSocial?.trim() || null,

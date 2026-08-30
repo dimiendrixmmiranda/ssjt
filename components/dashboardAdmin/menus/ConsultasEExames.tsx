@@ -18,25 +18,27 @@ import InputData from "@/components/assets/InputData";
 import Image from "next/image";
 import { useAtendimentos } from "@/hooks/useAtendimento";
 import calcularIdade from "@/utils/calcularIdade";
+import { Paginator } from "primereact/paginator";
+import { tiposDeCondicoes, tiposDeDados } from "@/utils/opcoesDeDados";
+import DadosNaoEncontrados from "@/components/assets/dadosNaoEncontrados";
 
 export default function ConsultasEExames() {
-    const [buttonActive, setButtonActive] = useState<'todos' | 'consultas' | 'exames' | 'cirurgias'>('todos')
-    const [visible, setVisible] = useState(false);
-
     const { pacientes } = usePacientes()
     const { prestadores } = usePrestadores()
     const { especialidades } = useEspecialidades()
     const { locais } = useLocais()
     const { atendimentos } = useAtendimentos()
 
+    const [buttonActive, setButtonActive] = useState<'todos' | 'consultas' | 'exames' | 'cirurgias'>('todos')
+    const [visible, setVisible] = useState(false);
+
     const [buscarPaciente, setBuscarPaciente] = useState('')
     const [buscarPrestador, setBuscarPrestador] = useState('')
+    const [pesquisa, setPesquisa] = useState(false)
 
     const pacientesFiltrados = pacientes.filter((paciente) => {
         if (!buscarPaciente.trim()) return false
-
         const busca = buscarPaciente.toLowerCase().trim()
-
         return (
             paciente.nome.toLowerCase().includes(busca) ||
             paciente.cpf?.includes(busca) ||
@@ -44,11 +46,11 @@ export default function ConsultasEExames() {
         )
     }).slice(0, 8)
 
-    const unidadesSolicitantesDaCidade = locais.filter(local => local.cep == '86455000')
+    const locaisJoaquimTavora = locais.filter(local => local.cep == '86455000')
 
     // filtros de busca
     const [tipoDeDado, setTipoDeDado] = useState<TipoDeDado>(TipoDeDado.NOME)
-    const [condicao, setCondicao] = useState<Condicao>(Condicao.IGUAL)
+    const [condicao, setCondicao] = useState<Condicao>(Condicao.CONTEM)
     const [unidadeCliente, setUnidadeCliente] = useState("")
     const [valorDaBusca, setValorDaBusca] = useState("")
 
@@ -67,13 +69,18 @@ export default function ConsultasEExames() {
     const [situacao, setSituacao] = useState('')
     const [dataDoRetorno, setDataDoRetorno] = useState('')
     const [condicaoDeRetorno, setCondicaoDeRetorno] = useState('')
-    console.log(categoriaAtendimento)
+
+    const [atendimentosEncontrados, setAtendimentosEncontrados] = useState<typeof atendimentos>([])
+    const [first, setFirst] = useState(0)
+    const [rows, setRows] = useState(5)
 
     const normalizarTexto = (texto: string) =>
         texto
             .normalize("NFD")
             .replace(/[\u0300-\u036f]/g, "")
             .toLowerCase()
+            .replace(/\s+/g, " ")
+            .trim()
 
     const especialidadesEncaminhadasFiltradas = especialidades
         .filter((especialidade) => {
@@ -94,53 +101,23 @@ export default function ConsultasEExames() {
         )
     )
 
-    const tiposDeCondicoes: CondicaoOption[] = [
+    const opcoesUnidades = [
         {
-            valor: Condicao.CONTEM,
-            label: "Contem",
+            label: "Selecione",
+            valor: ''
         },
-        {
-            valor: Condicao.IGUAL,
-            label: "Igual",
-        },
-        {
-            valor: Condicao.MAIOR_QUE,
-            label: "Maior Que",
-        },
-        {
-            valor: Condicao.MENOR_QUE,
-            label: "Menor Que",
-        },
+        ...locaisJoaquimTavora.map(local => ({
+            label: local.nome,
+            valor: local.id
+        }))
     ]
-
-    const tiposDeDados: TipoDeDadoOption[] = [
-        {
-            valor: TipoDeDado.NOME,
-            label: "Nome",
-        },
-        {
-            valor: TipoDeDado.CPF,
-            label: "CPF",
-        },
-        {
-            valor: TipoDeDado.CARTAO_SUS,
-            label: "Cartão SUS",
-        },
-    ]
-
-    const opcoesUnidades = unidadesSolicitantesDaCidade.map(local => ({
-        label: local.nome,
-        valor: local.id
-    }))
-
-    console.log(opcoesUnidades)
 
     const opcoesUnidadesDeOrigem = [
         {
             label: 'Selecione',
             valor: ''
         },
-        ...unidadesSolicitantesDaCidade.map(local => ({
+        ...locaisJoaquimTavora.map(local => ({
             label: local.nome,
             valor: local.id
         }))
@@ -175,7 +152,6 @@ export default function ConsultasEExames() {
                 label: esp.nome
             }))
     ]
-    console.log(condicaoDeRetorno)
 
     const opcoesCategoriaDeAtendimento = [
         {
@@ -214,6 +190,7 @@ export default function ConsultasEExames() {
             label: 'Normal'
         },
     ]
+
     const opcoesTipoDeConsulta = [
         {
             valor: '',
@@ -258,10 +235,27 @@ export default function ConsultasEExames() {
         }
     }
 
-    useEffect(() => {
-        setEspecialidadeEncaminhada('')
-    }, [categoriaAtendimento])
+    const atendimentosFiltrados = atendimentosEncontrados.filter((atendimento) => {
+        switch (buttonActive) {
+            case 'consultas':
+                return atendimento.categoriaAtendimento === 'CONSULTA'
 
+            case 'exames':
+                return atendimento.categoriaAtendimento === 'PROCEDIMENTO'
+
+            case 'cirurgias':
+                return atendimento.categoriaAtendimento === 'CIRURGIA'
+
+            case 'todos':
+            default:
+                return true
+        }
+    })
+
+    const atendimentosPorPagina = atendimentosFiltrados.slice(
+        first,
+        first + rows
+    )
 
     const handleSubmit = async () => {
         if (!pacienteAtual) {
@@ -305,8 +299,6 @@ export default function ConsultasEExames() {
             console.log("Atendimento cadastrado:", data);
 
             setVisible(false);
-
-            // limpar formulário aqui
         } catch (error) {
             console.error(error);
 
@@ -316,10 +308,107 @@ export default function ConsultasEExames() {
                     : "Erro ao cadastrar atendimento."
             );
         }
-    };
+    }
+
+    const handleBuscar = () => {
+        const valor = valorDaBusca.trim()
+
+        if (!valor) {
+            alert("Informe um valor para realizar a busca.")
+            return
+        }
+
+        const busca = normalizarTexto(valor)
+
+        const resultados = atendimentos.filter((atendimento) => {
+            const paciente = pacientes.find(
+                (paciente) => paciente.id === atendimento.pacienteId
+            )
+
+            if (!paciente) return false
+
+            // Filtro por unidade
+            if (
+                unidadeCliente &&
+                atendimento.unidadeDeOrigemId !== unidadeCliente
+            ) {
+                return false
+            }
+
+            let valorDoCampo = ""
+
+            switch (tipoDeDado) {
+                case TipoDeDado.NOME:
+                    valorDoCampo = paciente.nome ?? ""
+                    break
+
+                case TipoDeDado.CPF:
+                    valorDoCampo = paciente.cpf ?? ""
+                    break
+
+                case TipoDeDado.CARTAO_SUS:
+                    valorDoCampo = paciente.cartaoSus ?? ""
+                    break
+            }
+
+            const campo = normalizarTexto(valorDoCampo)
+
+            console.log({
+                paciente: paciente.nome,
+                tipoDeDado,
+                campo,
+                busca,
+                condicao,
+                igual: campo === busca,
+                contem: campo.includes(busca),
+            })
+
+            // Nome
+            if (tipoDeDado === TipoDeDado.NOME) {
+                if (condicao === Condicao.IGUAL) {
+                    return campo === busca
+                }
+
+                if (condicao === Condicao.CONTEM) {
+                    return campo.includes(busca)
+                }
+            }
+
+            // CPF / CNS
+            if (
+                tipoDeDado === TipoDeDado.CPF ||
+                tipoDeDado === TipoDeDado.CARTAO_SUS
+            ) {
+                const campoNumerico = campo.replace(/\D/g, "")
+                const buscaNumerica = busca.replace(/\D/g, "")
+
+                if (condicao === Condicao.IGUAL) {
+                    return campoNumerico === buscaNumerica
+                }
+
+                if (condicao === Condicao.CONTEM) {
+                    return campoNumerico.includes(buscaNumerica)
+                }
+            }
+
+            return false
+        })
+
+        setAtendimentosEncontrados(resultados)
+        setFirst(0)
+        setPesquisa(true)
+    }
+
+    useEffect(() => {
+        setEspecialidadeEncaminhada('')
+    }, [categoriaAtendimento])
+
+    useEffect(() => {
+        setFirst(0)
+    }, [buttonActive])
 
     return (
-        <div className="p-4 flex flex-col gap-4 font-arimo text-verde-escuro overflow-hidden">
+        <div className="p-4 flex flex-col gap-4 font-arimo text-verde-escuro overflow-hidden row-span-2">
             <div className="flex justify-between">
                 <div className="flex items-center gap-2">
                     <FaLaptopMedical className="text-6xl" />
@@ -333,10 +422,9 @@ export default function ConsultasEExames() {
                     <p>Nova Consulta/Exame/Cirurgia</p>
                 </button>
             </div>
-
             {/* filtros */}
             <div>
-                <div className="grid grid-cols-[160px_160px_200px_1fr_140px] gap-4">
+                <div className="grid grid-cols-[160px_160px_200px_1fr_140px] gap-4 2xl:grid-cols-[160px_160px_260px_1fr_140px]">
                     <InputSelect
                         icone={<AiOutlineSelect />}
                         id="tipoDeDado"
@@ -366,184 +454,233 @@ export default function ConsultasEExames() {
                     />
                     {/* vai ter que ser um input especial depois */}
                     <InputTexto icone={<MdDriveFileRenameOutline />} id="valor" label="Valor" nome="valor" placeholder="valor..." setValor={setValorDaBusca} valor={valorDaBusca} />
-                    <button className="font-bold bg-verde text-white h-fit mt-auto py-2 rounded-lg">Buscar</button>
+                    <button
+                        type="button"
+                        onClick={handleBuscar}
+                        className="
+                            font-bold
+                            bg-verde
+                            text-white
+                            h-fit
+                            mt-auto
+                            py-2
+                            px-5
+                            rounded-lg
+                            hover:bg-verde-escuro
+                            transition-all
+                        "
+                    >
+                        Buscar
+                    </button>
                 </div>
             </div>
 
-            <div>
-                <div className="border border-zinc-200 rounded-t-lg">
-                    <button onClick={() => setButtonActive('todos')} className={`p-4 font-bold ${buttonActive === 'todos' ? 'text-verde border-b-3 border-verde' : 'text-gray-700'}`}>
-                        <p>Todos</p>
-                    </button>
-                    <button onClick={() => setButtonActive('consultas')} className={`p-4 font-bold ${buttonActive === 'consultas' ? 'text-verde border-b-3 border-verde' : 'text-gray-700'}`}>
-                        <p>Consultas</p>
-                    </button>
-                    <button onClick={() => setButtonActive('exames')} className={`p-4 font-bold ${buttonActive === 'exames' ? 'text-verde border-b-3 border-verde' : 'text-gray-700'}`}>
-                        <p>Exames</p>
-                    </button>
-                    <button onClick={() => setButtonActive('cirurgias')} className={`p-4 font-bold ${buttonActive === 'cirurgias' ? 'text-verde border-b-3 border-verde' : 'text-gray-700'}`}>
-                        <p>Cirurgias</p>
-                    </button>
-                </div>
-                <div className="mt-4">
-                    <div className="w-full overflow-x-auto border border-zinc-200 rounded-t-lg rounded-b-lg text-sm">
-                        <ul className="grid grid-cols-[100px_160px_130px_240px_160px_130px_180px_250px_100px_250px_250px_150px_190px_180px_190px_120px] min-w-max">
-                            <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
-                                <p>ID</p>
-                            </li>
-                            <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
-                                <p>Data da Solicitação</p>
-                            </li>
-                            <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
-                                <p>Prioridade</p>
-                            </li>
-                            <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
-                                <p>Paciente</p>
-                            </li>
-                            <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
-                                <p>Tipo</p>
-                            </li>
-                            <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
-                                <p>Situação</p>
-                            </li>
-                            <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
-                                <p>Data de Nascimento</p>
-                            </li>
-                            <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
-                                <p>Nome da Mãe</p>
-                            </li>
-                            <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
-                                <p>Idade</p>
-                            </li>
-                            <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
-                                <p>Profissional Solicitante</p>
-                            </li>
-                            <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
-                                <p>Especialidade/Procedimento</p>
-                            </li>
-                            <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
-                                <p>Data de Retorno</p>
-                            </li>
-                            <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
-                                <p>Unidade de Saúde</p>
-                            </li>
-                            <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
-                                <p>Data da Realização</p>
-                            </li>
-                            <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
-                                <p>Local da Realização</p>
-                            </li>
-                            <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
-                                <p>Ações</p>
-                            </li>
-                        </ul>
-                        <ul className="text-zinc-800">
-                            {atendimentos.map((item, i) => {
-                                console.log(item)
-                                const paciente = pacientes.find(pac => pac.id === item.pacienteId)
-                                const medicoSolicitante = prestadores.find(pres => pres.id === item.medicoSolicitanteId)
+            {
+                pesquisa ? (
+                    <>
+                        <div className="h-full flex flex-col">
+                            <div className="border border-verde-escuro rounded-t-lg pb-2 px-2">
+                                <button onClick={() => setButtonActive('todos')} className={`p-3 font-bold ${buttonActive === 'todos' ? 'text-verde border-b-3 border-verde' : 'text-gray-700'}`}>
+                                    <p>Todos</p>
+                                </button>
+                                <button onClick={() => setButtonActive('consultas')} className={`p-3 font-bold ${buttonActive === 'consultas' ? 'text-verde border-b-3 border-verde' : 'text-gray-700'}`}>
+                                    <p>Consultas</p>
+                                </button>
+                                <button onClick={() => setButtonActive('exames')} className={`p-3 font-bold ${buttonActive === 'exames' ? 'text-verde border-b-3 border-verde' : 'text-gray-700'}`}>
+                                    <p>Exames</p>
+                                </button>
+                                <button onClick={() => setButtonActive('cirurgias')} className={`p-3 font-bold ${buttonActive === 'cirurgias' ? 'text-verde border-b-3 border-verde' : 'text-gray-700'}`}>
+                                    <p>Cirurgias</p>
+                                </button>
+                            </div>
+                            <div className="mt-4 h-full">
+                                {
+                                    atendimentosPorPagina.length > 0 ? (
+                                        <div className="w-full overflow-x-auto border border-verde-escuro rounded-t-lg rounded-b-lg text-sm">
+                                            <ul className="grid grid-cols-[130px_160px_120px_240px_160px_130px_180px_250px_100px_250px_250px_150px_190px_180px_190px_120px] min-w-max">
+                                                <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
+                                                    <p>ID da Consulta</p>
+                                                </li>
+                                                <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
+                                                    <p>Data da Solicitação</p>
+                                                </li>
+                                                <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
+                                                    <p>Prioridade</p>
+                                                </li>
+                                                <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
+                                                    <p>Paciente</p>
+                                                </li>
+                                                <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
+                                                    <p>Tipo</p>
+                                                </li>
+                                                <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
+                                                    <p>Situação</p>
+                                                </li>
+                                                <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
+                                                    <p>Data de Nascimento</p>
+                                                </li>
+                                                <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
+                                                    <p>Nome da Mãe</p>
+                                                </li>
+                                                <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
+                                                    <p>Idade</p>
+                                                </li>
+                                                <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
+                                                    <p>Profissional Solicitante</p>
+                                                </li>
+                                                <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
+                                                    <p>Especialidade/Procedimento</p>
+                                                </li>
+                                                <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
+                                                    <p>Data de Retorno</p>
+                                                </li>
+                                                <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
+                                                    <p>Unidade de Saúde</p>
+                                                </li>
+                                                <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
+                                                    <p>Data da Realização</p>
+                                                </li>
+                                                <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
+                                                    <p>Local da Realização</p>
+                                                </li>
+                                                <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
+                                                    <p>Ações</p>
+                                                </li>
+                                            </ul>
+                                            <ul className="text-zinc-800">
+                                                {atendimentosPorPagina.map((item, i) => {
+                                                    const paciente = pacientes.find(pac => pac.id === item.pacienteId)
+                                                    const medicoSolicitante = prestadores.find(pres => pres.id === item.medicoSolicitanteId)
 
-                                return (
-                                    <li key={i}>
-                                        <ul className={`
-                                                    grid grid-cols-[100px_160px_130px_240px_160px_130px_180px_250px_100px_250px_250px_150px_190px_180px_190px_120px] min-w-max
+                                                    return (
+                                                        <li key={i}>
+                                                            <ul className={`
+                                                    grid grid-cols-[130px_160px_120px_240px_160px_130px_180px_250px_100px_250px_250px_150px_190px_180px_190px_120px] min-w-max
                                                     transition-all duration-200 font-semibold
                                                     ${item.categoriaAtendimento === 'CONSULTA' ? 'bg-blue-100 hover:bg-blue-200' : ''}
                                                     ${item.categoriaAtendimento === 'PROCEDIMENTO' ? 'bg-orange-100 hover:bg-orange-200' : ''}
                                                     ${item.categoriaAtendimento === 'CIRURGIA' ? 'bg-red-100 hover:bg-red-200' : ''}
                                                 `}>
-                                            <li className="truncate p-3 text-center border border-zinc-200">
-                                                {item.id}
-                                            </li>
+                                                                <li className="truncate p-3 text-center border border-zinc-200">
+                                                                    {item.id}
+                                                                </li>
 
-                                            <li className="truncate p-3 text-center border border-zinc-200 whitespace-nowrap">
-                                                {new Date(item.dataDeEntrada)
-                                                    .toISOString()
-                                                    .split("T")[0]
-                                                    .split("-")
-                                                    .reverse()
-                                                    .join("/")}
-                                            </li>
+                                                                <li className="truncate p-3 text-center border border-zinc-200 whitespace-nowrap">
+                                                                    {new Date(item.dataDeEntrada)
+                                                                        .toISOString()
+                                                                        .split("T")[0]
+                                                                        .split("-")
+                                                                        .reverse()
+                                                                        .join("/")}
+                                                                </li>
 
-                                            <li className="truncate p-3 text-center border border-zinc-200">
-                                                <span
-                                                    className={`inline-flex px-3 py-1 rounded-full text-xs font-bold ${getPrioridadeClass(
-                                                        item.situacao
-                                                    )}`}
-                                                >
-                                                    {item.situacao}
-                                                </span>
-                                            </li>
+                                                                <li className="truncate p-3 text-center border border-zinc-200">
+                                                                    <span
+                                                                        className={`inline-flex px-3 py-1 rounded-full text-xs font-bold ${getPrioridadeClass(
+                                                                            item.situacao
+                                                                        )}`}
+                                                                    >
+                                                                        {item.situacao}
+                                                                    </span>
+                                                                </li>
 
-                                            <li className="truncate p-3 border border-zinc-200">
-                                                {paciente?.nome}
-                                            </li>
+                                                                <li className="truncate p-3 border border-zinc-200">
+                                                                    {paciente?.nome}
+                                                                </li>
 
-                                            <li className="truncate p-3 text-center border border-zinc-200">
-                                                {item.categoriaAtendimento}
-                                            </li>
+                                                                <li className="truncate p-3 text-center border border-zinc-200">
+                                                                    {item.categoriaAtendimento}
+                                                                </li>
 
-                                            <li className="truncate p-3 text-center border border-zinc-200">
-                                                Em espera
-                                            </li>
+                                                                <li className="truncate p-3 text-center border border-zinc-200">
+                                                                    Em espera
+                                                                </li>
 
-                                            <li className="truncate p-3 text-center border border-zinc-200 whitespace-nowrap">
-                                                {paciente?.dataDeNascimento
-                                                    ? new Date(paciente.dataDeNascimento)
-                                                        .toISOString()
-                                                        .split("T")[0]
-                                                        .split("-")
-                                                        .reverse()
-                                                        .join("/")
-                                                    : "-"}
-                                            </li>
+                                                                <li className="truncate p-3 text-center border border-zinc-200 whitespace-nowrap">
+                                                                    {paciente?.dataDeNascimento
+                                                                        ? new Date(paciente.dataDeNascimento)
+                                                                            .toISOString()
+                                                                            .split("T")[0]
+                                                                            .split("-")
+                                                                            .reverse()
+                                                                            .join("/")
+                                                                        : "-"}
+                                                                </li>
 
-                                            <li className="truncate p-3 border border-zinc-200">
-                                                {paciente?.nomeDaMae}
-                                            </li>
+                                                                <li className="truncate p-3 border border-zinc-200">
+                                                                    {paciente?.nomeDaMae}
+                                                                </li>
 
-                                            <li className="truncate p-3 text-center border border-zinc-200">
-                                                {calcularIdade(paciente?.dataDeNascimento)}
-                                                22
-                                            </li>
+                                                                <li className="truncate p-3 text-center border border-zinc-200">
+                                                                    {calcularIdade(paciente?.dataDeNascimento)}
+                                                                    22
+                                                                </li>
 
-                                            <li className="truncate p-3 border border-zinc-200">
-                                                {medicoSolicitante?.nome}
-                                            </li>
+                                                                <li className="truncate p-3 border border-zinc-200">
+                                                                    {medicoSolicitante?.nome}
+                                                                </li>
 
-                                            <li className="truncate p-3 border border-zinc-200">
-                                                {medicoSolicitante?.especialidadeId}
-                                            </li>
+                                                                <li className="truncate p-3 border border-zinc-200">
+                                                                    {medicoSolicitante?.especialidadeId}
+                                                                </li>
 
-                                            <li className="truncate p-3 text-center border border-zinc-200 whitespace-nowrap">
-                                                {/* {item.dataRetorno} */}
-                                            </li>
+                                                                <li className="truncate p-3 text-center border border-zinc-200 whitespace-nowrap">
+                                                                    {/* {item.dataRetorno} */}
+                                                                </li>
 
-                                            <li className="truncate p-3 border border-zinc-200">
-                                                {item.unidadeDeOrigemId}
-                                            </li>
+                                                                <li className="truncate p-3 border border-zinc-200">
+                                                                    {item.unidadeDeOrigemId}
+                                                                </li>
 
-                                            <li className="truncate p-3 text-center border border-zinc-200 whitespace-nowrap">
-                                                {/* {item.dataRealizacao} */}
-                                            </li>
+                                                                <li className="truncate p-3 text-center border border-zinc-200 whitespace-nowrap">
+                                                                    {/* {item.dataRealizacao} */}
+                                                                </li>
 
-                                            <li className="truncate p-3 border border-zinc-200">
-                                                {/* {item.localRealizacao} */}
-                                            </li>
+                                                                <li className="truncate p-3 border border-zinc-200">
+                                                                    {/* {item.localRealizacao} */}
+                                                                </li>
 
-                                            <li className="truncate p-3 text-center border border-zinc-200">
-                                                <button className="text-verde font-bold">
-                                                    Ver
-                                                </button>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                )
-                            })}
-                        </ul>
-                    </div>
-                </div>
-            </div>
+                                                                <li className="truncate p-3 text-center border border-zinc-200">
+                                                                    <button className="text-verde font-bold">
+                                                                        Ver
+                                                                    </button>
+                                                                </li>
+                                                            </ul>
+                                                        </li>
+                                                    )
+                                                })}
+                                            </ul>
+                                        </div>
+                                    ) : (
+                                        <DadosNaoEncontrados />
+                                    )
+                                }
+                            </div>
+                        </div>
+                        {/* Paginator */}
+                        <div className="relative w-full mt-auto">
+                            {atendimentosEncontrados.length > 0 && (
+                                <div className="border-t border-zinc-200">
+                                    <Paginator
+                                        first={first}
+                                        rows={rows}
+                                        totalRecords={atendimentosFiltrados.length}
+                                        rowsPerPageOptions={[5, 10, 20, 50]}
+                                        onPageChange={(event) => {
+                                            setFirst(event.first)
+                                            setRows(event.rows)
+                                        }}
+                                        template="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown CurrentPageReport"
+                                        currentPageReportTemplate="{first} até {last} de {totalRecords} atendimentos"
+                                    />
+                                </div>
+                            )}
+                        </div>
+                    </>
+                ) : (
+                    <DadosNaoEncontrados />
+                )
+            }
 
             {
                 <Dialog
@@ -1047,71 +1184,3 @@ export default function ConsultasEExames() {
         </div >
     )
 }
-
-
-// const consultasExames = [
-//     {
-//         id: 108845,
-//         dataSolicitacao: "14/08/2026",
-//         prioridade: "URGENTE",
-//         paciente: "Maria Aparecida Martins",
-//         tipo: "CONSULTA",
-//         dataNascimento: "01/06/1978",
-//         nomeMae: "Maria Aparecida Martins",
-//         idade: 48,
-//         profissional: "Aurelio Filipaki",
-//         especialidadeProcedimento: "Cardiologia - Retorno",
-//         dataRetorno: "21/08/2026",
-//         unidadeSaude: "Centro de Saúde Municipal",
-//         dataRealizacao: "21/08/2026",
-//         localRealizacao: "Hospital Municipal",
-//     },
-//     {
-//         id: 108844,
-//         dataSolicitacao: "13/08/2026",
-//         prioridade: "PRIORIDADE",
-//         paciente: "João da Silva",
-//         tipo: "EXAME",
-//         dataNascimento: "15/03/1965",
-//         nomeMae: "Ana Maria da Silva",
-//         idade: 61,
-//         profissional: "Bruno Belusci",
-//         especialidadeProcedimento: "Hemograma Completo",
-//         dataRetorno: "-",
-//         unidadeSaude: "Centro de Saúde Municipal",
-//         dataRealizacao: "25/08/2026",
-//         localRealizacao: "Laboratório Municipal",
-//     },
-//     {
-//         id: 108843,
-//         dataSolicitacao: "12/08/2026",
-//         prioridade: "NORMAL",
-//         paciente: "Ana Paula Santos",
-//         tipo: "CONSULTA",
-//         dataNascimento: "22/11/1990",
-//         nomeMae: "Joana Santos",
-//         idade: 35,
-//         profissional: "Aurelio Filipaki",
-//         especialidadeProcedimento: "Cardiologia - Primeira vez",
-//         dataRetorno: "12/09/2026",
-//         unidadeSaude: "UBS Central",
-//         dataRealizacao: "12/09/2026",
-//         localRealizacao: "UBS Central",
-//     },
-//     {
-//         id: 208845,
-//         dataSolicitacao: "15/08/2026",
-//         prioridade: "URGENTE",
-//         paciente: "Carlos Eduardo Martins",
-//         tipo: "CIRURGIA",
-//         dataNascimento: "10/04/1962",
-//         nomeMae: "Maria de Lourdes Martins",
-//         idade: 64,
-//         profissional: "Dr. Rafael Oliveira",
-//         especialidadeProcedimento: "Colecistectomia",
-//         dataRetorno: "28/08/2026",
-//         unidadeSaude: "Centro de Saúde Municipal",
-//         dataRealizacao: "05/09/2026",
-//         localRealizacao: "Hospital Municipal",
-//     },
-// ]
