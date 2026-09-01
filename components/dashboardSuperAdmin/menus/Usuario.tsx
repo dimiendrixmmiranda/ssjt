@@ -120,7 +120,7 @@ export default function Usuario() {
     }
 
     return (
-        <div className="text-verde-escuro p-6">
+        <div className="p-6 overflow-x-hidden max-h-[91.5vh]">
             <div className="mb-4">
                 <h3 className="text-2xl font-bold">Usuários</h3>
             </div>

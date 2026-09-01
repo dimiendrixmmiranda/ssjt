@@ -3,6 +3,7 @@ import InputNome from "@/components/assets/inputNome"
 import InputSelect from "@/components/assets/InputSelect"
 import InputTextArea from "@/components/assets/InputTextArea"
 import InputTexto from "@/components/assets/InputTexto"
+import { useDialog } from "@/context/DialogContext"
 import { useEspecialidades } from "@/hooks/useEspecialidades"
 import { Paginator, PaginatorPageChangeEvent } from "primereact/paginator"
 import { useEffect, useState } from "react"
@@ -26,7 +27,13 @@ export default function Especialidade() {
     const [descricao, setDescricao] = useState('')
     const [ativo, setAtivo] = useState(true)
 
-    const { especialidades } = useEspecialidades()
+    const { especialidades, buscarEspecialidades } = useEspecialidades()
+    const { abrirDialog } = useDialog()
+
+    useEffect(() => {
+        buscarEspecialidades()
+    }, [])
+
     console.log(especialidades)
     const [erro, setErro] = useState('')
     const [sucesso, setSucesso] = useState('')
@@ -44,64 +51,90 @@ export default function Especialidade() {
         first + rows
     )
 
-
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
-        setErro("");
-        setSucesso("");
-
+    const cadastrarEspecialidade = async (especialidade: any) => {
         try {
-            if (!nome || !categoria || !codigo) {
-                setErro("Preencha todos os campos obrigatórios.");
-                return;
-            }
-
             const response = await fetch("/api/especialidades", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({
-                    nome,
-                    categoria,
-                    codigo,
-                    descricao,
-                    ativo,
-                }),
-            });
+                body: JSON.stringify(especialidade),
+            })
 
-            console.log(response)
-
-            const data = await response.json();
+            const data = await response.json()
 
             if (!response.ok) {
                 throw new Error(
-                    data.erro || data.error || "Erro ao criar usuário."
-                );
+                    data.erro ||
+                    data.error ||
+                    "Erro ao cadastrar Especialidade."
+                )
+            }
+            await buscarEspecialidades()
+            abrirDialog({
+                title: "Cadastro realizado",
+                message: "O local foi cadastrado com sucesso.",
+            })
+        } catch (error) {
+            console.error("Erro ao cadastrar local:", error)
+            abrirDialog({
+                title: "Erro",
+                message:
+                    error instanceof Error
+                        ? error.message
+                        : "Erro ao cadastrar local.",
+            })
+        }
+    }
+
+    const handleSubmit = async (
+        e: React.FormEvent<HTMLFormElement>
+    ) => {
+        e.preventDefault()
+        try {
+
+            if (!nome.trim()) {
+                throw new Error("Informe o nome da Especialidade.")
             }
 
-            setSucesso("Usuário criado com sucesso!");
+            if (!categoria) {
+                throw new Error("Selecione a categoria da especialidade")
+            }
 
-            // Limpa o formulário
-            setNome("");
-            setCategoria("");
-            setCodigo("");
-            setDescricao("");
-            setAtivo(true);
+            const especialidade = {
+                nome: nome.trim(),
+                categoria,
+                codigo,
+                descricao,
+                ativo,
+            }
+
+            abrirDialog({
+                title: "Confirmar cadastro",
+                message: `Deseja realmente adicionar a especialidade "${especialidade.nome}"?`,
+                confirmText: "Cadastrar",
+                cancelText: "Cancelar",
+
+                onConfirm: async () => {
+                    await cadastrarEspecialidade(especialidade)
+                }
+            })
+
         } catch (error) {
-            console.error("Erro ao criar usuário:", error);
-            setErro(
-                error instanceof Error
-                    ? error.message
-                    : "Erro inesperado ao criar usuário."
-            );
+
+            abrirDialog({
+                title: "Atenção",
+                message:
+                    error instanceof Error
+                        ? error.message
+                        : "Erro ao validar o formulário."
+            })
         }
     }
 
     // Falta implementar os filtros para buscar
     return (
-        <div className="p-4">
+        <div className="p-6 overflow-x-hidden max-h-[91.5vh]">
             <div className="mb-4">
                 <h3 className="text-2xl font-bold">Especialidades e Procedimentos</h3>
                 <span>Gerencie as especialidades medicas, exames, cirurgias e procedimentos utilizados no sistema.</span>
@@ -112,8 +145,8 @@ export default function Especialidade() {
                         <VscNewCollection />
                         <h2>Novo Cadastro</h2>
                     </div>
-                    <form onSubmit={handleSubmit}>
-                        <InputSelect icone={<AiOutlineSelect />} id="categoria" label="Selecione o categoria" nome="categoria" setValor={setCategoria} valor={categoria} opcoes={[{ valor: 'CONSULTA', label: 'Consulta' }, { valor: 'PROCEDIMENTO', label: 'Exame' }, { valor: 'CIRURGIA', label: 'Cirurgia' }]} />
+                    <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+                        <InputSelect icone={<AiOutlineSelect />} id="categoria" label="Selecione o categoria" nome="categoria" setValor={setCategoria} valor={categoria} opcoes={[{ valor: '', label: 'Selecione' }, { valor: 'CONSULTA', label: 'Consulta' }, { valor: 'PROCEDIMENTO', label: 'Exame' }, { valor: 'CIRURGIA', label: 'Cirurgia' }]} />
                         <InputTexto icone={<MdDriveFileRenameOutline />} id="nome" label="Nome" nome="nome" placeholder="Digite o nome da especialidade ou procedimento" setValor={setNome} valor={nome} />
                         <InputTexto icone={<GoCodescan />} id="codigo" label="Código" nome="codigo" placeholder="Ex: 156" setValor={setCodigo} valor={codigo} />
                         <InputTextArea altura="h-[150px]" icone={<LiaAudioDescriptionSolid />} id="descricao" label="Adicione uma descrição (Opcional)" nome="descricao" placeholder="..." setValor={setDescricao} valor={descricao} />
@@ -144,7 +177,7 @@ export default function Especialidade() {
                             <p>Buscar</p>
                         </button>
                     </div>
-                    <div className="h-[390px] flex flex-col">
+                    <div className="flex flex-col">
                         <div>
                             <ul className="grid grid-cols-[1fr_160px_100px_100px_150px] w-full font-bold border-b p-3">
                                 <li>
@@ -186,9 +219,9 @@ export default function Especialidade() {
                                                             <p>{esp.ativo ? 'ATIVO' : 'INATIVO'}</p>
                                                         </div>
                                                         <div className="grid grid-cols-3">
-                                                            <button><BiSolidEdit /></button>
-                                                            <button><RiDeleteBin5Line /></button>
-                                                            <button><TiUserDelete /></button>
+                                                            <button className="flex justify-center items-center rounded-full border border-amber-500 text-amber-500 w-10 h-10 mx-auto duration-200 transition-all hover:bg-amber-500 hover:text-white"><BiSolidEdit /></button>
+                                                            <button className="flex justify-center items-center rounded-full border border-red-500 text-red-500 w-10 h-10 mx-auto duration-200 transition-all hover:bg-red-500 hover:text-white"><RiDeleteBin5Line /></button>
+                                                            <button className="flex justify-center items-center rounded-full border border-purple-600 text-purple-600 w-10 h-10 mx-auto duration-200 transition-all hover:bg-purple-600 hover:text-white"><TiUserDelete /></button>
                                                         </div>
                                                     </li>
                                                 )
@@ -202,7 +235,7 @@ export default function Especialidade() {
                                 )
                             }
                         </div>
-                        <div className="grid grid-cols-[300px_1fr] mt-auto -mb-2">
+                        <div className="grid grid-cols-[300px_1fr] mt-1 -mb-2">
                             <p className="my-auto">Mostrando 1 a 5 de 5 registros</p>
                             <Paginator
                                 first={first}

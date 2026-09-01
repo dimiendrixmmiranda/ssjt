@@ -1,15 +1,18 @@
 'use client'
+import DadosNaoEncontrados from "@/components/assets/dadosNaoEncontrados";
 import InputCheckbox from "@/components/assets/InputCheckbox";
 import InputSelect from "@/components/assets/InputSelect";
 import InputTextArea from "@/components/assets/InputTextArea";
 import InputTexto from "@/components/assets/InputTexto";
+import { useDialog } from "@/context/DialogContext";
 import { useEspecialidades } from "@/hooks/useEspecialidades";
 import { usePrestadores } from "@/hooks/usePrestadores";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AiOutlineSelect } from "react-icons/ai";
 import { FaRegEdit, FaRegEye, FaRegTrashAlt } from "react-icons/fa";
-import { FaListCheck, FaUserDoctor } from "react-icons/fa6";
+import { FaListCheck, FaMagnifyingGlass, FaMagnifyingGlassPlus, FaUserDoctor } from "react-icons/fa6";
 import { FiUserPlus } from "react-icons/fi";
+import { GrStatusInfo } from "react-icons/gr";
 import { MdDriveFileRenameOutline, MdOutlineCancel, MdOutlineMenu } from "react-icons/md";
 import { VscNewCollection } from "react-icons/vsc";
 
@@ -22,9 +25,14 @@ export default function Medico() {
     const [descricao, setDescricao] = useState('')
     const { especialidades } = useEspecialidades()
 
-    const especialidadesFiltradas = especialidades.filter(esp => esp.categoria === 'CONSULTA')
+    const [buscarNomeCodigo, setBuscarNomeCodigo] = useState('')
+    const [filtroCategoria, setFiltroCategoria] = useState('')
+    const [filtroStatus, setFiltroStatus] = useState('')
 
-    const { prestadores } = usePrestadores()
+    const especialidadesFiltradas = especialidades.filter(esp => esp.categoria === 'CONSULTA')
+    const { abrirDialog } = useDialog()
+
+    const { prestadores, buscarPrestadores } = usePrestadores()
 
     const [erro, setErro] = useState('')
     const [sucesso, setSucesso] = useState('')
@@ -35,6 +43,10 @@ export default function Medico() {
 
     const tiposDePrestador = [
         {
+            valor: '',
+            label: 'Selecione'
+        },
+        {
             valor: 'MEDICO',
             label: 'Médico'
         },
@@ -44,69 +56,101 @@ export default function Medico() {
         }
     ]
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    useEffect(() => {
+        buscarPrestadores()
+    }, [])
 
-        setErro("");
-        setSucesso("");
-
-        if (!nome || !crm || !especialidade || !tipoPrestador) {
-            setErro("Preencha todos os campos obrigatórios.");
-            return;
-        }
-
-        const dadosDoFormulario = {
-            nome,
-            crm,
-            especialidadeId: especialidade,
-            tipo: tipoPrestador,
-            ativo,
-            descricao,
-        };
-
-        console.log("Dados enviados:", dadosDoFormulario);
-
+    const cadastraMedico = async (medico: any) => {
         try {
             const response = await fetch("/api/prestador", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(dadosDoFormulario),
-            });
+                body: JSON.stringify(medico),
+            })
 
-            const data = await response.json();
+            const data = await response.json()
 
             if (!response.ok) {
                 throw new Error(
-                    data.error || data.erro || "Erro ao cadastrar médico."
-                );
+                    data.erro ||
+                    data.error ||
+                    "Erro ao cadastrar Medico."
+                )
+            }
+            await buscarPrestadores()
+            abrirDialog({
+                title: "Cadastro realizado",
+                message: "O medico foi cadastrado com sucesso.",
+            })
+        } catch (error) {
+            console.error("Erro ao cadastrar medico:", error)
+            abrirDialog({
+                title: "Erro",
+                message:
+                    error instanceof Error
+                        ? error.message
+                        : "Erro ao cadastrar medico.",
+            })
+        }
+    }
+
+    const handleSubmit = async (
+        e: React.FormEvent<HTMLFormElement>
+    ) => {
+        e.preventDefault()
+
+        try {
+            if (!nome.trim()) {
+                throw new Error("Informe o nome do profissional.")
             }
 
-            setSucesso("Profissional cadastrado com sucesso!");
+            if (!crm.trim()) {
+                throw new Error("Informe o CRM")
+            }
 
-            setNome("");
-            setCrm("");
-            setEspecialidade("");
-            setTipoPrestador("");
-            setDescricao("");
-            setAtivo(true);
+            if (!tipoPrestador) {
+                throw new Error("Selecione o tipo de prestador")
+            }
+
+            if (!especialidade) {
+                throw new Error("Selecione uma especialidade")
+            }
+
+            const medico = {
+                nome: nome.trim(),
+                crm: crm.trim(),
+                especialidadeId: especialidade,
+                tipo: tipoPrestador,
+                ativo,
+                descricao: descricao.trim(),
+            }
+
+            abrirDialog({
+                title: "Confirmar cadastro",
+                message: `Deseja realmente adicionar o médico "${medico.nome}"?`,
+                confirmText: "Cadastrar",
+                cancelText: "Cancelar",
+
+                onConfirm: async () => {
+                    await cadastraMedico(medico)
+                }
+            })
 
         } catch (error) {
-            console.error("Erro ao cadastrar médico:", error);
-
-            setErro(
-                error instanceof Error
-                    ? error.message
-                    : "Erro inesperado ao cadastrar médico."
-            );
+            abrirDialog({
+                title: "Atenção",
+                message:
+                    error instanceof Error
+                        ? error.message
+                        : "Erro ao validar o formulário."
+            })
         }
-    };
-
-    console.log(prestadores)
+    }
 
     return (
-        <div className="p-4">
+        <div className="p-6 overflow-x-hidden max-h-[91.5vh]">
             <div className="mb-4">
                 <h3 className="text-2xl font-bold">Médicos</h3>
                 <span>Gerencie e cadastre um novo profissional.</span>
@@ -139,10 +183,18 @@ export default function Medico() {
                                 nome="especialidade"
                                 setValor={setEspecialidade}
                                 valor={especialidade}
-                                opcoes={especialidadesFiltradas.map((esp) => ({
-                                    valor: esp.id,
-                                    label: esp.nome,
-                                }))}
+                                opcoes={
+                                    [
+                                        {
+                                            valor: '',
+                                            label: "Selecione"
+                                        },
+                                        ...especialidadesFiltradas.map((esp) => ({
+                                            valor: esp.id,
+                                            label: esp.nome,
+                                        }))
+                                    ]
+                                }
                             />
                             <div className="row-span-2">
                                 <InputTextArea
@@ -188,10 +240,20 @@ export default function Medico() {
                         <MdOutlineMenu />
                         <h2>Profissionais Cadastrados</h2>
                     </div>
+                    <div className="grid grid-cols-3 gap-4 2xl:grid-cols-2 2xl:gap-4">
+                        <InputTexto estiloPersonalizado="col-span-3 2xl:col-span-1" icone={<MdDriveFileRenameOutline />} id="buscarNomeCodigo" label="Buscar por Nome ou Código do Profissional" nome="buscarNomeCodigo" placeholder="Buscar por nome ou código" setValor={setBuscarNomeCodigo} valor={buscarNomeCodigo} />
+                        <InputTexto estiloPersonalizado="col-span-3 2xl:col-span-1" icone={<MdDriveFileRenameOutline />} id="buscarNomeCodigo" label="Buscar por Especialidade" nome="buscarNomeCodigo" placeholder="Dermatologista" setValor={setBuscarNomeCodigo} valor={buscarNomeCodigo} />
+                        <InputSelect icone={<FaMagnifyingGlass />} id="filtroCategoria" label="Filtrar por categoria" nome="filtroCategoria" setValor={setFiltroCategoria} valor={filtroCategoria} opcoes={[{ label: 'Selecione', valor: '' }, { label: 'Consulta', valor: 'CONSULTA' }, { label: 'Procedimento', valor: "PROCEDIMENTO" }, { label: 'Cirurgia', valor: 'CIRURGIA' }]} />
+                        <InputSelect icone={<GrStatusInfo />} id="filtroStatus" label="Filtrar por status" nome="filtroStatus" setValor={setFiltroStatus} valor={filtroStatus} opcoes={[{valor: '', label: "Selecione"},{ label: 'Ativo', valor: 'CONSULTA' }, { label: 'Inativo', valor: "PROCEDIMENTO" }]} />
+                        <button className="flex items-center justify-center bg-verde text-white rounded-xl gap-2 text-lg font-bold mt-auto h-[40px] 2xl:col-span-2">
+                            <FaMagnifyingGlassPlus />
+                            <p>Buscar</p>
+                        </button>
+                    </div>
                     <div className="flex flex-col w-full">
                         {prestadores.length > 0 ? (
                             <div className="w-full">
-                                <ul className="grid grid-cols-[1fr_100px_150px_100px_200px_150px] w-full font-bold border-b">
+                                <ul className="grid grid-cols-[1fr_100px_180px_100px_200px_150px] w-full font-bold border-b">
                                     <li className="p-3">Nome</li>
                                     <li className="p-3 text-center">CRM</li>
                                     <li className="p-3 text-center">Especialidade</li>
@@ -205,7 +267,7 @@ export default function Medico() {
                                     return (
                                         <ul
                                             key={prestador.id}
-                                            className="grid grid-cols-[1fr_100px_150px_100px_200px_150px] w-full border-b items-center"
+                                            className="grid grid-cols-[1fr_100px_180px_100px_200px_150px] w-full border-b items-center"
                                         >
                                             <li className="p-3">
                                                 <div className="flex items-center gap-4">
@@ -230,13 +292,13 @@ export default function Medico() {
                                                 {prestador.descricao || "-"}
                                             </li>
                                             <li className="p-3 gap-2 text-center grid grid-cols-3">
-                                                <button className="border border-verde text-verde rounded-lg w-10 h-10 flex justify-center items-center">
+                                                <button className="border border-verde text-verde rounded-lg w-10 h-10 flex justify-center items-center duration-200 transition-all hover:bg-verde hover:text-white">
                                                     <FaRegEye />
                                                 </button>
-                                                <button className="border border-amber-600 text-amber-600 rounded-lg w-10 h-10 flex justify-center items-center">
+                                                <button className="border border-amber-600 text-amber-600 rounded-lg w-10 h-10 flex justify-center items-center duration-200 transition-all hover:bg-amber-600 hover:text-white">
                                                     <FaRegEdit />
                                                 </button>
-                                                <button className="border border-red-500 text-red-500 rounded-lg w-10 h-10 flex justify-center items-center">
+                                                <button className="border border-red-500 text-red-500 rounded-lg w-10 h-10 flex justify-center items-center duration-200 transition-all hover:bg-red-500 hover:text-white">
                                                     <FaRegTrashAlt />
                                                 </button>
                                             </li>
@@ -245,9 +307,7 @@ export default function Medico() {
                                 })}
                             </div>
                         ) : (
-                            <div>
-                                <h3>Nenhum Profissional Cadastrado</h3>
-                            </div>
+                            <DadosNaoEncontrados />
                         )}
                     </div>
                 </div>

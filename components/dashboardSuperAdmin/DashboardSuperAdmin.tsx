@@ -8,7 +8,7 @@ import Inicio from "./menus/Inicio";
 import Usuario from "./menus/Usuario";
 import Medico from "./menus/Medico";
 import Especialidade from "./menus/Especialidade";
-import { FaRegBuilding, FaRegCalendarCheck, FaRegUser } from "react-icons/fa";
+import { FaRegBell, FaRegBuilding, FaRegCalendarCheck, FaRegUser } from "react-icons/fa";
 import { FaBuildingFlag, FaUserDoctor } from "react-icons/fa6";
 import { MdCalendarMonth, MdOutlineMedicalServices } from "react-icons/md";
 import { TbReportAnalytics } from "react-icons/tb";
@@ -18,6 +18,7 @@ import { RiAdminFill } from "react-icons/ri";
 import { PiMedalFill } from "react-icons/pi";
 import { useUsuarios } from "@/hooks/useUsuarios";
 import { useLocais } from "@/hooks/useLocais";
+import { BsMoon } from "react-icons/bs";
 
 interface DashboardSuperAdminProps {
     usuario: any
@@ -157,8 +158,14 @@ export default function DashboardSuperAdmin({ usuario }: DashboardSuperAdminProp
                                 )}
                             </ul>
                         </div>
-                        <div className="mt-auto grid grid-cols-3 gap-2 ml-auto w-auto">
+                        <div className="mt-auto grid grid-cols-5 gap-2 ml-auto w-auto">
                             <button className="w-[40px] h-[40px] bg-amber-600 flex justify-center items-center rounded-lg text-xl transition-all border border-amber-600 duration-200 hover:text-amber-600 hover:bg-white">
+                                <FaRegBell />
+                            </button>
+                            <button className="w-[40px] h-[40px] bg-zinc-950 flex justify-center items-center rounded-lg text-xl transition-all border border-zinc-bg-zinc-950 duration-200 hover:text-zinc-950 hover:bg-white">
+                                <BsMoon />
+                            </button>
+                            <button className="w-[40px] h-[40px] bg-blue-600 flex justify-center items-center rounded-lg text-xl transition-all border border-blue-600 duration-200 hover:text-blue-600 hover:bg-white">
                                 <GoGear />
                             </button>
                             <button className="w-[40px] h-[40px] bg-verde flex justify-center items-center rounded-lg text-xl transition-all border border-verde duration-200 hover:text-verde hover:bg-white">

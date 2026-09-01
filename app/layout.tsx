@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Geist, Geist_Mono, Arimo, Oswald } from "next/font/google";
 import Providers from "./providers";
+import { DialogProvider } from "@/context/DialogContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,7 +36,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <Providers>
-          {children}
+          <DialogProvider>
+            {children}
+          </DialogProvider>
         </Providers>
       </body>
     </html>

@@ -3,7 +3,6 @@ import InputSelect from "@/components/assets/InputSelect";
 import InputTextArea from "@/components/assets/InputTextArea";
 import InputTexto from "@/components/assets/InputTexto";
 import { useEspecialidades } from "@/hooks/useEspecialidades";
-import { useLocais } from "@/hooks/useLocais";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -15,9 +14,11 @@ import { IoIosCheckmarkCircle } from "react-icons/io";
 import { IoAdd } from "react-icons/io5";
 import { MdDriveFileRenameOutline } from "react-icons/md";
 import { RiLightbulbLine } from "react-icons/ri";
-import { TbListDetails } from "react-icons/tb";
 import { TiDeleteOutline } from "react-icons/ti";
 import { Paginator, PaginatorPageChangeEvent } from "primereact/paginator";
+import { useDialog } from "@/context/DialogContext";
+import { Local } from "@/app/generated/prisma/client";
+import { useLocais } from "@/hooks/useLocais";
 
 
 export default function Locais() {
@@ -38,7 +39,15 @@ export default function Locais() {
     const [descricao, setDescricao] = useState('')
     const { especialidades } = useEspecialidades()
 
-    const { locais } = useLocais()
+    const { abrirDialog } = useDialog()
+    const {
+        locais,
+        buscarLocais
+    } = useLocais()
+
+    useEffect(() => {
+        buscarLocais()
+    }, [])
 
     // Filtros para busca
     const [buscarLocal, setBuscarLocal] = useState('')
@@ -80,70 +89,8 @@ export default function Locais() {
         )
     }
 
-    const handleSubmit = async (
-        e: React.FormEvent<HTMLFormElement>
-    ) => {
-
-        e.preventDefault()
-
+    const cadastrarLocal = async (local: any) => {
         try {
-
-            if (!nome.trim()) {
-                throw new Error("Informe o nome do local.")
-            }
-
-            if (!tipoDoLocal) {
-                throw new Error("Selecione o tipo do local.")
-            }
-
-            if (!status) {
-                throw new Error("Selecione o status do local.")
-            }
-
-            if (!cidade.trim()) {
-                throw new Error("Informe a cidade.")
-            }
-
-            console.log(tiposDeAtendimento)
-
-            if (tiposDeAtendimento.length === 0) {
-                throw new Error(
-                    "Adicione pelo menos um tipo de atendimento."
-                )
-            }
-
-            const local = {
-                nome: nome.trim(),
-
-                tipoDoLocal,
-
-                cidade: cidade.trim(),
-
-                cep: cep.trim() || null,
-
-                rua: rua.trim() || null,
-
-                numero: numero.trim() || null,
-
-                bairro: bairro.trim() || null,
-
-                complemento: complemento.trim() || null,
-
-                telefone1: telefone1.trim() || null,
-
-                telefone2: telefone2.trim() || null,
-
-                email: email.trim() || null,
-
-                status,
-
-                descricao: descricao.trim() || null,
-
-                tiposDeAtendimento,
-            }
-
-            console.log("LOCAL ENVIADO:", local)
-
             const response = await fetch("/api/locais", {
                 method: "POST",
                 headers: {
@@ -162,24 +109,95 @@ export default function Locais() {
                 )
             }
 
-            alert("Local cadastrado com sucesso!")
+            await buscarLocais()
 
-            // limparFormulario()
+            abrirDialog({
+                title: "Cadastro realizado",
+                message: "O local foi cadastrado com sucesso.",
+            })
+
+        } catch (error) {
+            console.error("Erro ao cadastrar local:", error)
+
+            abrirDialog({
+                title: "Erro",
+                message:
+                    error instanceof Error
+                        ? error.message
+                        : "Erro ao cadastrar local.",
+            })
+        }
+    }
+
+    
+    const handleSubmit = async (
+        e: React.FormEvent<HTMLFormElement>
+    ) => {
+        e.preventDefault()
+        try {
+
+            if (!nome.trim()) {
+                throw new Error("Informe o nome do local.")
+            }
+
+            if (!tipoDoLocal) {
+                throw new Error("Selecione o tipo do local.")
+            }
+
+            if (!status) {
+                throw new Error("Selecione o status do local.")
+            }
+
+            if (!cidade.trim()) {
+                throw new Error("Informe a cidade.")
+            }
+
+            if (tiposDeAtendimento.length === 0) {
+                throw new Error(
+                    "Adicione pelo menos um tipo de atendimento."
+                )
+            }
+
+            const local = {
+                nome: nome.trim(),
+                tipoDoLocal,
+                cidade: cidade.trim(),
+                cep: cep.trim() || null,
+                rua: rua.trim() || null,
+                numero: numero.trim() || null,
+                bairro: bairro.trim() || null,
+                complemento: complemento.trim() || null,
+                telefone1: telefone1.trim() || null,
+                telefone2: telefone2.trim() || null,
+                email: email.trim() || null,
+                status,
+                descricao: descricao.trim() || null,
+                tiposDeAtendimento,
+            }
+
+            abrirDialog({
+                title: "Confirmar cadastro",
+                message: `Deseja realmente cadastrar o local "${local.nome}"?`,
+                confirmText: "Cadastrar",
+                cancelText: "Cancelar",
+
+                onConfirm: async () => {
+                    await cadastrarLocal(local)
+                }
+            })
 
         } catch (error) {
 
-            console.error(
-                "Erro ao cadastrar local:",
-                error
-            )
-
-            alert(
-                error instanceof Error
-                    ? error.message
-                    : "Erro ao cadastrar local."
-            )
+            abrirDialog({
+                title: "Atenção",
+                message:
+                    error instanceof Error
+                        ? error.message
+                        : "Erro ao validar o formulário."
+            })
         }
     }
+
 
     const locaisFiltrados = locais.filter((local) => {
         const correspondeStatus =
@@ -212,6 +230,10 @@ export default function Locais() {
     // no banco de dados colocar na cidade ou fora da cidade
     const tiposDeLocal = [
         {
+            valor: "",
+            label: "Selecione"
+        },
+        {
             valor: "POSTO_DE_SAUDE",
             label: "Posto de Saúde"
         },
@@ -226,6 +248,10 @@ export default function Locais() {
     ]
     const statusDoLocal = [
         {
+            valor: "",
+            label: "Selecione"
+        },
+        {
             valor: "ATIVO",
             label: "Ativo"
         },
@@ -235,9 +261,8 @@ export default function Locais() {
         },
     ]
 
-    console.log(tiposDeAtendimento)
     return (
-        <div className="p-4 overflow-x-hidden" id="adicionarLocal">
+        <div className="p-6 overflow-x-hidden max-h-[91.5vh]" id="adicionarLocal">
             <div className="mb-4">
                 <h3 className="text-2xl font-bold">Locais de Atendimento</h3>
                 <span>Gerencie e cadastre locais de atendimento.</span>
@@ -416,10 +441,18 @@ export default function Locais() {
                                     nome="tipoDeAtendimento"
                                     setValor={setTipoDeAtendimento}
                                     valor={tipoDeAtendimento}
-                                    opcoes={especialidades.map((especialidade) => ({
-                                        valor: especialidade.id,
-                                        label: especialidade.nome
-                                    }))}
+                                    opcoes={
+                                        [
+                                            {
+                                                valor: '',
+                                                label: "Selecione"
+                                            },
+                                            ...especialidades.map((especialidade) => ({
+                                                valor: especialidade.id,
+                                                label: especialidade.nome
+                                            }))
+                                        ]
+                                    }
                                 />
 
                                 <button
@@ -455,16 +488,16 @@ export default function Locais() {
                                             <div
                                                 key={tipoId}
                                                 className="
-                            flex
-                            items-center
-                            gap-2
-                            px-3
-                            py-2
-                            rounded-lg
-                            bg-verde
-                            text-white
-                            font-semibold
-                        "
+                                                    flex
+                                                    items-center
+                                                    gap-2
+                                                    px-3
+                                                    py-2
+                                                    rounded-lg
+                                                    bg-verde
+                                                    text-white
+                                                    font-semibold
+                                                "
                                             >
                                                 <span>
                                                     {tipo?.nome}
@@ -476,10 +509,10 @@ export default function Locais() {
                                                         removerTipoDeAtendimento(tipoId)
                                                     }
                                                     className="
-                                text-white
-                                hover:text-red-200
-                                font-bold
-                            "
+                                                        text-white
+                                                        hover:text-red-200
+                                                        font-bold
+                                                    "
                                                 >
                                                     ×
                                                 </button>
@@ -548,7 +581,7 @@ export default function Locais() {
                         </button>
                     </div>
                 </form>
-                <div className="shadow-[0px_0px_2px_1px_var(--verde-escuro)] rounded-lg p-5 flex flex-col gap-5 h-[550px] overflow-x-hidden">
+                <div className="shadow-[0px_0px_2px_1px_var(--verde-escuro)] rounded-lg p-5 flex flex-col gap-5 overflow-x-hidden">
                     <div className="flex items-center gap-2 text-xl font-bold text-verde border-b border-gray-300 pb-3">
                         <BsFillBuildingsFill />
                         <h2>
@@ -600,7 +633,7 @@ export default function Locais() {
                     {
                         locaisPaginados.length > 0 ? (
                             <div className="flex flex-col overflow-x-scroll">
-                                <ul className="grid grid-cols-[200px_170px_120px_180px_100px_100px_140px] w-full font-bold border-b">
+                                <ul className="grid grid-cols-[200px_170px_120px_180px_140px_100px_190px] 2xl:grid-cols-[200px_170px_120px_1fr_140px_100px_190px] w-full font-bold border-b">
                                     <li className="p-3">
                                         <p>Nome do Local</p>
                                     </li>
@@ -628,36 +661,36 @@ export default function Locais() {
                                         locaisPaginados.map((local) => {
                                             return (
                                                 <li key={local.id} className="border-b">
-                                                    <ul className="grid grid-cols-[200px_170px_120px_180px_100px_100px_140px]">
+                                                    <ul className="grid grid-cols-[200px_170px_120px_180px_140px_100px_190px] 2xl:grid-cols-[200px_170px_120px_1fr_140px_100px_190px]">
                                                         <li className="p-3">
                                                             <p>{local.nome}</p>
                                                         </li>
-                                                        <li className="p-3 text-center">
+                                                        <li className="p-3 text-center my-auto">
                                                             <p className="capitalize">{local.tipoDoLocal.replaceAll('_', ' ').toLowerCase()}</p>
                                                         </li>
-                                                        <li className="p-3 text-center">
+                                                        <li className="p-3 text-center my-auto">
                                                             <p>{local.cidade}</p>
                                                         </li>
-                                                        <li className="p-3 text-center line-clamp-2 overflow-hidden">
+                                                        <li className="p-3 text-center line-clamp-2 overflow-hidden my-auto">
                                                             <p className="line-clamp-2 overflow-hidden">{local.rua}, {local.numero} - {local.bairro} {local.complemento ? `(${local.complemento})` : ''}</p>
                                                         </li>
-                                                        <li className="p-3 text-center">
+                                                        <li className="p-3 text-center my-auto">
                                                             <p>{local.telefone1}</p>
                                                         </li>
-                                                        <li className="p-3 text-center">
+                                                        <li className={`py-2 text-center my-auto rounded-lg h-fit text-white font-bold ${local.status === 'ATIVO' ? 'bg-green-600' : 'bg-red-600'}`}>
                                                             <p>{local.status}</p>
                                                         </li>
-                                                        <li className="p-3 text-center">
-                                                            <button>
+                                                        <li className="p-3 text-center grid grid-cols-4 w-full items-center self-center gap-2">
+                                                            <button className="flex justify-center items-center rounded-full w-10 h-10 font-bold border border-green-600 text-green-600 duration-200 transition-all hover:bg-green-600 hover:text-white">
                                                                 <BsBuildingDash />
                                                             </button>
-                                                            <button>
+                                                            <button className="flex justify-center items-center rounded-full w-10 h-10 font-bold border border-red-600 text-red-600 duration-200 transition-all hover:bg-red-600 hover:text-white">
                                                                 <FaRegTrashAlt />
                                                             </button>
-                                                            <button>
+                                                            <button className="flex justify-center items-center rounded-full w-10 h-10 font-bold border border-amber-600 text-amber-600 duration-200 transition-all hover:bg-amber-600 hover:text-white">
                                                                 <FaRegEdit />
                                                             </button>
-                                                            <button>
+                                                            <button className="flex justify-center items-center rounded-full w-10 h-10 font-bold border border-blue-600 text-blue-600 duration-200 transition-all hover:bg-blue-600 hover:text-white">
                                                                 <FaRegEye />
                                                             </button>
                                                         </li>

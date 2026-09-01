@@ -16,7 +16,7 @@ export default function Inicio() {
     }, [])
 
     return (
-        <div className="p-4 flex flex-col gap-4 text-verde-escuro 2xl:p-8">
+        <div className="p-6 overflow-x-hidden max-h-[91.5vh]">
             <div className=" flex justify-between">
                 <h3 className="text-2xl font-bold">Painel do Super Administrador</h3>
                 <div>
