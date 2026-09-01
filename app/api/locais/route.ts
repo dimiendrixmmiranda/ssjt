@@ -149,3 +149,73 @@ export async function GET() {
         )
     }
 }
+
+export async function DELETE(req: Request) {
+    try {
+        const body = await req.json()
+
+        if (!body.id) {
+            return NextResponse.json(
+                { erro: "ID do local não informado." },
+                { status: 400 }
+            )
+        }
+
+        const local = await prisma.local.findUnique({
+            where: {
+                id: body.id
+            }
+        })
+
+        if (!local) {
+            return NextResponse.json(
+                { erro: "Local não encontrado." },
+                { status: 404 }
+            )
+        }
+
+        await prisma.$transaction(async (tx) => {
+
+            // Remove os tipos de atendimento relacionados ao local
+            await tx.localTipoAtendimento.deleteMany({
+                where: {
+                    localId: body.id
+                }
+            })
+
+            // Remove o local
+            await tx.local.delete({
+                where: {
+                    id: body.id
+                }
+            })
+        })
+
+        return NextResponse.json(
+            {
+                mensagem: "Local removido com sucesso."
+            },
+            {
+                status: 200
+            }
+        )
+
+    } catch (error) {
+        console.error(
+            "ERRO AO REMOVER LOCAL:",
+            error
+        )
+
+        return NextResponse.json(
+            {
+                erro:
+                    error instanceof Error
+                        ? error.message
+                        : "Erro interno ao remover local."
+            },
+            {
+                status: 500
+            }
+        )
+    }
+}

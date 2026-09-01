@@ -1,13 +1,25 @@
 "use client";
 
+import { useDialog } from "@/context/DialogContext";
 import { signOut } from "next-auth/react";
 import { HiOutlineLogout } from "react-icons/hi";
 
 export default function BotaoLogout() {
+	const { abrirDialog } = useDialog();
+
+	const handleLogout = () => {
+		abrirDialog({
+			title: "Sair do sistema",
+			message: "Tem certeza que deseja sair do sistema?",
+			confirmText: "Sair",
+            cancelText: "Cancelar",
+			onConfirm: () => signOut({ callbackUrl: "/" }),
+		});
+	};
 	return (
 		<button
 			type="button"
-			onClick={() => signOut({ callbackUrl: "/" })}
+			onClick={() => handleLogout()}
 			className="w-[40px] h-[40px] bg-red-500 font-bold text-xl py-1 rounded-lg flex items-center justify-center gap-1 border border-red-500 transition-all duration-300 cursor-pointer hover:bg-white hover:text-red-500"
 		>
 			<HiOutlineLogout />

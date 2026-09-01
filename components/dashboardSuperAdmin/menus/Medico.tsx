@@ -15,6 +15,7 @@ import { FiUserPlus } from "react-icons/fi";
 import { GrStatusInfo } from "react-icons/gr";
 import { MdDriveFileRenameOutline, MdOutlineCancel, MdOutlineMenu } from "react-icons/md";
 import { VscNewCollection } from "react-icons/vsc";
+import { Paginator, PaginatorPageChangeEvent } from "primereact/paginator"
 
 export default function Medico() {
     const [nome, setNome] = useState('')
@@ -36,6 +37,14 @@ export default function Medico() {
 
     const [erro, setErro] = useState('')
     const [sucesso, setSucesso] = useState('')
+
+    const [first, setFirst] = useState(0)
+    const [rows] = useState(5)
+
+    const prestadoresPaginados = prestadores.slice(
+        first,
+        first + rows
+    )
 
     const buscarEspecialidade = (espId: string) => {
         return especialidades.find(esp => esp.id === espId)
@@ -84,6 +93,12 @@ export default function Medico() {
                 title: "Cadastro realizado",
                 message: "O medico foi cadastrado com sucesso.",
             })
+            // limpando formulario
+            setNome('')
+            setCrm('')
+            setTipoPrestador('')
+            setEspecialidade('')
+            setDescricao('')
         } catch (error) {
             console.error("Erro ao cadastrar medico:", error)
             abrirDialog({
@@ -148,6 +163,73 @@ export default function Medico() {
             })
         }
     }
+
+    const removerPrestador = (prestadorId: string) => {
+        const prestadorSelecionado = prestadores.find(
+            (prestador) => prestador.id === prestadorId
+        );
+
+        if (!prestadorSelecionado) {
+            abrirDialog({
+                title: "Erro",
+                message: "Prestador não encontrado.",
+            });
+
+            return;
+        }
+
+        abrirDialog({
+            title: "Excluir prestador",
+            message: `Deseja realmente excluir o prestador "${prestadorSelecionado.nome}"?`,
+            confirmText: "Excluir",
+            cancelText: "Cancelar",
+
+            onConfirm: async () => {
+                try {
+                    const response = await fetch("/api/prestador", {
+                        method: "DELETE",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            id: prestadorId,
+                        }),
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(
+                            data.error ||
+                            data.erro ||
+                            "Erro ao excluir prestador."
+                        );
+                    }
+
+                    await buscarPrestadores();
+
+                    abrirDialog({
+                        title: "Exclusão realizada",
+                        message: `O prestador "${prestadorSelecionado.nome}" foi excluído com sucesso.`,
+                    });
+
+                } catch (error) {
+                    console.error(
+                        "Erro ao excluir prestador:",
+                        error
+                    );
+
+                    abrirDialog({
+                        title: "Erro",
+                        message:
+                            error instanceof Error
+                                ? error.message
+                                : "Erro ao excluir prestador.",
+                    });
+                }
+            },
+        });
+    };
 
     return (
         <div className="p-6 overflow-x-hidden max-h-[91.5vh]">
@@ -244,7 +326,7 @@ export default function Medico() {
                         <InputTexto estiloPersonalizado="col-span-3 2xl:col-span-1" icone={<MdDriveFileRenameOutline />} id="buscarNomeCodigo" label="Buscar por Nome ou Código do Profissional" nome="buscarNomeCodigo" placeholder="Buscar por nome ou código" setValor={setBuscarNomeCodigo} valor={buscarNomeCodigo} />
                         <InputTexto estiloPersonalizado="col-span-3 2xl:col-span-1" icone={<MdDriveFileRenameOutline />} id="buscarNomeCodigo" label="Buscar por Especialidade" nome="buscarNomeCodigo" placeholder="Dermatologista" setValor={setBuscarNomeCodigo} valor={buscarNomeCodigo} />
                         <InputSelect icone={<FaMagnifyingGlass />} id="filtroCategoria" label="Filtrar por categoria" nome="filtroCategoria" setValor={setFiltroCategoria} valor={filtroCategoria} opcoes={[{ label: 'Selecione', valor: '' }, { label: 'Consulta', valor: 'CONSULTA' }, { label: 'Procedimento', valor: "PROCEDIMENTO" }, { label: 'Cirurgia', valor: 'CIRURGIA' }]} />
-                        <InputSelect icone={<GrStatusInfo />} id="filtroStatus" label="Filtrar por status" nome="filtroStatus" setValor={setFiltroStatus} valor={filtroStatus} opcoes={[{valor: '', label: "Selecione"},{ label: 'Ativo', valor: 'CONSULTA' }, { label: 'Inativo', valor: "PROCEDIMENTO" }]} />
+                        <InputSelect icone={<GrStatusInfo />} id="filtroStatus" label="Filtrar por status" nome="filtroStatus" setValor={setFiltroStatus} valor={filtroStatus} opcoes={[{ valor: '', label: "Selecione" }, { label: 'Ativo', valor: 'CONSULTA' }, { label: 'Inativo', valor: "PROCEDIMENTO" }]} />
                         <button className="flex items-center justify-center bg-verde text-white rounded-xl gap-2 text-lg font-bold mt-auto h-[40px] 2xl:col-span-2">
                             <FaMagnifyingGlassPlus />
                             <p>Buscar</p>
@@ -262,7 +344,7 @@ export default function Medico() {
                                     <li className="p-3 text-center">Ações</li>
                                 </ul>
 
-                                {prestadores.map((prestador) => {
+                                {prestadoresPaginados.map((prestador) => {
                                     const especialidade = buscarEspecialidade(prestador.especialidadeId!)
                                     return (
                                         <ul
@@ -298,7 +380,7 @@ export default function Medico() {
                                                 <button className="border border-amber-600 text-amber-600 rounded-lg w-10 h-10 flex justify-center items-center duration-200 transition-all hover:bg-amber-600 hover:text-white">
                                                     <FaRegEdit />
                                                 </button>
-                                                <button className="border border-red-500 text-red-500 rounded-lg w-10 h-10 flex justify-center items-center duration-200 transition-all hover:bg-red-500 hover:text-white">
+                                                <button onClick={() => removerPrestador(prestador.id)} className="border border-red-500 text-red-500 rounded-lg w-10 h-10 flex justify-center items-center duration-200 transition-all hover:bg-red-500 hover:text-white">
                                                     <FaRegTrashAlt />
                                                 </button>
                                             </li>
@@ -309,6 +391,18 @@ export default function Medico() {
                         ) : (
                             <DadosNaoEncontrados />
                         )}
+                    </div>
+                    <div className="grid grid-cols-[300px_1fr] mt-1 -mb-2">
+                        <p className="my-auto">Mostrando 1 a 5 de 5 registros</p>
+                        <Paginator
+                            first={first}
+                            rows={rows}
+                            totalRecords={especialidades.length}
+                            onPageChange={(event: PaginatorPageChangeEvent) => {
+                                setFirst(event.first)
+                            }}
+                            className="my-auto"
+                        />
                     </div>
                 </div>
             </div>

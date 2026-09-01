@@ -78,3 +78,58 @@ export async function POST(request: Request) {
 		);
 	}
 }
+
+export async function DELETE(request: Request) {
+	try {
+		const body = await request.json();
+
+		const { id } = body;
+
+		if (!id) {
+			return NextResponse.json(
+				{
+					error: "ID do prestador não informado.",
+				},
+				{ status: 400 }
+			);
+		}
+
+		const prestador = await prisma.prestador.findUnique({
+			where: {
+				id,
+			},
+		});
+
+		if (!prestador) {
+			return NextResponse.json(
+				{
+					error: "Prestador não encontrado.",
+				},
+				{ status: 404 }
+			);
+		}
+
+		await prisma.prestador.delete({
+			where: {
+				id,
+			},
+		});
+
+		return NextResponse.json(
+			{
+				mensagem: "Prestador removido com sucesso.",
+			},
+			{ status: 200 }
+		);
+
+	} catch (error) {
+		console.error("Erro ao remover prestador:", error);
+
+		return NextResponse.json(
+			{
+				error: "Erro interno ao remover prestador.",
+			},
+			{ status: 500 }
+		);
+	}
+}

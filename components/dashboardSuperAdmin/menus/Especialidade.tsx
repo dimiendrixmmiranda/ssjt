@@ -34,7 +34,6 @@ export default function Especialidade() {
         buscarEspecialidades()
     }, [])
 
-    console.log(especialidades)
     const [erro, setErro] = useState('')
     const [sucesso, setSucesso] = useState('')
 
@@ -75,6 +74,11 @@ export default function Especialidade() {
                 title: "Cadastro realizado",
                 message: "O local foi cadastrado com sucesso.",
             })
+            // limpar formulario
+            setCategoria('')
+            setNome('')
+            setCodigo('')
+            setDescricao('')
         } catch (error) {
             console.error("Erro ao cadastrar local:", error)
             abrirDialog({
@@ -130,6 +134,74 @@ export default function Especialidade() {
                         : "Erro ao validar o formulário."
             })
         }
+    }
+
+    const removerEspecialidade = (especialidadeId: string) => {
+        const especialidadeSelecionada = especialidades.find(
+            esp => esp.id === especialidadeId
+        )
+
+        console.log("ID:", especialidadeId)
+        console.log("Especialidade:", especialidadeSelecionada)
+
+        if (!especialidadeSelecionada) {
+            abrirDialog({
+                title: "Erro",
+                message: "Especialidade não encontrada."
+            })
+            return
+        }
+
+        abrirDialog({
+            title: "Excluir especialidade",
+            message: `Deseja realmente excluir a especialidade "${especialidadeSelecionada.nome}"?`,
+            confirmText: "Excluir",
+            cancelText: "Cancelar",
+
+            onConfirm: async () => {
+                try {
+                    const response = await fetch("/api/especialidades", {
+                        method: "DELETE",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            id: especialidadeId,
+                        }),
+                    })
+
+                    const data = await response.json()
+
+                    if (!response.ok) {
+                        throw new Error(
+                            data.erro ||
+                            "Erro ao excluir especialidade."
+                        )
+                    }
+
+                    await buscarEspecialidades()
+
+                    abrirDialog({
+                        title: "Exclusão realizada",
+                        message: `A especialidade "${especialidadeSelecionada.nome}" foi excluída com sucesso.`,
+                    })
+
+                } catch (error) {
+                    console.error(
+                        "Erro ao excluir especialidade:",
+                        error
+                    )
+
+                    abrirDialog({
+                        title: "Erro",
+                        message:
+                            error instanceof Error
+                                ? error.message
+                                : "Erro ao excluir especialidade.",
+                    })
+                }
+            },
+        })
     }
 
     // Falta implementar os filtros para buscar
@@ -203,9 +275,8 @@ export default function Especialidade() {
                                     <ul className="flex flex-col gap-2">
                                         {
                                             especialidadesPaginadas.map((esp, i) => {
-                                                console.log(esp)
                                                 return (
-                                                    <li className="grid grid-cols-[1fr_160px_100px_100px_150px] w-full border-b items-center p-3">
+                                                    <li key={i} className="grid grid-cols-[1fr_160px_100px_100px_150px] w-full border-b items-center p-3">
                                                         <div>
                                                             <p>{esp.nome}</p>
                                                         </div>
@@ -220,7 +291,7 @@ export default function Especialidade() {
                                                         </div>
                                                         <div className="grid grid-cols-3">
                                                             <button className="flex justify-center items-center rounded-full border border-amber-500 text-amber-500 w-10 h-10 mx-auto duration-200 transition-all hover:bg-amber-500 hover:text-white"><BiSolidEdit /></button>
-                                                            <button className="flex justify-center items-center rounded-full border border-red-500 text-red-500 w-10 h-10 mx-auto duration-200 transition-all hover:bg-red-500 hover:text-white"><RiDeleteBin5Line /></button>
+                                                            <button onClick={() => removerEspecialidade(esp.id)} className="flex justify-center items-center rounded-full border border-red-500 text-red-500 w-10 h-10 mx-auto duration-200 transition-all hover:bg-red-500 hover:text-white"><RiDeleteBin5Line /></button>
                                                             <button className="flex justify-center items-center rounded-full border border-purple-600 text-purple-600 w-10 h-10 mx-auto duration-200 transition-all hover:bg-purple-600 hover:text-white"><TiUserDelete /></button>
                                                         </div>
                                                     </li>

@@ -129,7 +129,7 @@ export default function Locais() {
         }
     }
 
-    
+
     const handleSubmit = async (
         e: React.FormEvent<HTMLFormElement>
     ) => {
@@ -196,6 +196,61 @@ export default function Locais() {
                         : "Erro ao validar o formulário."
             })
         }
+    }
+
+    const removerLocal = async (local: Local) => {
+        abrirDialog({
+            title: "Remover local",
+            message: `Deseja realmente remover o local "${local.nome}"? Essa ação não poderá ser desfeita.`,
+            confirmText: "Remover",
+            cancelText: "Cancelar",
+
+            onConfirm: async () => {
+                try {
+                    const response = await fetch("/api/locais", {
+                        method: "DELETE",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            id: local.id
+                        })
+                    })
+
+                    const data = await response.json()
+
+                    if (!response.ok) {
+                        throw new Error(
+                            data.erro ||
+                            data.error ||
+                            "Erro ao remover local."
+                        )
+                    }
+
+                    // Atualiza a lista automaticamente
+                    await buscarLocais()
+
+                    abrirDialog({
+                        title: "Local removido",
+                        message: "O local foi removido com sucesso."
+                    })
+
+                } catch (error) {
+                    console.error(
+                        "Erro ao remover local:",
+                        error
+                    )
+
+                    abrirDialog({
+                        title: "Erro",
+                        message:
+                            error instanceof Error
+                                ? error.message
+                                : "Erro ao remover local."
+                    })
+                }
+            }
+        })
     }
 
 
@@ -684,7 +739,7 @@ export default function Locais() {
                                                             <button className="flex justify-center items-center rounded-full w-10 h-10 font-bold border border-green-600 text-green-600 duration-200 transition-all hover:bg-green-600 hover:text-white">
                                                                 <BsBuildingDash />
                                                             </button>
-                                                            <button className="flex justify-center items-center rounded-full w-10 h-10 font-bold border border-red-600 text-red-600 duration-200 transition-all hover:bg-red-600 hover:text-white">
+                                                            <button onClick={() => removerLocal(local)} className="flex justify-center items-center rounded-full w-10 h-10 font-bold border border-red-600 text-red-600 duration-200 transition-all hover:bg-red-600 hover:text-white">
                                                                 <FaRegTrashAlt />
                                                             </button>
                                                             <button className="flex justify-center items-center rounded-full w-10 h-10 font-bold border border-amber-600 text-amber-600 duration-200 transition-all hover:bg-amber-600 hover:text-white">

@@ -132,6 +132,8 @@ export default function DashboardSuperAdmin({ usuario }: DashboardSuperAdminProp
         return locais.find(local => local.id === localId)
     }
 
+    
+
     return (
         <>
             <div className="grid grid-cols-[280px_1fr] grid-rows-[1fr_75px] w-full min-h-screen">

@@ -76,6 +76,7 @@ export async function POST(request: NextRequest) {
         )
     }
 }
+
 export async function GET() {
     try {
         const tiposAtendimento = await prisma.tipoAtendimento.findMany({
@@ -105,5 +106,67 @@ export async function GET() {
             },
             { status: 500 }
         );
+    }
+}
+
+export async function DELETE(request: NextRequest) {
+    try {
+        const body = await request.json()
+
+        const { id } = body
+
+        if (!id) {
+            return NextResponse.json(
+                {
+                    erro: "ID da especialidade não informado.",
+                },
+                { status: 400 }
+            )
+        }
+
+        const especialidade =
+            await prisma.tipoAtendimento.findUnique({
+                where: {
+                    id,
+                },
+            })
+
+        if (!especialidade) {
+            return NextResponse.json(
+                {
+                    erro: "Especialidade não encontrada.",
+                },
+                { status: 404 }
+            )
+        }
+
+        await prisma.tipoAtendimento.delete({
+            where: {
+                id,
+            },
+        })
+
+        return NextResponse.json(
+            {
+                mensagem: "Especialidade removida com sucesso.",
+            },
+            { status: 200 }
+        )
+
+    } catch (error) {
+        console.error(
+            "Erro ao remover especialidade:",
+            error
+        )
+
+        return NextResponse.json(
+            {
+                erro:
+                    error instanceof Error
+                        ? error.message
+                        : "Erro interno ao remover especialidade.",
+            },
+            { status: 500 }
+        )
     }
 }
