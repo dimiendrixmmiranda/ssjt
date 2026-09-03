@@ -154,3 +154,22 @@ button{
     @apply font-sans;
   }
 }
+
+
+.barraDeRolagemTabelaConsultasExames::-webkit-scrollbar {
+    width: 8px;
+    height: 4px;
+}
+
+.barraDeRolagemTabelaConsultasExames::-webkit-scrollbar-track {
+    background: #18181b;
+}
+
+.barraDeRolagemTabelaConsultasExames::-webkit-scrollbar-thumb {
+    background: #52525b;
+    border-radius: 999px;
+}
+
+.barraDeRolagemTabelaConsultasExames::-webkit-scrollbar-thumb:hover {
+    background: #16a34a;
+}

@@ -21,6 +21,10 @@ import calcularIdade from "@/utils/calcularIdade";
 import { Paginator } from "primereact/paginator";
 import { tiposDeCondicoes, tiposDeDados } from "@/utils/opcoesDeDados";
 import DadosNaoEncontrados from "@/components/assets/dadosNaoEncontrados";
+import MenuContextoAtendimento from "@/components/assets/menuContextoAtendimento";
+import { useRef } from "react";
+import { MdChevronLeft, MdChevronRight } from "react-icons/md";
+
 
 export default function ConsultasEExames() {
     const { pacientes } = usePacientes()
@@ -28,6 +32,23 @@ export default function ConsultasEExames() {
     const { especialidades } = useEspecialidades()
     const { locais } = useLocais()
     const { atendimentos } = useAtendimentos()
+
+    const [menuContexto, setMenuContexto] = useState<{
+        x: number
+        y: number
+        atendimento: typeof atendimentosPorPagina[number]
+    } | null>(null)
+
+    const tabelaRef = useRef<HTMLDivElement>(null);
+
+    const rolarTabela = (direcao: "esquerda" | "direita") => {
+        if (!tabelaRef.current) return;
+        console.log("aui")
+        tabelaRef.current.scrollBy({
+            left: direcao === "direita" ? 300 : -300,
+            behavior: "smooth",
+        });
+    };
 
     const [buttonActive, setButtonActive] = useState<'todos' | 'consultas' | 'exames' | 'cirurgias'>('todos')
     const [visible, setVisible] = useState(false);
@@ -493,168 +514,218 @@ export default function ConsultasEExames() {
                                     <p>Cirurgias</p>
                                 </button>
                             </div>
-                            <div className="mt-4 h-full">
-                                {
-                                    atendimentosPorPagina.length > 0 ? (
-                                        <div className="w-full overflow-x-auto border border-verde-escuro rounded-t-lg rounded-b-lg text-sm">
-                                            <ul className="grid grid-cols-[130px_160px_120px_240px_160px_130px_180px_250px_100px_250px_250px_150px_190px_180px_190px_120px] min-w-max">
-                                                <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
-                                                    <p>ID da Consulta</p>
-                                                </li>
-                                                <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
-                                                    <p>Data da Solicitação</p>
-                                                </li>
-                                                <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
-                                                    <p>Prioridade</p>
-                                                </li>
-                                                <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
-                                                    <p>Paciente</p>
-                                                </li>
-                                                <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
-                                                    <p>Tipo</p>
-                                                </li>
-                                                <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
-                                                    <p>Situação</p>
-                                                </li>
-                                                <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
-                                                    <p>Data de Nascimento</p>
-                                                </li>
-                                                <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
-                                                    <p>Nome da Mãe</p>
-                                                </li>
-                                                <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
-                                                    <p>Idade</p>
-                                                </li>
-                                                <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
-                                                    <p>Profissional Solicitante</p>
-                                                </li>
-                                                <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
-                                                    <p>Especialidade/Procedimento</p>
-                                                </li>
-                                                <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
-                                                    <p>Data de Retorno</p>
-                                                </li>
-                                                <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
-                                                    <p>Unidade de Saúde</p>
-                                                </li>
-                                                <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
-                                                    <p>Data da Realização</p>
-                                                </li>
-                                                <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
-                                                    <p>Local da Realização</p>
-                                                </li>
-                                                <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
-                                                    <p>Ações</p>
-                                                </li>
-                                            </ul>
-                                            <ul className="text-zinc-800">
-                                                {atendimentosPorPagina.map((item, i) => {
-                                                    const paciente = pacientes.find(pac => pac.id === item.pacienteId)
-                                                    const medicoSolicitante = prestadores.find(pres => pres.id === item.medicoSolicitanteId)
+                            <div className="relative w-full">
+                                <button
+                                    type="button"
+                                    onClick={() => rolarTabela("esquerda")}
+                                    className="
+                                        absolute left-2 top-1/2 -translate-y-1/2 z-10
+                                        flex items-center justify-center
+                                        w-8 h-8
+                                        rounded-full
+                                        bg-white/90
+                                        border border-zinc-300
+                                        text-zinc-600
+                                        shadow-sm
+                                        hover:bg-zinc-100
+                                        hover:text-verde-escuro
+                                        transition-all
+                                    "
+                                    aria-label="Rolar tabela para esquerda"
+                                >
+                                    <MdChevronLeft size={24} />
+                                </button>
+                                <div className="mt-4 h-full">
+                                    {
+                                        atendimentosPorPagina.length > 0 ? (
+                                            <div ref={tabelaRef} className="w-full overflow-x-auto border border-verde-escuro rounded-t-lg rounded-b-lg text-sm barraDeRolagemTabelaConsultasExames">
+                                                <ul className="grid grid-cols-[130px_160px_120px_240px_160px_130px_180px_250px_100px_250px_250px_150px_190px_180px_190px_120px] min-w-max">
+                                                    <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
+                                                        <p>ID da Consulta</p>
+                                                    </li>
+                                                    <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
+                                                        <p>Data da Solicitação</p>
+                                                    </li>
+                                                    <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
+                                                        <p>Prioridade</p>
+                                                    </li>
+                                                    <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
+                                                        <p>Paciente</p>
+                                                    </li>
+                                                    <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
+                                                        <p>Tipo</p>
+                                                    </li>
+                                                    <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
+                                                        <p>Situação</p>
+                                                    </li>
+                                                    <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
+                                                        <p>Data de Nascimento</p>
+                                                    </li>
+                                                    <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
+                                                        <p>Nome da Mãe</p>
+                                                    </li>
+                                                    <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
+                                                        <p>Idade</p>
+                                                    </li>
+                                                    <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
+                                                        <p>Profissional Solicitante</p>
+                                                    </li>
+                                                    <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
+                                                        <p>Especialidade/Procedimento</p>
+                                                    </li>
+                                                    <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
+                                                        <p>Data de Retorno</p>
+                                                    </li>
+                                                    <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
+                                                        <p>Unidade de Saúde</p>
+                                                    </li>
+                                                    <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
+                                                        <p>Data da Realização</p>
+                                                    </li>
+                                                    <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
+                                                        <p>Local da Realização</p>
+                                                    </li>
+                                                    <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
+                                                        <p>Ações</p>
+                                                    </li>
+                                                </ul>
+                                                <ul className="text-zinc-800">
+                                                    {atendimentosPorPagina.map((item, i) => {
+                                                        const paciente = pacientes.find(pac => pac.id === item.pacienteId)
+                                                        const medicoSolicitante = prestadores.find(pres => pres.id === item.medicoSolicitanteId)
 
-                                                    return (
-                                                        <li key={i}>
-                                                            <ul className={`
-                                                    grid grid-cols-[130px_160px_120px_240px_160px_130px_180px_250px_100px_250px_250px_150px_190px_180px_190px_120px] min-w-max
-                                                    transition-all duration-200 font-semibold
-                                                    ${item.categoriaAtendimento === 'CONSULTA' ? 'bg-blue-100 hover:bg-blue-200' : ''}
-                                                    ${item.categoriaAtendimento === 'PROCEDIMENTO' ? 'bg-orange-100 hover:bg-orange-200' : ''}
-                                                    ${item.categoriaAtendimento === 'CIRURGIA' ? 'bg-red-100 hover:bg-red-200' : ''}
-                                                `}>
-                                                                <li className="truncate p-3 text-center border border-zinc-200">
-                                                                    {item.id}
-                                                                </li>
-
-                                                                <li className="truncate p-3 text-center border border-zinc-200 whitespace-nowrap">
-                                                                    {new Date(item.dataDeEntrada)
-                                                                        .toISOString()
-                                                                        .split("T")[0]
-                                                                        .split("-")
-                                                                        .reverse()
-                                                                        .join("/")}
-                                                                </li>
-
-                                                                <li className="truncate p-3 text-center border border-zinc-200">
-                                                                    <span
-                                                                        className={`inline-flex px-3 py-1 rounded-full text-xs font-bold ${getPrioridadeClass(
-                                                                            item.situacao
-                                                                        )}`}
-                                                                    >
-                                                                        {item.situacao}
-                                                                    </span>
-                                                                </li>
-
-                                                                <li className="truncate p-3 border border-zinc-200">
-                                                                    {paciente?.nome}
-                                                                </li>
-
-                                                                <li className="truncate p-3 text-center border border-zinc-200">
-                                                                    {item.categoriaAtendimento}
-                                                                </li>
-
-                                                                <li className="truncate p-3 text-center border border-zinc-200">
-                                                                    Em espera
-                                                                </li>
-
-                                                                <li className="truncate p-3 text-center border border-zinc-200 whitespace-nowrap">
-                                                                    {paciente?.dataDeNascimento
-                                                                        ? new Date(paciente.dataDeNascimento)
+                                                        return (
+                                                            <li key={i}>
+                                                                <ul
+                                                                    onContextMenu={(e) => {
+                                                                        e.preventDefault()
+                                                                        setMenuContexto({
+                                                                            x: e.clientX,
+                                                                            y: e.clientY - 200,
+                                                                            atendimento: item,
+                                                                        })
+                                                                    }}
+                                                                    className={`
+                                                                    grid grid-cols-[130px_160px_120px_240px_160px_130px_180px_250px_100px_250px_250px_150px_190px_180px_190px_120px] min-w-max
+                                                                    transition-all duration-200 font-semibold
+                                                                    ${item.categoriaAtendimento === 'CONSULTA' ? 'bg-blue-100 hover:bg-blue-200' : ''}
+                                                                    ${item.categoriaAtendimento === 'PROCEDIMENTO' ? 'bg-orange-100 hover:bg-orange-200' : ''}
+                                                                    ${item.categoriaAtendimento === 'CIRURGIA' ? 'bg-red-100 hover:bg-red-200' : ''}
+                                                            `}>
+                                                                    <li className="truncate p-3 text-center border border-zinc-200">
+                                                                        {item.id}
+                                                                    </li>
+                                                                    <li className="truncate p-3 text-center border border-zinc-200 whitespace-nowrap">
+                                                                        {new Date(item.dataDeEntrada)
                                                                             .toISOString()
                                                                             .split("T")[0]
                                                                             .split("-")
                                                                             .reverse()
-                                                                            .join("/")
-                                                                        : "-"}
-                                                                </li>
+                                                                            .join("/")}
+                                                                    </li>
 
-                                                                <li className="truncate p-3 border border-zinc-200">
-                                                                    {paciente?.nomeDaMae}
-                                                                </li>
+                                                                    <li className="truncate p-3 text-center border border-zinc-200">
+                                                                        <span
+                                                                            className={`inline-flex px-3 py-1 rounded-full text-xs font-bold ${getPrioridadeClass(
+                                                                                item.situacao
+                                                                            )}`}
+                                                                        >
+                                                                            {item.situacao}
+                                                                        </span>
+                                                                    </li>
 
-                                                                <li className="truncate p-3 text-center border border-zinc-200">
-                                                                    {calcularIdade(paciente?.dataDeNascimento)}
-                                                                    22
-                                                                </li>
+                                                                    <li className="truncate p-3 border border-zinc-200">
+                                                                        {paciente?.nome}
+                                                                    </li>
 
-                                                                <li className="truncate p-3 border border-zinc-200">
-                                                                    {medicoSolicitante?.nome}
-                                                                </li>
+                                                                    <li className="truncate p-3 text-center border border-zinc-200">
+                                                                        {item.categoriaAtendimento}
+                                                                    </li>
 
-                                                                <li className="truncate p-3 border border-zinc-200">
-                                                                    {medicoSolicitante?.especialidadeId}
-                                                                </li>
+                                                                    <li className="truncate p-3 text-center border border-zinc-200">
+                                                                        Em espera
+                                                                    </li>
 
-                                                                <li className="truncate p-3 text-center border border-zinc-200 whitespace-nowrap">
-                                                                    {/* {item.dataRetorno} */}
-                                                                </li>
+                                                                    <li className="truncate p-3 text-center border border-zinc-200 whitespace-nowrap">
+                                                                        {paciente?.dataDeNascimento
+                                                                            ? new Date(paciente.dataDeNascimento)
+                                                                                .toISOString()
+                                                                                .split("T")[0]
+                                                                                .split("-")
+                                                                                .reverse()
+                                                                                .join("/")
+                                                                            : "-"}
+                                                                    </li>
 
-                                                                <li className="truncate p-3 border border-zinc-200">
-                                                                    {item.unidadeDeOrigemId}
-                                                                </li>
+                                                                    <li className="truncate p-3 border border-zinc-200">
+                                                                        {paciente?.nomeDaMae}
+                                                                    </li>
 
-                                                                <li className="truncate p-3 text-center border border-zinc-200 whitespace-nowrap">
-                                                                    {/* {item.dataRealizacao} */}
-                                                                </li>
+                                                                    <li className="truncate p-3 text-center border border-zinc-200">
+                                                                        {calcularIdade(paciente?.dataDeNascimento)}
+                                                                        22
+                                                                    </li>
 
-                                                                <li className="truncate p-3 border border-zinc-200">
-                                                                    {/* {item.localRealizacao} */}
-                                                                </li>
+                                                                    <li className="truncate p-3 border border-zinc-200">
+                                                                        {medicoSolicitante?.nome}
+                                                                    </li>
 
-                                                                <li className="truncate p-3 text-center border border-zinc-200">
-                                                                    <button className="text-verde font-bold">
-                                                                        Ver
-                                                                    </button>
-                                                                </li>
-                                                            </ul>
-                                                        </li>
-                                                    )
-                                                })}
-                                            </ul>
-                                        </div>
-                                    ) : (
-                                        <DadosNaoEncontrados />
-                                    )
-                                }
+                                                                    <li className="truncate p-3 border border-zinc-200">
+                                                                        {medicoSolicitante?.especialidadeId}
+                                                                    </li>
+
+                                                                    <li className="truncate p-3 text-center border border-zinc-200 whitespace-nowrap">
+                                                                        {/* {item.dataRetorno} */}
+                                                                    </li>
+
+                                                                    <li className="truncate p-3 border border-zinc-200">
+                                                                        {item.unidadeDeOrigemId}
+                                                                    </li>
+
+                                                                    <li className="truncate p-3 text-center border border-zinc-200 whitespace-nowrap">
+                                                                        {/* {item.dataRealizacao} */}
+                                                                    </li>
+
+                                                                    <li className="truncate p-3 border border-zinc-200">
+                                                                        {/* {item.localRealizacao} */}
+                                                                    </li>
+
+                                                                    <li className="truncate p-3 text-center border border-zinc-200">
+                                                                        <button className="text-verde font-bold">
+                                                                            Ver
+                                                                        </button>
+                                                                    </li>
+                                                                </ul>
+                                                            </li>
+                                                        )
+                                                    })}
+                                                </ul>
+                                            </div>
+                                        ) : (
+                                            <DadosNaoEncontrados />
+                                        )
+                                    }
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={() => rolarTabela("direita")}
+                                    className="
+                                        absolute right-2 top-1/2 -translate-y-1/2 z-10
+                                        flex items-center justify-center
+                                        w-8 h-8
+                                        rounded-full
+                                        bg-white/90
+                                        border border-zinc-300
+                                        text-zinc-600
+                                        shadow-sm
+                                        hover:bg-zinc-100
+                                        hover:text-verde-escuro
+                                        transition-all
+                                    "
+                                    aria-label="Rolar tabela para direita"
+                                >
+                                    <MdChevronRight size={24} />
+                                </button>
                             </div>
                         </div>
                         {/* Paginator */}
@@ -1181,6 +1252,15 @@ export default function ConsultasEExames() {
                     </div>
                 </Dialog>
             }
+
+            {menuContexto && (
+                <MenuContextoAtendimento
+                    x={menuContexto.x}
+                    y={menuContexto.y}
+                    atendimento={menuContexto.atendimento}
+                    onClose={() => setMenuContexto(null)}
+                />
+            )}
         </div >
     )
 }
