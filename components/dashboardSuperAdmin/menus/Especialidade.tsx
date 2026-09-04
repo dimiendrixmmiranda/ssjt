@@ -26,6 +26,8 @@ export default function Especialidade() {
     const [codigo, setCodigo] = useState('')
     const [descricao, setDescricao] = useState('')
     const [ativo, setAtivo] = useState(true)
+    const [opcoes, setOpcoes] = useState<any[]>([])
+    const [opcaoAtual, setOpcaoAtual] = useState<any | null>()
 
     const { especialidades, buscarEspecialidades } = useEspecialidades()
     const { abrirDialog } = useDialog()
@@ -111,6 +113,7 @@ export default function Especialidade() {
                 codigo,
                 descricao,
                 ativo,
+                opcoes,
             }
 
             abrirDialog({
@@ -140,10 +143,8 @@ export default function Especialidade() {
         const especialidadeSelecionada = especialidades.find(
             esp => esp.id === especialidadeId
         )
-
         console.log("ID:", especialidadeId)
         console.log("Especialidade:", especialidadeSelecionada)
-
         if (!especialidadeSelecionada) {
             abrirDialog({
                 title: "Erro",
@@ -151,7 +152,6 @@ export default function Especialidade() {
             })
             return
         }
-
         abrirDialog({
             title: "Excluir especialidade",
             message: `Deseja realmente excluir a especialidade "${especialidadeSelecionada.nome}"?`,
@@ -204,6 +204,38 @@ export default function Especialidade() {
         })
     }
 
+    const adicionarOpcao = () => {
+        const valor = opcaoAtual.trim()
+        if (!valor) {
+            return
+        }
+        const jaExiste = opcoes.some(
+            opcao => opcao.valor.toLowerCase() === valor.toLowerCase()
+        )
+        if (jaExiste) {
+            abrirDialog({
+                title: "Opção já adicionada",
+                message: "Essa opção de procedimento já foi adicionada."
+            })
+
+            return
+        }
+        setOpcoes(prev => [
+            ...prev,
+            {
+                label: valor,
+                valor: valor
+            }
+        ])
+        setOpcaoAtual("")
+    }
+
+    const removerOpcao = (valor: string) => {
+        setOpcoes(prev =>
+            prev.filter(opcao => opcao.valor !== valor)
+        )
+    }
+
     // Falta implementar os filtros para buscar
     return (
         <div className="p-6 overflow-x-hidden max-h-[91.5vh]">
@@ -220,6 +252,54 @@ export default function Especialidade() {
                     <form onSubmit={handleSubmit} className="flex flex-col gap-2">
                         <InputSelect icone={<AiOutlineSelect />} id="categoria" label="Selecione o categoria" nome="categoria" setValor={setCategoria} valor={categoria} opcoes={[{ valor: '', label: 'Selecione' }, { valor: 'CONSULTA', label: 'Consulta' }, { valor: 'PROCEDIMENTO', label: 'Exame' }, { valor: 'CIRURGIA', label: 'Cirurgia' }]} />
                         <InputTexto icone={<MdDriveFileRenameOutline />} id="nome" label="Nome" nome="nome" placeholder="Digite o nome da especialidade ou procedimento" setValor={setNome} valor={nome} />
+                        <div>
+                            <div className="flex items-end gap-2">
+                                <div className="flex-1">
+                                    <InputTexto
+                                        icone={<MdDriveFileRenameOutline />}
+                                        id="opcaoProcedimentoFilho"
+                                        label="Opções de Procedimento Filho"
+                                        nome="opcaoProcedimentoFilho"
+                                        placeholder="Digite uma opção de procedimento filho"
+                                        setValor={setOpcaoAtual}
+                                        valor={opcaoAtual}
+                                    />
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={adicionarOpcao}
+                                    className="h-[40px] px-4 bg-verde text-white rounded-lg font-bold"
+                                >
+                                    Adicionar
+                                </button>
+                            </div>
+                            {opcoes.length > 0 && (
+                                <div className="mt-3 border rounded-lg p-3">
+                                    <p className="font-bold mb-2">
+                                        Procedimentos adicionados
+                                    </p>
+
+                                    <div className="flex flex-col gap-2">
+                                        {opcoes.map((opcao) => (
+                                            <div
+                                                key={opcao.valor}
+                                                className="flex items-center justify-between border rounded-lg px-3 py-2"
+                                            >
+                                                <span>{opcao.label}</span>
+
+                                                <button
+                                                    type="button"
+                                                    onClick={() => removerOpcao(opcao.valor)}
+                                                    className="text-red-500 hover:text-red-700"
+                                                >
+                                                    <RiDeleteBin5Line />
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                         <InputTexto icone={<GoCodescan />} id="codigo" label="Código" nome="codigo" placeholder="Ex: 156" setValor={setCodigo} valor={codigo} />
                         <InputTextArea altura="h-[150px]" icone={<LiaAudioDescriptionSolid />} id="descricao" label="Adicione uma descrição (Opcional)" nome="descricao" placeholder="..." setValor={setDescricao} valor={descricao} />
                         <InputCheckbox id="ativo" label="Ativo" nome="codigo" setValor={setAtivo} valor={ativo} descricao="Desmarque para inativar esse item e oculta-lo nos cadastros" />

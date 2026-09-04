@@ -14,6 +14,7 @@ export async function POST(request: NextRequest) {
             especialidadeDoMedicoSolicitante,
             categoriaAtendimento,
             especialidadeId,
+            procedimentoFilhoId, // ← ADICIONE
             situacao,
             tipoDeConsulta,
         } = body;
@@ -69,6 +70,42 @@ export async function POST(request: NextRequest) {
                 { erro: "Especialidade/procedimento é obrigatório." },
                 { status: 400 }
             );
+        }
+
+        if (
+            categoriaAtendimento === CategoriaAtendimento.PROCEDIMENTO &&
+            !procedimentoFilhoId
+        ) {
+            return NextResponse.json(
+                { erro: "Procedimento filho é obrigatório para procedimentos." },
+                { status: 400 }
+            );
+        }
+
+        let procedimentoFilho = null;
+
+        if (procedimentoFilhoId) {
+            procedimentoFilho = await prisma.tipoAtendimentoOpcao.findUnique({
+                where: {
+                    id: procedimentoFilhoId,
+                },
+            });
+
+            if (!procedimentoFilho) {
+                return NextResponse.json(
+                    { erro: "Procedimento filho não encontrado." },
+                    { status: 404 }
+                );
+            }
+
+            if (procedimentoFilho.tipoAtendimentoId !== especialidadeId) {
+                return NextResponse.json(
+                    {
+                        erro: "O procedimento filho não pertence à especialidade selecionada.",
+                    },
+                    { status: 400 }
+                );
+            }
         }
 
         if (!situacao) {
@@ -199,38 +236,32 @@ export async function POST(request: NextRequest) {
                 { status: 400 }
             );
         }
-
-        // =========================
-        // CRIA ATENDIMENTO
-        // =========================
-
+        
         const atendimento = await prisma.atendimento.create({
             data: {
                 pacienteId,
                 unidadeDeOrigemId,
                 dataDeEntrada: new Date(dataDeEntrada),
-
                 medicoSolicitanteId,
-
                 especialidadeDoMedicoSolicitante,
-
                 categoriaAtendimento,
-
                 especialidadeId,
-
+                procedimentoFilhoId:
+                    categoriaAtendimento === CategoriaAtendimento.PROCEDIMENTO
+                        ? procedimentoFilhoId
+                        : null,
                 situacao,
-
                 tipoDeConsulta:
                     categoriaAtendimento === CategoriaAtendimento.CONSULTA
                         ? tipoDeConsulta
                         : null,
             },
-
             include: {
                 paciente: true,
                 unidadeDeOrigem: true,
                 medicoSolicitante: true,
                 especialidade: true,
+                procedimentoFilho: true, // ← também adicione
             },
         });
 

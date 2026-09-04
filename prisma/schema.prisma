@@ -122,6 +122,23 @@ enum Prioridade{
   NORMAL
 }
 
+model TipoAtendimentoOpcao {
+  id        String   @id @default(cuid())
+  label     String
+  valor     String
+  ativo     Boolean  @default(true)
+
+  tipoAtendimentoId String
+  tipoAtendimento TipoAtendimento @relation(fields: [tipoAtendimentoId], references: [id], onDelete: Cascade)
+
+  atendimentos Atendimento[] @relation("AtendimentoProcedimentoFilho")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([tipoAtendimentoId])
+}
+
 model Usuario {
   id        String   @id @default(cuid())
   nome      String
@@ -146,6 +163,7 @@ model TipoAtendimento {
   descricao   String?
   createdAt   DateTime               @default(now())
   updatedAt   DateTime               @updatedAt
+  opcoes TipoAtendimentoOpcao[]
 
   locais LocalTipoAtendimento[]
   atendimentos Atendimento[] @relation("AtendimentoEspecialidade")
@@ -303,35 +321,30 @@ model Atendimento {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // PACIENTE
   pacienteId String
   paciente   Paciente @relation(fields: [pacienteId], references: [id])
 
-  // ORIGEM
   unidadeDeOrigemId String
   unidadeDeOrigem   Local @relation("AtendimentoUnidadeOrigem", fields: [unidadeDeOrigemId], references: [id])
 
   dataDeEntrada DateTime
 
-  // MÉDICO SOLICITANTE
   medicoSolicitanteId String
   medicoSolicitante   Prestador @relation("AtendimentoMedicoSolicitante", fields: [medicoSolicitanteId], references: [id])
 
-  // ESPECIALIDADE DO MÉDICO SOLICITANTE
   especialidadeDoMedicoSolicitante String
 
-  // DESTINO
   categoriaAtendimento CategoriaAtendimento
 
-  // ID do tipo/especialidade/procedimento escolhido
-  especialidadeId String
-  especialidade   TipoAtendimento @relation("AtendimentoEspecialidade", fields: [especialidadeId], references: [id])
-
-  // SITUAÇÃO
   situacao Prioridade
 
-  // SOMENTE PARA CONSULTA
   tipoDeConsulta TipoDeConsulta?
+
+  especialidadeId String
+  especialidade TipoAtendimento @relation("AtendimentoEspecialidade", fields: [especialidadeId], references: [id])
+
+  procedimentoFilhoId String?
+  procedimentoFilho TipoAtendimentoOpcao? @relation("AtendimentoProcedimentoFilho", fields: [procedimentoFilhoId], references: [id])
 
   @@index([pacienteId])
   @@index([unidadeDeOrigemId])

@@ -1,39 +1,56 @@
-import { TipoAtendimento } from "@/app/generated/prisma/client";
+import {
+    TipoAtendimento,
+    TipoAtendimentoOpcao,
+} from "@/app/generated/prisma/client";
 import { useEffect, useState } from "react";
 
+type TipoAtendimentoComOpcoes = TipoAtendimento & {
+    opcoes: TipoAtendimentoOpcao[];
+};
+
 export function useEspecialidades() {
-    const [especialidades, setEspecialidades] = useState<TipoAtendimento[]>([])
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState<string | null>(null)
+    const [especialidades, setEspecialidades] = useState<
+        TipoAtendimentoComOpcoes[]
+    >([]);
+
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     const buscarEspecialidades = async () => {
         try {
-            setLoading(true)
-            setError(null)
-            const response = await fetch("/api/especialidades")
+            setLoading(true);
+            setError(null);
+
+            const response = await fetch("/api/especialidades");
+
             if (!response.ok) {
-                throw new Error("Erro ao buscar especialidades.")
+                throw new Error("Erro ao buscar especialidades.");
             }
-            const data = await response.json()
-            setEspecialidades(data)
+
+            const data = await response.json();
+
+            setEspecialidades(data);
         } catch (err) {
-            console.error("Erro ao buscar especialidades:", err)
+            console.error("Erro ao buscar especialidades:", err);
+
             setError(
                 err instanceof Error
                     ? err.message
                     : "Erro ao buscar especialidades."
-            )
+            );
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
-    }
+    };
+
     useEffect(() => {
-        buscarEspecialidades()
-    }, [])
+        buscarEspecialidades();
+    }, []);
+
     return {
         especialidades,
         loading,
         error,
         buscarEspecialidades,
-    }
+    };
 }

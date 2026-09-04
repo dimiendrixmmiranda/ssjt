@@ -33,6 +33,7 @@ export default function ConsultasEExames() {
     const { locais } = useLocais()
     const { atendimentos } = useAtendimentos()
 
+
     const [menuContexto, setMenuContexto] = useState<{
         x: number
         y: number
@@ -86,6 +87,10 @@ export default function ConsultasEExames() {
     const [categoriaAtendimento, setCategoriaDeAtendimento] = useState('')
     const [especialidadeEncaminhada, setEspecialidadeEncaminhada] = useState('')
     const [buscarEspecialidadeEncaminhada, setBuscarEspecialidadeEncaminhada] = useState('')
+
+    const [procedimentoFilho, setProcedimentoFilho] = useState('')
+    const [buscarProcedimentoFilho, setBuscarProcedimentoFilho] = useState('')
+
     const [tipoDeConsulta, setTipoDeConsulta] = useState('')
     const [situacao, setSituacao] = useState('')
     const [dataDoRetorno, setDataDoRetorno] = useState('')
@@ -112,6 +117,20 @@ export default function ConsultasEExames() {
         .filter((especialidade) =>
             normalizarTexto(especialidade.nome).includes(
                 normalizarTexto(buscarEspecialidadeEncaminhada)
+            )
+        )
+        .slice(0, 8)
+
+    const especialidadeSelecionada = especialidades.find(
+        especialidade => especialidade.id === especialidadeEncaminhada
+    )
+
+    const procedimentosFilhos = especialidadeSelecionada?.opcoes ?? []
+
+    const procedimentosFilhosFiltrados = procedimentosFilhos
+        .filter((opcao) =>
+            normalizarTexto(opcao.label).includes(
+                normalizarTexto(buscarProcedimentoFilho)
             )
         )
         .slice(0, 8)
@@ -300,10 +319,22 @@ export default function ConsultasEExames() {
                     unidadeDeOrigemId: unidadeDeOrigem,
                     dataDeEntrada,
                     medicoSolicitanteId: prestadorAtual.id,
-                    especialidadeDoMedicoSolicitante: especialidadeDoPrestador,
+
+                    especialidadeDoMedicoSolicitante:
+                        especialidadeDoPrestador,
+
                     categoriaAtendimento,
-                    especialidadeId: especialidadeEncaminhada,
+
+                    especialidadeId:
+                        especialidadeEncaminhada,
+
+                    procedimentoFilhoId:
+                        categoriaAtendimento === "PROCEDIMENTO"
+                            ? procedimentoFilho || null
+                            : null,
+
                     situacao,
+
                     tipoDeConsulta:
                         categoriaAtendimento === "CONSULTA"
                             ? tipoDeConsulta
@@ -428,6 +459,27 @@ export default function ConsultasEExames() {
         setFirst(0)
     }, [buttonActive])
 
+    useEffect(() => {
+        if (!pesquisa) return
+
+        setAtendimentosEncontrados((anteriores) => {
+            const idsAtuais = new Set(atendimentos.map(a => a.id))
+
+            return anteriores
+                .map(anterior =>
+                    atendimentos.find(atual => atual.id === anterior.id)
+                )
+                .filter((atendimento): atendimento is typeof atendimentos[number] =>
+                    atendimento !== undefined
+                )
+        })
+    }, [atendimentos, pesquisa])
+
+    useEffect(() => {
+        setProcedimentoFilho('')
+        setBuscarProcedimentoFilho('')
+    }, [especialidadeEncaminhada])
+
     return (
         <div className="p-4 flex flex-col gap-4 font-arimo text-verde-escuro overflow-hidden row-span-2">
             <div className="flex justify-between">
@@ -539,7 +591,7 @@ export default function ConsultasEExames() {
                                     {
                                         atendimentosPorPagina.length > 0 ? (
                                             <div ref={tabelaRef} className="w-full overflow-x-auto border border-verde-escuro rounded-t-lg rounded-b-lg text-sm barraDeRolagemTabelaConsultasExames">
-                                                <ul className="grid grid-cols-[130px_160px_120px_240px_160px_130px_180px_250px_100px_250px_250px_150px_190px_180px_190px_120px] min-w-max">
+                                                <ul className="grid grid-cols-[130px_160px_120px_240px_160px_210px_180px_250px_100px_250px_250px_150px_190px_180px_190px_120px] min-w-max">
                                                     <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
                                                         <p>ID da Consulta</p>
                                                     </li>
@@ -556,6 +608,9 @@ export default function ConsultasEExames() {
                                                         <p>Tipo</p>
                                                     </li>
                                                     <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
+                                                        <p>Especialidade/Procedimento</p>
+                                                    </li>
+                                                    <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
                                                         <p>Situação</p>
                                                     </li>
                                                     <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
@@ -570,9 +625,7 @@ export default function ConsultasEExames() {
                                                     <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
                                                         <p>Profissional Solicitante</p>
                                                     </li>
-                                                    <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
-                                                        <p>Especialidade/Procedimento</p>
-                                                    </li>
+
                                                     <li className="p-3 font-bold whitespace-nowrap text-center border border-zinc-200">
                                                         <p>Data de Retorno</p>
                                                     </li>
@@ -593,7 +646,9 @@ export default function ConsultasEExames() {
                                                     {atendimentosPorPagina.map((item, i) => {
                                                         const paciente = pacientes.find(pac => pac.id === item.pacienteId)
                                                         const medicoSolicitante = prestadores.find(pres => pres.id === item.medicoSolicitanteId)
-
+                                                        const especialidade = especialidades.find(esp => esp.id === item.especialidadeId)
+                                                        console.log(especialidade)
+                                                        console.log(item)
                                                         return (
                                                             <li key={i}>
                                                                 <ul
@@ -606,7 +661,7 @@ export default function ConsultasEExames() {
                                                                         })
                                                                     }}
                                                                     className={`
-                                                                    grid grid-cols-[130px_160px_120px_240px_160px_130px_180px_250px_100px_250px_250px_150px_190px_180px_190px_120px] min-w-max
+                                                                    grid grid-cols-[130px_160px_120px_240px_160px_210px_180px_250px_100px_250px_250px_150px_190px_180px_190px_120px] min-w-max
                                                                     transition-all duration-200 font-semibold
                                                                     ${item.categoriaAtendimento === 'CONSULTA' ? 'bg-blue-100 hover:bg-blue-200' : ''}
                                                                     ${item.categoriaAtendimento === 'PROCEDIMENTO' ? 'bg-orange-100 hover:bg-orange-200' : ''}
@@ -642,6 +697,10 @@ export default function ConsultasEExames() {
                                                                         {item.categoriaAtendimento}
                                                                     </li>
 
+                                                                    <li className="truncate p-3 border border-zinc-200 text-center uppercase">
+                                                                        {especialidade?.nome}
+                                                                    </li>
+
                                                                     <li className="truncate p-3 text-center border border-zinc-200">
                                                                         Em espera
                                                                     </li>
@@ -663,16 +722,13 @@ export default function ConsultasEExames() {
 
                                                                     <li className="truncate p-3 text-center border border-zinc-200">
                                                                         {calcularIdade(paciente?.dataDeNascimento)}
-                                                                        22
                                                                     </li>
 
                                                                     <li className="truncate p-3 border border-zinc-200">
                                                                         {medicoSolicitante?.nome}
                                                                     </li>
 
-                                                                    <li className="truncate p-3 border border-zinc-200">
-                                                                        {medicoSolicitante?.especialidadeId}
-                                                                    </li>
+
 
                                                                     <li className="truncate p-3 text-center border border-zinc-200 whitespace-nowrap">
                                                                         {/* {item.dataRetorno} */}
@@ -1089,7 +1145,7 @@ export default function ConsultasEExames() {
                                             htmlFor="buscarEspecialidadeEncaminhada"
                                             className="font-semibold text-zinc-700"
                                         >
-                                            Encaminho para especialidade:
+                                            Encaminho para especialidade/Procedimento:
                                         </label>
                                         <input
                                             id="buscarEspecialidadeEncaminhada"
@@ -1169,6 +1225,104 @@ export default function ConsultasEExames() {
                                             )}
                                     </div>
                                 </div>
+                                {/* procedimento filho */}
+                                <div className="flex flex-col gap-1 relative">
+                                    <label
+                                        htmlFor="buscarProcedimentoFilho"
+                                        className="font-semibold text-zinc-700"
+                                    >
+                                        Procedimento:
+                                    </label>
+
+                                    <input
+                                        id="buscarProcedimentoFilho"
+                                        type="text"
+                                        value={
+                                            procedimentoFilho
+                                                ? procedimentosFilhos.find(
+                                                    opcao => opcao.id === procedimentoFilho
+                                                )?.label ?? ''
+                                                : buscarProcedimentoFilho
+                                        }
+                                        onChange={(e) => {
+                                            setBuscarProcedimentoFilho(e.target.value)
+                                            setProcedimentoFilho('')
+                                        }}
+                                        disabled={
+                                            categoriaAtendimento !== 'PROCEDIMENTO' ||
+                                            !especialidadeEncaminhada
+                                        }
+                                        placeholder={
+                                            !especialidadeEncaminhada
+                                                ? "Selecione primeiro o procedimento"
+                                                : "Digite o procedimento..."
+                                        }
+                                        autoComplete="off"
+                                        className="
+            w-full
+            border border-zinc-300
+            rounded-lg
+            px-3 py-2
+            outline-none
+            focus:border-verde
+            focus:ring-1
+            focus:ring-verde
+            disabled:bg-zinc-100
+            disabled:text-zinc-400
+        "
+                                    />
+
+                                    {especialidadeEncaminhada &&
+                                        !procedimentoFilho &&
+                                        buscarProcedimentoFilho.trim() !== '' && (
+                                            <div
+                                                className="
+                    absolute
+                    top-full
+                    left-0
+                    right-0
+                    z-50
+                    mt-1
+                    bg-white
+                    border
+                    border-zinc-200
+                    rounded-lg
+                    shadow-lg
+                    overflow-hidden
+                "
+                                            >
+                                                {procedimentosFilhosFiltrados.length > 0 ? (
+                                                    procedimentosFilhosFiltrados.map((opcao) => (
+                                                        <button
+                                                            type="button"
+                                                            key={opcao.id}
+                                                            onClick={() => {
+                                                                setProcedimentoFilho(opcao.id)
+                                                                setBuscarProcedimentoFilho('')
+                                                            }}
+                                                            className="
+                                w-full
+                                text-left
+                                px-4 py-3
+                                hover:bg-green-50
+                                border-b
+                                border-zinc-100
+                                transition
+                            "
+                                                        >
+                                                            <p className="font-semibold text-zinc-800">
+                                                                {opcao.label}
+                                                            </p>
+                                                        </button>
+                                                    ))
+                                                ) : (
+                                                    <div className="px-4 py-3 text-sm text-zinc-500">
+                                                        Nenhum procedimento encontrado.
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+                                </div>
                                 <div>
                                     <InputSelect
                                         icone={<AiOutlineSelect />}
@@ -1181,7 +1335,7 @@ export default function ConsultasEExames() {
                                     />
                                 </div>
                                 {/* Situação */}
-                                <div>
+                                <div className={`mt-auto ${categoriaAtendimento === 'PROCEDIMENTO' ? 'opacity-20' : ''}`}>
                                     <InputSelect
                                         icone={<AiOutlineSelect />}
                                         id="tipoDeConsulta"
@@ -1193,7 +1347,7 @@ export default function ConsultasEExames() {
                                         disabled={categoriaAtendimento !== 'CONSULTA'}
                                     />
                                 </div>
-                                <div className="mt-auto">
+                                <div className={`mt-auto ${categoriaAtendimento === 'PROCEDIMENTO' ? 'opacity-20' : ''}`}>
                                     <InputSelect
                                         icone={<AiOutlineSelect />}
                                         id="condicaoDeRetorno"
@@ -1205,8 +1359,10 @@ export default function ConsultasEExames() {
                                         disabled={tipoDeConsulta !== 'RETORNO'}
                                     />
                                 </div>
-                                <InputData icone={<HiOutlineCalendarDateRange />} id="dataDoRetorno" label="Data do Retorno" nome="dataDoRetorno" placeholder="Data do Retorno" setValor={setDataDoRetorno} valor={dataDoRetorno} disabled={tipoDeConsulta !== 'RETORNO'}
-                                />
+                                <div className={`${categoriaAtendimento === 'PROCEDIMENTO' ? 'opacity-20' : ''}`}>
+                                    <InputData icone={<HiOutlineCalendarDateRange />} id="dataDoRetorno" label="Data do Retorno" nome="dataDoRetorno" placeholder="Data do Retorno" setValor={setDataDoRetorno} valor={dataDoRetorno} disabled={tipoDeConsulta !== 'RETORNO'}
+                                    />
+                                </div>
                                 {/* Falta data de retorno em caso de ser retorno */}
                             </div>
                         </div>

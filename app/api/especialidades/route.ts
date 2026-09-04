@@ -11,6 +11,7 @@ export async function POST(request: NextRequest) {
             ativo,
             codigo,
             descricao,
+            opcoes,
         } = body
 
         if (!nome || !categoria || !codigo) {
@@ -50,6 +51,15 @@ export async function POST(request: NextRequest) {
                     ativo: ativo ?? true,
                     codigo: codigoNormalizado,
                     descricao: descricao?.trim() || null,
+
+                    opcoes: {
+                        create: Array.isArray(opcoes)
+                            ? opcoes.map((opcao: { label: string; valor: string }) => ({
+                                label: opcao.label,
+                                valor: opcao.valor,
+                            }))
+                            : [],
+                    },
                 },
             })
 
@@ -80,6 +90,16 @@ export async function POST(request: NextRequest) {
 export async function GET() {
     try {
         const tiposAtendimento = await prisma.tipoAtendimento.findMany({
+            include: {
+                opcoes: {
+                    where: {
+                        ativo: true,
+                    },
+                    orderBy: {
+                        label: "asc",
+                    },
+                },
+            },
             orderBy: [
                 {
                     categoria: "asc",
@@ -88,24 +108,24 @@ export async function GET() {
                     nome: "asc",
                 },
             ],
-        });
+        })
 
         return NextResponse.json(tiposAtendimento, {
             status: 200,
-        });
+        })
 
     } catch (error) {
         console.error(
             "Erro ao buscar tipos de atendimento:",
             error
-        );
+        )
 
         return NextResponse.json(
             {
                 erro: "Erro interno ao buscar tipos de atendimento.",
             },
             { status: 500 }
-        );
+        )
     }
 }
 
