@@ -1,0 +1,424 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Perfil {
+  ADMINISTRADOR
+  MEDICO
+  RECEPCAO
+  AGENDAMENTO
+  ENFERMEIRO
+}
+
+enum TipoEspecialidade {
+  NORMAL
+  TFD
+}
+
+enum TipoLocal {
+  POSTO_DE_SAUDE
+  HOSPITAL
+  CLINICA
+}
+
+enum Sexo {
+  MASCULINO
+  FEMININO
+  PREFIRO_NAO_DIZER
+}
+
+enum EstadoCivil {
+  SOLTEIRO
+  CASADO
+  DIVORCIADO
+  VIUVO
+  SEPARADO
+  UNIAO_ESTAVEL
+}
+
+enum CorRaca {
+  BRANCA
+  PRETA
+  PARDA
+  AMARELA
+  INDIGENA
+  NAO_INFORMADO
+}
+
+enum TipoSanguineo {
+  A
+  B
+  AB
+  O
+}
+
+enum FatorRh {
+  POSITIVO
+  NEGATIVO
+}
+
+enum SimNao {
+  SIM
+  NAO
+}
+
+enum OrgaoEmissor {
+  SSP
+  DETRAN
+  POLICIA_CIVIL
+  OUTRO
+}
+
+enum GrauEscolaridade {
+  FUNDAMENTAL_INCOMPLETO
+  FUNDAMENTAL_COMPLETO
+  MEDIO_INCOMPLETO
+  MEDIO_COMPLETO
+  SUPERIOR_INCOMPLETO
+  SUPERIOR_COMPLETO
+  POS_GRADUACAO
+  MESTRADO
+  DOUTORADO
+}
+
+enum Pais {
+  BRASIL
+  OUTRO
+}
+
+enum Zona {
+  URBANA
+  RURAL
+}
+
+enum TipoPrestador {
+  MEDICO
+  LABORATORIO
+}
+
+enum TipoDeConsulta {
+  PRIMEIRA_CONSULTA
+  RETORNO
+}
+
+enum Prioridade{
+  URGENTE
+  PRIORIDADE
+  NORMAL
+}
+
+enum CondicaoDeRetorno {
+  COM_EXAMES_PRONTOS
+  DETERMINADO_PERIODO_DE_TEMPO
+}
+
+enum Lado {
+  DIREITO
+  ESQUERDO
+  SUPERIOR
+  INFERIOR
+}
+
+enum TipoAgendamento {
+  CONSULTA
+  PROCEDIMENTO
+}
+
+enum RedeLocal {
+  REDE_MUNICIPAL
+  REDE_REFERENCIADA
+}
+
+
+model Usuario {
+  id                Int      @id @default(autoincrement())
+  nome              String
+  email             String   @unique
+  senha             String
+  perfil            Perfil
+  imagem            String?
+  dataDeNascimento  DateTime?
+  ativo             Boolean  @default(true)
+
+  unidadeDeOrigemId Int?
+  unidadeDeOrigem   Local?   @relation(fields: [unidadeDeOrigemId],references: [id])
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model Especialidade {
+  id        Int              @id @default(autoincrement())
+  nome      String
+  codigo    String           @unique
+  tipo      TipoEspecialidade
+  ativo     Boolean          @default(true)
+  filhas    EspecialidadeFilha[]
+
+  medicos   Medico[]
+  agendamentos Agendamento[]
+  prestadores     PrestadorEspecialidade[]
+
+
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+}
+
+model EspecialidadeFilha {
+  id              Int          @id @default(autoincrement())
+  nome            String
+  especialidadeId Int
+  especialidade   Especialidade @relation(fields: [especialidadeId],references: [id],onDelete: Cascade)
+
+  agendamentos Agendamento[]
+
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+}
+
+model Procedimento {
+  id        Int                 @id @default(autoincrement())
+  nome      String
+  codigo    String              @unique
+  ativo     Boolean             @default(true)
+
+  filhas    ProcedimentoFilho[]
+  agendamentos Agendamento[]
+  prestadores     PrestadorProcedimento[]
+
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+}
+
+model ProcedimentoFilho {
+  id              Int             @id @default(autoincrement())
+
+  nome            String?
+  procedimentoId  Int
+  procedimento    Procedimento    @relation(fields: [procedimentoId], references: [id], onDelete: Cascade)
+
+  agendamentos Agendamento[]
+
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+}
+
+model Medico {
+  id              Int          @id @default(autoincrement())
+  nome            String
+  codigo          String       @unique
+  crm             String       @unique
+  ativo           Boolean      @default(true)
+
+  especialidadeId Int
+  especialidade   Especialidade @relation(fields: [especialidadeId],references: [id])
+
+  agendamentosSolicitados Agendamento[]
+
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+}
+
+model Local {
+  id           Int       @id @default(autoincrement())
+
+  nome         String
+  tipo         TipoLocal
+  rede         RedeLocal?
+  ativo        Boolean   @default(true)
+
+  cidade       String
+  cep          String
+  uf           String
+
+  rua          String
+  numero       String
+  bairro       String
+  complemento  String?
+
+  telefone1    String
+  telefone2    String?
+  email        String?
+
+  usuariosOrigem Usuario[]
+
+  agendamentosOrigem Agendamento[]
+
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Paciente {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  idPaciente                   String?
+  nome                         String
+  nomeSocial                   String?
+  declaroNaoPossuirNomeSocial  Boolean @default(false)
+  nomeDaMae                    String
+  nomeDoPai                    String?
+  dataDeNascimento             DateTime
+  sexo                         Sexo?
+  estadoCivil                  EstadoCivil?
+  corRaca                      CorRaca?
+  cpf                          String   @unique
+  cartaoSus                    String?
+  nis                          String?
+  unidadeDeSaude               String?
+  codigoGsus                   String?
+  codigoIds                    String?
+  tipoSanguineo                TipoSanguineo?
+  fatorRh                      FatorRh?
+  observacoes                  String?
+
+  telefone1                    String
+  telefone2                    String?
+  email                        String?
+
+  rg                           String?
+  orgaoEmissor                 OrgaoEmissor?
+  ufRg                         String?
+  dataEmissaoRg                DateTime?
+  cpfRegular                   SimNao?
+  cpfCns                       String?
+  cnsMae                       String?
+  orientacaoRegCpf             SimNao?
+
+  tituloEleitor                String?
+  zonaEleitoral                String?
+  secaoEleitoral               String?
+
+  ctpsNumero                   String?
+  ctpsSerie                    String?
+  ctpsUf                       String?
+  ctpsDataEmissao              DateTime?
+  pisPasep                     String?
+
+  frequentaEscola              SimNao?
+  escola                       String?
+  serieEscolar                 String?
+  grauEscolaridade             GrauEscolaridade?
+  cursoProfissionalizante      String?
+
+  paisOrigem                   String?
+  entradaBrasil                DateTime?
+  numeroPortaria               String?
+  dataNaturalizacao            DateTime?
+
+  pais                         Pais?
+  uf                           String?
+  municipio                    String?
+  cep                          String?
+  bairro                       String?
+  rua                          String?
+  numero                       String?
+  complemento                  String?
+  zona                         Zona?
+
+  latitude                     Float?
+  longitude                    Float?
+
+  agendamentos Agendamento[]
+}
+
+enum StatusAgendamento {
+  EM_ESPERA
+  AGENDADO
+  BLOQUEADO
+  TIRADO_DA_FILA
+}
+
+model Agendamento {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tipo TipoAgendamento
+
+  pacienteId String
+  paciente   Paciente @relation(fields: [pacienteId], references: [id])
+
+  unidadeDeOrigemId Int
+  unidadeDeOrigem   Local @relation(fields: [unidadeDeOrigemId], references: [id])
+
+  dataDeEntrada DateTime
+
+  medicoSolicitanteId Int?
+  medicoSolicitante   Medico? @relation(fields: [medicoSolicitanteId], references: [id])
+
+  especialidadeId Int?
+  especialidade   Especialidade? @relation(fields: [especialidadeId], references: [id])
+
+  especialidadeFilhaId Int?
+  especialidadeFilha   EspecialidadeFilha? @relation(fields: [especialidadeFilhaId], references: [id])
+
+  tipoDeConsulta TipoDeConsulta?
+
+  procedimentoId Int?
+  procedimento   Procedimento? @relation(fields: [procedimentoId], references: [id])
+
+  procedimentoFilhoId Int?
+  procedimentoFilho   ProcedimentoFilho? @relation(fields: [procedimentoFilhoId], references: [id])
+
+  lado Lado?
+
+  prioridade Prioridade
+
+  condicaoDeRetorno CondicaoDeRetorno?
+  dataDoRetorno     DateTime?
+
+  encaminhamentoRemarcado Boolean @default(false)
+
+  status StatusAgendamento @default(EM_ESPERA)
+  dataDoAgendamento DateTime
+
+  ativo Boolean @default(true)
+}
+
+model Prestador {
+  id            Int      @id @default(autoincrement())
+  nome          String
+  codigo        String   @unique
+  ativo         Boolean  @default(true)
+  rede          RedeLocal?
+
+  telefone      String?
+  email         String?
+  observacoes   String?
+
+  especialidades PrestadorEspecialidade[]
+  procedimentos  PrestadorProcedimento[]
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model PrestadorEspecialidade {
+  prestadorId    Int
+  especialidadeId Int
+  prestador      Prestador @relation(fields: [prestadorId],references: [id],onDelete: Cascade)
+  especialidade  Especialidade @relation(fields: [especialidadeId],references: [id],onDelete: Cascade)
+  @@id([prestadorId, especialidadeId])
+}
+
+model PrestadorProcedimento {
+  prestadorId    Int
+  procedimentoId Int
+  prestador      Prestador @relation(fields: [prestadorId],references: [id],onDelete: Cascade)
+  procedimento   Procedimento @relation(fields: [procedimentoId],references: [id],onDelete: Cascade)
+  @@id([prestadorId, procedimentoId])
+}
