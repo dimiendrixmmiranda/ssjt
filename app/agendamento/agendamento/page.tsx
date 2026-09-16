@@ -1,6 +1,6 @@
 'use client'
 
-import { Local, Medico, Paciente, TipoEspecialidade } from "@/app/generated/prisma/client";
+import { Local, Medico, Paciente, Prestador, TipoEspecialidade } from "@/app/generated/prisma/client";
 import InputCheckbox from "@/components/assets/inputs/InputCheckbox";
 import InputData from "@/components/assets/inputs/InputData";
 import InputSelect from "@/components/assets/inputs/InputSelect";
@@ -29,6 +29,7 @@ import InputTexto from "@/components/assets/inputs/InputTexto";
 import MenuContextoPaciente from "@/components/assets/contextoDeAtendimento/ContextoDeAtendimento";
 import FormIncluirAgendamento from "@/components/formularios/FormIncluirAgendamento";
 import Image from "next/image";
+import { usePrestadores } from "@/hooks/usePrestadores";
 
 type AcaoPaciente =
     | "agendamento"
@@ -61,6 +62,7 @@ export default function Atendimentos() {
     const { locais } = useLocaisDeAtendimento()
     const { medicos } = useMedicos()
     const { especialidades } = useEspecialidades()
+    const { prestadores } = usePrestadores()
     const [visible, setVisible] = useState(false);
     const [buscarPaciente, setBuscarPaciente] = useState('')
     // Origem
@@ -293,17 +295,25 @@ export default function Atendimentos() {
             }
 
             const dadosAgendamento = {
+                // Tipo
                 tipo: botaoAdicionarConsultaProcedimento,
 
+                // Paciente
                 pacienteId: pacienteAtual.id,
 
+                // Unidade que originou
                 unidadeDeOrigemId: unidadeDeOrigem.id,
 
+                // Entrada na fila
                 dataDeEntrada: `${dataDeEntrada}T00:00:00`,
 
+                // Médico solicitante
                 medicoSolicitanteId: medicoSolicitante?.id ?? null,
 
-                // Especialidade do destino
+                // =========================
+                // CONSULTA
+                // =========================
+
                 especialidadeId:
                     botaoAdicionarConsultaProcedimento === "CONSULTA"
                         ? especialidadeEncaminhada
@@ -318,6 +328,10 @@ export default function Atendimentos() {
                     botaoAdicionarConsultaProcedimento === "CONSULTA"
                         ? tipoDeConsulta || null
                         : null,
+
+                // =========================
+                // PROCEDIMENTO
+                // =========================
 
                 procedimentoId:
                     botaoAdicionarConsultaProcedimento === "PROCEDIMENTO"
@@ -334,7 +348,15 @@ export default function Atendimentos() {
                         ? lado || null
                         : null,
 
+                // =========================
+                // PRIORIDADE
+                // =========================
+
                 prioridade: situacao,
+
+                // =========================
+                // RETORNO
+                // =========================
 
                 condicaoDeRetorno:
                     botaoAdicionarConsultaProcedimento === "CONSULTA"
@@ -347,11 +369,24 @@ export default function Atendimentos() {
                         ? `${dataDoRetorno}T00:00:00`
                         : null,
 
+                // =========================
+                // REMARCAÇÃO
+                // =========================
+
                 encaminhamentoRemarcado,
+
+                // =========================
+                // STATUS
+                // =========================
 
                 status: "EM_ESPERA",
 
-                dataDoAgendamento: `${dataDeEntrada}T00:00:00`,
+                // Ainda não foi colocado na agenda
+                dataDoAgendamento: null,
+
+                // =========================
+                // ATIVO
+                // =========================
 
                 ativo: true,
             }
@@ -382,17 +417,25 @@ export default function Atendimentos() {
 
             console.log("AGENDAMENTO CRIADO:", dados)
 
-            // Limpa o formulário
+            // =========================
+            // LIMPAR FORMULÁRIO
+            // =========================
+
             setPacienteAtual(null)
             setBuscarPaciente("")
 
             setUnidadeDeOrigem(null)
+
             setMedicoSolicitante(null)
             setBuscarMedicoSolicitante("")
 
             setEspecialidadeDoPrestador("")
 
             setTipoDeAtendimento("")
+
+            setEspecialidadeEncaminhada(null)
+            setBuscarEspecialidadeEncaminhada("")
+
             setEspecialidadeEncaminhada(null)
             setBuscarEspecialidadeEncaminhada("")
 
@@ -412,19 +455,23 @@ export default function Atendimentos() {
             setBuscarProcedimentoFilho("")
 
             setLado("")
+
             setEncaminhamentoRemarcado(false)
 
             setVisible(false)
 
         } catch (erro) {
-            console.error("Erro ao adicionar agendamento:", erro)
+            console.error(
+                "Erro ao adicionar agendamento:",
+                erro
+            )
 
             alert("Erro ao conectar com o servidor.")
         }
     }
 
     const [first, setFirst] = useState(0)
-    const [rows] = useState(7)
+    const [rows] = useState(5)
 
     const opcoesCampoDeBusca = [
         {
@@ -593,6 +640,10 @@ export default function Atendimentos() {
         setBuscaRealizada(true)
     }
 
+    console.log(agendamentos)
+
+
+
     return (
         <>
             <div className="p-4 flex flex-col gap-4 row-span-2 h-full">
@@ -666,45 +717,45 @@ export default function Atendimentos() {
                             </div>
                         </div>
                     </div>
+                    {/* Filtros por tipo */}
+                    <div className="shadow-[0px_0px_2px_1px_var(--verde-escuro)] rounded-lg py-2 px-4 gap-3 relative flex justify-between">
+                        <div className="flex items-center">
+                            <button onClick={() => setButtonActive('TODOS')} className={`p-3 font-bold ${buttonActive === 'TODOS' ? 'text-verde border-b-3 border-verde' : 'text-gray-700'}`}>
+                                <p>Todos</p>
+                            </button>
+                            <button onClick={() => setButtonActive('CONSULTA')} className={`p-3 font-bold ${buttonActive === 'CONSULTA' ? 'text-verde border-b-3 border-verde' : 'text-gray-700'}`}>
+                                <p>Consultas</p>
+                            </button>
+                            <button onClick={() => setButtonActive('PROCEDIMENTO')} className={`p-3 font-bold ${buttonActive === 'PROCEDIMENTO' ? 'text-verde border-b-3 border-verde' : 'text-gray-700'}`}>
+                                <p>Procedimento</p>
+                            </button>
+                            <button onClick={() => setButtonActive('CIRURGIA')} className={`p-3 font-bold ${buttonActive === 'CIRURGIA' ? 'text-verde border-b-3 border-verde' : 'text-gray-700'}`}>
+                                <p>Cirurgias</p>
+                            </button>
+                        </div>
+                        <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-1">
+                                <div className="bg-green-200 w-6 h-4 rounded-md border broder-black"></div>
+                                <p className="font-bold text-sm">Consulta</p>
+                            </div>
+                            <div className="flex items-center gap-1">
+                                <div className="bg-blue-200 w-6 h-4 rounded-md border broder-black"></div>
+                                <p className="font-bold text-sm">Consulta - TFD</p>
+                            </div>
+                            <div className="flex items-center gap-1">
+                                <div className="bg-orange-200 w-6 h-4 rounded-md border broder-black"></div>
+                                <p className="font-bold text-sm">Procedimentos</p>
+                            </div>
+                        </div>
+                    </div>
                     {
                         buscaAgendamentosPaginados.length > 0 ? (
                             <div className="shadow-[0px_0px_2px_1px_var(--verde-escuro)] rounded-lg py-2 px-4 flex flex-col gap-3 h-full relative">
-                                {/* Filtros por tipo */}
-                                <div className="flex justify-between">
-                                    <div className="">
-                                        <button onClick={() => setButtonActive('TODOS')} className={`p-3 font-bold ${buttonActive === 'TODOS' ? 'text-verde border-b-3 border-verde' : 'text-gray-700'}`}>
-                                            <p>Todos</p>
-                                        </button>
-                                        <button onClick={() => setButtonActive('CONSULTA')} className={`p-3 font-bold ${buttonActive === 'CONSULTA' ? 'text-verde border-b-3 border-verde' : 'text-gray-700'}`}>
-                                            <p>Consultas</p>
-                                        </button>
-                                        <button onClick={() => setButtonActive('PROCEDIMENTO')} className={`p-3 font-bold ${buttonActive === 'PROCEDIMENTO' ? 'text-verde border-b-3 border-verde' : 'text-gray-700'}`}>
-                                            <p>Procedimento</p>
-                                        </button>
-                                        <button onClick={() => setButtonActive('CIRURGIA')} className={`p-3 font-bold ${buttonActive === 'CIRURGIA' ? 'text-verde border-b-3 border-verde' : 'text-gray-700'}`}>
-                                            <p>Cirurgias</p>
-                                        </button>
-                                    </div>
-                                    <div className="flex items-center gap-4">
-                                        <div className="flex items-center gap-1">
-                                            <div className="bg-green-200 w-6 h-4 rounded-md border broder-black"></div>
-                                            <p className="font-bold text-sm">Consulta</p>
-                                        </div>
-                                        <div className="flex items-center gap-1">
-                                            <div className="bg-blue-200 w-6 h-4 rounded-md border broder-black"></div>
-                                            <p className="font-bold text-sm">Consulta - TFD</p>
-                                        </div>
-                                        <div className="flex items-center gap-1">
-                                            <div className="bg-orange-200 w-6 h-4 rounded-md border broder-black"></div>
-                                            <p className="font-bold text-sm">Procedimentos</p>
-                                        </div>
-                                    </div>
-                                </div>
                                 {/* Tabela */}
                                 <div className="flex flex-col h-full overflow-hidden">
                                     <div className="w-full overflow-x-auto teste pb-2 h-full" ref={tabelaRef}>
-                                        <div className="min-w-[1880px]">
-                                            <ul className="grid grid-cols-[50px_100px_200px_230px_200px_300px_200px_200px_200px_200px] w-full font-bold border-b">
+                                        <div className="min-w-[2280px]">
+                                            <ul className="grid grid-cols-[50px_100px_200px_230px_200px_300px_200px_200px_200px_200px_200px_200px] w-full font-bold border-b">
                                                 <li className="flex justify-center items-center py-2 bg-red-500 text-white border border-zinc-900">
                                                     <TbUrgent className="text-2xl font-bold" />
                                                 </li>
@@ -727,10 +778,16 @@ export default function Atendimentos() {
                                                     <p>Situação</p>
                                                 </li>
                                                 <li className="flex justify-center items-center py-2 border border-zinc-900 bg-verde-escuro text-white">
+                                                    <p>Médico Solicitante</p>
+                                                </li>
+                                                <li className="flex justify-center items-center py-2 border border-zinc-900 bg-verde-escuro text-white">
+                                                    <p>Data de Saída</p>
+                                                </li>
+                                                <li className="flex justify-center items-center py-2 border border-zinc-900 bg-verde-escuro text-white">
                                                     <p>Data de Agendamento</p>
                                                 </li>
                                                 <li className="flex justify-center items-center py-2 border border-zinc-900 bg-verde-escuro text-white">
-                                                    <p>Local Realizado</p>
+                                                    <p>Local de Atendimento</p>
                                                 </li>
                                                 <li className="flex justify-center items-center py-2 border border-zinc-900 bg-verde-escuro text-white">
                                                     <p>Prestador Executante</p>
@@ -742,6 +799,8 @@ export default function Atendimentos() {
                                                         <ul className="flex flex-col">
                                                             {
                                                                 buscaAgendamentosPaginados.map((agendamento, i) => {
+                                                                    const localDeAtendimento = locais.find(local => local.id === agendamento.localDeAtendimentoId)
+                                                                    const prestador = prestadores.find(prestador => prestador.id === agendamento.prestadorId)
                                                                     return (
                                                                         <li key={i}
                                                                             onContextMenu={(e) => {
@@ -753,11 +812,12 @@ export default function Atendimentos() {
                                                                                 })
                                                                             }}
                                                                             className={`
-                                                                                grid grid-cols-[50px_100px_200px_230px_200px_300px_200px_200px_200px_200px] w-full border-b items-center py-2
+                                                                                grid grid-cols-[50px_100px_200px_230px_200px_300px_200px_200px_200px_200px_200px_200px] w-full border-b items-center py-2
                                                                                 ${agendamento.especialidade?.tipo === 'TFD' ? 'bg-blue-200' : ''}
                                                                                 ${agendamento.especialidade?.tipo === 'NORMAL' ? 'bg-green-200' : ''}
                                                                                 ${agendamento.tipo === 'PROCEDIMENTO' ? 'bg-orange-200' : ''}
                                                                                 cursor-pointer
+                                                                                border-l border-r border-zinc-700
                                                                             `}>
                                                                             <div className="flex justify-center items-center relative">
                                                                                 {
@@ -823,13 +883,19 @@ export default function Atendimentos() {
                                                                                 <p className="capitalize">{agendamento.status.replaceAll('_', ' ').toLowerCase()}</p>
                                                                             </div>
                                                                             <div className="flex justify-center items-center">
-                                                                                <p className="capitalize">{agendamento.status.replaceAll('_', ' ').toLowerCase()}</p>
+                                                                                <p className="capitalize">{agendamento.medicoSolicitante?.nome}</p>
                                                                             </div>
                                                                             <div className="flex justify-center items-center">
-                                                                                <p className="capitalize">{agendamento.status.replaceAll('_', ' ').toLowerCase()}</p>
+                                                                                <p className="capitalize">{agendamento.dataDeSaida ? new Date(agendamento.dataDeSaida).toISOString().split("T")[0].split("-").reverse().join("/") : '—'}</p>
                                                                             </div>
                                                                             <div className="flex justify-center items-center">
-                                                                                <p className="capitalize">{agendamento.status.replaceAll('_', ' ').toLowerCase()}</p>
+                                                                                <p className="capitalize">{agendamento.dataDoAgendamento ? new Date(agendamento.dataDoAgendamento).toISOString().split("T")[0].split("-").reverse().join("/") : '—'}</p>
+                                                                            </div>
+                                                                            <div className="flex justify-center items-center">
+                                                                                <p className="capitalize">{localDeAtendimento?.nome || '—'}</p>
+                                                                            </div>
+                                                                            <div className="flex justify-center items-center">
+                                                                                <p className="capitalize">{prestador?.nome || '—'}</p>
                                                                             </div>
                                                                         </li>
                                                                     )

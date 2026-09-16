@@ -10,21 +10,35 @@ export async function POST(request: NextRequest) {
             pacienteId,
             unidadeDeOrigemId,
             dataDeEntrada,
+
             medicoSolicitanteId,
+
             especialidadeId,
             especialidadeFilhaId,
             tipoDeConsulta,
+
             procedimentoId,
             procedimentoFilhoId,
             lado,
+
             prioridade,
+
             condicaoDeRetorno,
             dataDoRetorno,
+
+            localDeAtendimentoId,
+            prestadorId,
+
             encaminhamentoRemarcado,
+
             status,
             dataDoAgendamento,
             ativo,
         } = body;
+
+        // =========================
+        // VALIDAÇÕES
+        // =========================
 
         if (!tipo) {
             return NextResponse.json(
@@ -61,12 +75,9 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        if (!dataDoAgendamento) {
-            return NextResponse.json(
-                { erro: "A data do agendamento é obrigatória." },
-                { status: 400 }
-            );
-        }
+        // =========================
+        // VERIFICAR PACIENTE
+        // =========================
 
         const paciente = await prisma.paciente.findUnique({
             where: {
@@ -81,8 +92,13 @@ export async function POST(request: NextRequest) {
             );
         }
 
+        // =========================
+        // CRIAR AGENDAMENTO
+        // =========================
+
         const agendamento = await prisma.agendamento.create({
             data: {
+
                 tipo,
 
                 paciente: {
@@ -99,6 +115,7 @@ export async function POST(request: NextRequest) {
 
                 dataDeEntrada: new Date(dataDeEntrada),
 
+                // Médico solicitante
                 medicoSolicitante: medicoSolicitanteId
                     ? {
                         connect: {
@@ -107,6 +124,7 @@ export async function POST(request: NextRequest) {
                     }
                     : undefined,
 
+                // Especialidade
                 especialidade: especialidadeId
                     ? {
                         connect: {
@@ -123,8 +141,10 @@ export async function POST(request: NextRequest) {
                     }
                     : undefined,
 
-                tipoDeConsulta: tipoDeConsulta || null,
+                tipoDeConsulta:
+                    tipoDeConsulta || null,
 
+                // Procedimento
                 procedimento: procedimentoId
                     ? {
                         connect: {
@@ -141,33 +161,70 @@ export async function POST(request: NextRequest) {
                     }
                     : undefined,
 
-                lado: lado || null,
+                lado:
+                    lado || null,
 
                 prioridade,
 
-                condicaoDeRetorno: condicaoDeRetorno || null,
+                // Retorno
+                condicaoDeRetorno:
+                    condicaoDeRetorno || null,
 
-                dataDoRetorno: dataDoRetorno
-                    ? new Date(dataDoRetorno)
-                    : null,
+                dataDoRetorno:
+                    dataDoRetorno
+                        ? new Date(dataDoRetorno)
+                        : null,
 
+                // Local de atendimento
+                localDeAtendimento:
+                    localDeAtendimentoId
+                        ? {
+                            connect: {
+                                id: Number(localDeAtendimentoId),
+                            },
+                        }
+                        : undefined,
+
+                // Prestador
+                prestador:
+                    prestadorId
+                        ? {
+                            connect: {
+                                id: Number(prestadorId),
+                            },
+                        }
+                        : undefined,
+
+                // Remarcação
                 encaminhamentoRemarcado:
                     encaminhamentoRemarcado ?? false,
 
-                status: status || "EM_ESPERA",
+                // Status
+                status:
+                    status || "EM_ESPERA",
 
+                // Data do agendamento
                 dataDoAgendamento:
-                    new Date(dataDoAgendamento),
+                    dataDoAgendamento
+                        ? new Date(dataDoAgendamento)
+                        : null,
 
-                ativo: ativo ?? true,
+                ativo:
+                    ativo ?? true,
             },
 
             include: {
                 paciente: true,
                 unidadeDeOrigem: true,
+
+                localDeAtendimento: true,
+                prestador: true,
+
                 medicoSolicitante: true,
+
                 especialidade: true,
                 especialidadeFilha: true,
+
                 procedimento: true,
                 procedimentoFilho: true,
             },
@@ -179,10 +236,16 @@ export async function POST(request: NextRequest) {
         );
 
     } catch (erro) {
-        console.error("Erro ao criar agendamento:", erro);
+
+        console.error(
+            "Erro ao criar agendamento:",
+            erro
+        );
 
         return NextResponse.json(
-            { erro: "Erro ao criar agendamento." },
+            {
+                erro: "Erro ao criar agendamento."
+            },
             { status: 500 }
         );
     }

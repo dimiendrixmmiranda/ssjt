@@ -254,7 +254,8 @@ model Local {
 
   usuariosOrigem Usuario[]
 
-  agendamentosOrigem Agendamento[]
+  agendamentosOrigem      Agendamento[] @relation("AgendamentosOrigem")
+  agendamentosAtendimento Agendamento[] @relation("AgendamentosAtendimento")
 
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
@@ -347,44 +348,69 @@ model Agendamento {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  // Tipo
   tipo TipoAgendamento
 
+  // Paciente
   pacienteId String
-  paciente   Paciente @relation(fields: [pacienteId], references: [id])
+  paciente   Paciente @relation(fields: [pacienteId],references: [id])
 
+  // Unidade que originou o encaminhamento/agendamento
   unidadeDeOrigemId Int
-  unidadeDeOrigem   Local @relation(fields: [unidadeDeOrigemId], references: [id])
+  unidadeDeOrigem   Local @relation("AgendamentosOrigem",fields: [unidadeDeOrigemId],references: [id])
 
+  // Entrada no sistema/fila
   dataDeEntrada DateTime
 
-  medicoSolicitanteId Int?
-  medicoSolicitante   Medico? @relation(fields: [medicoSolicitanteId], references: [id])
+  // Data/hora em que o atendimento foi encerrado/baixado
+  dataDeSaida DateTime?
 
+  // Médico que solicitou o atendimento
+  medicoSolicitanteId Int?
+  medicoSolicitante   Medico? @relation(fields: [medicoSolicitanteId],references: [id])
+
+  // Especialidade
   especialidadeId Int?
-  especialidade   Especialidade? @relation(fields: [especialidadeId], references: [id])
+  especialidade   Especialidade? @relation(fields: [especialidadeId],references: [id])
 
   especialidadeFilhaId Int?
-  especialidadeFilha   EspecialidadeFilha? @relation(fields: [especialidadeFilhaId], references: [id])
+  especialidadeFilha   EspecialidadeFilha? @relation(fields: [especialidadeFilhaId],references: [id])
 
+  // Consulta
   tipoDeConsulta TipoDeConsulta?
 
+  // Procedimento
   procedimentoId Int?
-  procedimento   Procedimento? @relation(fields: [procedimentoId], references: [id])
+  procedimento   Procedimento? @relation(fields: [procedimentoId],references: [id])
 
   procedimentoFilhoId Int?
-  procedimentoFilho   ProcedimentoFilho? @relation(fields: [procedimentoFilhoId], references: [id])
+  procedimentoFilho   ProcedimentoFilho? @relation(fields: [procedimentoFilhoId],references: [id])
 
   lado Lado?
 
+  // Prioridade
   prioridade Prioridade
 
+  // Retorno
   condicaoDeRetorno CondicaoDeRetorno?
   dataDoRetorno     DateTime?
 
+  // Local onde o atendimento acontecerá
+  localDeAtendimentoId Int?
+  localDeAtendimento   Local? @relation("AgendamentosAtendimento",fields: [localDeAtendimentoId],references: [id])
+
+  // Prestador que realizará o atendimento
+  prestadorId Int?
+  prestador   Prestador? @relation(fields: [prestadorId],references: [id])
+
+  // Remarcação
   encaminhamentoRemarcado Boolean @default(false)
 
+  // Status
   status StatusAgendamento @default(EM_ESPERA)
-  dataDoAgendamento DateTime
+
+  // Dia para o qual o paciente foi agendado
+  dataDoAgendamento DateTime?
 
   ativo Boolean @default(true)
 }
@@ -402,6 +428,7 @@ model Prestador {
 
   especialidades PrestadorEspecialidade[]
   procedimentos  PrestadorProcedimento[]
+  agendamentos Agendamento[]
 
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt

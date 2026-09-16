@@ -5,6 +5,11 @@ import { AiOutlineCalendar, AiOutlineClockCircle, AiOutlineSelect } from "react-
 import { useState } from "react"
 import { usePrestadores } from "@/hooks/usePrestadores"
 import { opcoesDeHorariosDeManha, opcoesDeHorariosDeTarde } from "@/lib/opcoesDeDados"
+import CalendarioAgenda from "../agenda/CalendarioAgenda"
+import { RiSave2Line } from "react-icons/ri"
+import { MdCancel } from "react-icons/md"
+import { Local, Prestador } from "@/app/generated/prisma/client"
+import { useDialog } from "@/context/DialogContext"
 
 interface FormIncluirAgendamentoProps {
     agendamento: any
@@ -19,7 +24,7 @@ export default function FormIncluirAgendamento({
     const { prestadores } = usePrestadores()
     const [unidadeDeOrigem, setUnidadeDeOrigem] = useState(agendamento.unidadeDeOrigem)
     const locaisJoaquimTavora = locais.filter(local => local.cep === '86455-000')
-
+    const { } = useDialog()
     const opcoesUnidadesDeOrigem = [
         {
             label: 'Selecione',
@@ -74,8 +79,6 @@ export default function FormIncluirAgendamento({
             }))
     ]
 
-    const [localDeAtendimento, setLocalDeAtendimento] = useState('')
-
     const [prestador, setPrestador] = useState('')
 
     const opcoesDePrestadores = [
@@ -108,7 +111,83 @@ export default function FormIncluirAgendamento({
     }
 
     const [dataSelecionada, setDataSelecionada] = useState(getDataAtual())
-    console.log(agendamento)
+
+
+    const [dataDoAgendamento, setDataDoAgendamento] = useState(
+        new Date().toISOString().split("T")[0]
+    )
+
+    const [localDeAtendimento, setLocalDeAtendimento] = useState('')
+
+    const [prestadorExecutante, setPrestadorExecutante] =
+        useState<Prestador | null>(null)
+
+    const handleSalvarAgendamento = async () => {
+        try {
+            if (!agendamento?.id) {
+                alert("Agendamento não encontrado.")
+                return
+            }
+
+            if (!dataSelecionada) {
+                alert("Selecione uma data.")
+                return
+            }
+
+            if (!horarioSelecionado) {
+                alert("Selecione um horário.")
+                return
+            }
+
+            if (!localDeAtendimento) {
+                alert("Selecione o local de atendimento.")
+                return
+            }
+
+            if (!prestador) {
+                alert("Selecione o prestador executante.")
+                return
+            }
+
+            const dados = {
+                dataDoAgendamento: `${dataSelecionada}T${horarioSelecionado}:00`,
+                dataDeSaida: new Date().toISOString(),
+                localDeAtendimentoId: Number(localDeAtendimento),
+                prestadorId: Number(prestador),
+                status: "AGENDADO",
+            }
+
+            const resposta = await fetch(
+                `/api/agendamento/${agendamento.id}`,
+                {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(dados),
+                }
+            )
+
+            const resultado = await resposta.json()
+
+            if (!resposta.ok) {
+                alert(
+                    resultado.erro ||
+                    "Não foi possível salvar o agendamento."
+                )
+                return
+            }
+
+            alert("Agendamento realizado com sucesso!")
+
+            onClose()
+
+        } catch (erro) {
+            console.error("Erro ao salvar agendamento:", erro)
+            alert("Erro ao conectar com o servidor.")
+        }
+    }
+
     return (
         <div>
             <div className="grid grid-cols-2 gap-4">
@@ -186,8 +265,17 @@ export default function FormIncluirAgendamento({
                         />
                     </div>
                 </div>
-                <div className="border border-zinc-200 flex flex-col gap-4 p-4 rounded-lg w-full">
-                    Calendario
+                <div className="border border-gray-200 rounded-lg p-4">
+
+                    <h3 className="text-lg font-medium text-gray-700 mb-4">
+                        Calendário
+                    </h3>
+
+                    <CalendarioAgenda
+                        dataSelecionada={dataSelecionada}
+                        onChange={setDataSelecionada}
+                    />
+
                 </div>
                 <div className="border border-zinc-200 rounded-lg p-4">
                     <div className="flex items-center gap-2 mb-4">
@@ -478,6 +566,17 @@ export default function FormIncluirAgendamento({
                             )
                         })}
                     </div>
+                </div>
+
+                <div className="flex items-center gap-4 ml-auto col-span-2">
+                    <button className="flex items-center border border-red-500 text-red-500 rounded-lg font-bold text-xl px-4 py-2 gap-2 duration-300 transition-all hover:bg-red-500 hover:text-white">
+                        <MdCancel />
+                        <p>Cancelar</p>
+                    </button>
+                    <button onClick={() => handleSalvarAgendamento()} className="flex items-center border border-verde-escuro text-verde-escuro rounded-lg font-bold text-xl px-4 py-2 gap-2 duration-300 transition-all hover:bg-verde-escuro hover:text-white">
+                        <RiSave2Line />
+                        <p>Salvar</p>
+                    </button>
                 </div>
             </div>
         </div>
