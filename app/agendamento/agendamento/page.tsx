@@ -19,17 +19,18 @@ import { FaClockRotateLeft, FaHandHoldingMedical, FaListCheck, FaPlus, FaRegLigh
 import { HiOutlineCalendarDateRange } from "react-icons/hi2";
 import { IoMapSharp } from "react-icons/io5";
 import { LiaProceduresSolid } from "react-icons/lia";
-import { MdChevronLeft, MdChevronRight, MdDriveFileRenameOutline, MdOutlineMedicalInformation, MdTableRows } from "react-icons/md";
+import { MdChevronLeft, MdChevronRight, MdCopyAll, MdDriveFileRenameOutline, MdOutlineMedicalInformation, MdTableRows } from "react-icons/md";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { TiUserDelete } from "react-icons/ti";
 import { LuMinus } from "react-icons/lu";
 import { RxRows } from "react-icons/rx";
-import { TbFilterCog, TbUrgent } from "react-icons/tb";
+import { TbFilterCog, TbPhoneCalling, TbUrgent } from "react-icons/tb";
 import InputTexto from "@/components/assets/inputs/InputTexto";
 import MenuContextoPaciente from "@/components/assets/contextoDeAtendimento/ContextoDeAtendimento";
 import FormIncluirAgendamento from "@/components/formularios/FormIncluirAgendamento";
 import Image from "next/image";
 import { usePrestadores } from "@/hooks/usePrestadores";
+import { copiarTexto } from "@/lib/utils";
 
 type AcaoPaciente =
     | "agendamento"
@@ -754,8 +755,8 @@ export default function Atendimentos() {
                                 {/* Tabela */}
                                 <div className="flex flex-col h-full overflow-hidden">
                                     <div className="w-full overflow-x-auto teste pb-2 h-full" ref={tabelaRef}>
-                                        <div className="min-w-[2280px]">
-                                            <ul className="grid grid-cols-[50px_100px_200px_230px_200px_300px_200px_200px_200px_200px_200px_200px] w-full font-bold border-b">
+                                        <div className="min-w-[2480px]">
+                                            <ul className="grid grid-cols-[50px_100px_200px_230px_200px_300px_200px_200px_200px_200px_200px_200px_200px] w-full font-bold border-b">
                                                 <li className="flex justify-center items-center py-2 bg-red-500 text-white border border-zinc-900">
                                                     <TbUrgent className="text-2xl font-bold" />
                                                 </li>
@@ -782,6 +783,9 @@ export default function Atendimentos() {
                                                 </li>
                                                 <li className="flex justify-center items-center py-2 border border-zinc-900 bg-verde-escuro text-white">
                                                     <p>Data de Saída</p>
+                                                </li>
+                                                <li className="flex justify-center items-center py-2 border border-zinc-900 bg-verde-escuro text-white">
+                                                    <p>Contato</p>
                                                 </li>
                                                 <li className="flex justify-center items-center py-2 border border-zinc-900 bg-verde-escuro text-white">
                                                     <p>Data de Agendamento</p>
@@ -812,7 +816,7 @@ export default function Atendimentos() {
                                                                                 })
                                                                             }}
                                                                             className={`
-                                                                                grid grid-cols-[50px_100px_200px_230px_200px_300px_200px_200px_200px_200px_200px_200px] w-full border-b items-center py-2
+                                                                                grid grid-cols-[50px_100px_200px_230px_200px_300px_200px_200px_200px_200px_200px_200px_200px] w-full border-b items-center py-2
                                                                                 ${agendamento.especialidade?.tipo === 'TFD' ? 'bg-blue-200' : ''}
                                                                                 ${agendamento.especialidade?.tipo === 'NORMAL' ? 'bg-green-200' : ''}
                                                                                 ${agendamento.tipo === 'PROCEDIMENTO' ? 'bg-orange-200' : ''}
@@ -851,8 +855,13 @@ export default function Atendimentos() {
                                                                                     )
                                                                                 }
                                                                             </div>
-                                                                            <div className="flex justify-center items-center">
-                                                                                <p>{agendamento.paciente.codigoIds}</p>
+                                                                            <div className="flex justify-center items-center relative">
+                                                                                <p className="cursor-auto">{agendamento.paciente.codigoIds}</p>
+                                                                                <div className="absolute -top-2 right-0">
+                                                                                    <button onClick={() => copiarTexto(agendamento.paciente.codigoIds)}>
+                                                                                        <MdCopyAll />
+                                                                                    </button>
+                                                                                </div>
                                                                             </div>
                                                                             <div className="flex justify-center items-center">
                                                                                 <p>
@@ -887,6 +896,17 @@ export default function Atendimentos() {
                                                                             </div>
                                                                             <div className="flex justify-center items-center">
                                                                                 <p className="capitalize">{agendamento.dataDeSaida ? new Date(agendamento.dataDeSaida).toISOString().split("T")[0].split("-").reverse().join("/") : '—'}</p>
+                                                                            </div>
+                                                                            <div className="flex justify-center items-center relative">
+                                                                                <p className="capitalize">{agendamento.paciente.telefone1}</p>
+                                                                                <a
+                                                                                    href={`https://wa.me/55${agendamento.paciente.telefone1.replace(/\D/g, '')}`}
+                                                                                    target="_blank"
+                                                                                    rel="noopener noreferrer"
+                                                                                    className="absolute -top-1 right-2"
+                                                                                >
+                                                                                    <TbPhoneCalling />
+                                                                                </a>
                                                                             </div>
                                                                             <div className="flex justify-center items-center">
                                                                                 <p className="capitalize">{agendamento.dataDoAgendamento ? new Date(agendamento.dataDoAgendamento).toISOString().split("T")[0].split("-").reverse().join("/") : '—'}</p>
