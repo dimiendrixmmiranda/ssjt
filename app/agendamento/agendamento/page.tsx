@@ -31,6 +31,7 @@ import FormIncluirAgendamento from "@/components/formularios/FormIncluirAgendame
 import Image from "next/image";
 import { usePrestadores } from "@/hooks/usePrestadores";
 import { copiarTexto } from "@/lib/utils";
+import { useDialog } from "@/context/DialogContext";
 
 type AcaoPaciente =
     | "agendamento"
@@ -48,7 +49,8 @@ type AcaoPaciente =
 
 
 export default function Atendimentos() {
-    const { agendamentos } = useAgendamentos()
+    const { agendamentos, buscarAgendamentos } = useAgendamentos()
+    const { abrirDialog } = useDialog()
     const [buttonActive, setButtonActive] = useState<'TODOS' | 'CONSULTA' | 'PROCEDIMENTO' | 'CIRURGIA'>('TODOS')
 
     const normalizarTexto = (texto: string) =>
@@ -272,6 +274,47 @@ export default function Atendimentos() {
     ]
     const [encaminhamentoRemarcado, setEncaminhamentoRemarcado] = useState(false)
 
+    const limparFormualario = () => {
+        setPacienteAtual(null)
+        setBuscarPaciente("")
+
+        setUnidadeDeOrigem(null)
+
+        setMedicoSolicitante(null)
+        setBuscarMedicoSolicitante("")
+
+        setEspecialidadeDoPrestador("")
+
+        setTipoDeAtendimento("")
+
+        setEspecialidadeEncaminhada(null)
+        setBuscarEspecialidadeEncaminhada("")
+
+        setEspecialidadeEncaminhada(null)
+        setBuscarEspecialidadeEncaminhada("")
+
+        setProcedimentoFilho(null)
+        setBuscarEspecialidadeFilha("")
+
+        setTipoDeConsulta("")
+
+        setSituacao("")
+        setCondicaoDeRetorno("")
+        setDataDoRetorno("")
+
+        setProcedimentoSelecionado(null)
+        setBuscarProcedimento("")
+
+        setProcedimentoFilhoSelecionado(null)
+        setBuscarProcedimentoFilho("")
+
+        setLado("")
+
+        setEncaminhamentoRemarcado(false)
+
+        setVisible(false)
+
+    }
 
     const handleAdicionarAgendamento = async () => {
         try {
@@ -414,52 +457,18 @@ export default function Atendimentos() {
                 return
             }
 
-            alert("Agendamento criado com sucesso!")
+            abrirDialog({
+                title: `Sucesso!`,
+                message: `${botaoAdicionarConsultaProcedimento} foi cadastrado com sucesso.`,
+            })
 
             console.log("AGENDAMENTO CRIADO:", dados)
+            await buscarAgendamentos()
 
             // =========================
             // LIMPAR FORMULÁRIO
             // =========================
-
-            setPacienteAtual(null)
-            setBuscarPaciente("")
-
-            setUnidadeDeOrigem(null)
-
-            setMedicoSolicitante(null)
-            setBuscarMedicoSolicitante("")
-
-            setEspecialidadeDoPrestador("")
-
-            setTipoDeAtendimento("")
-
-            setEspecialidadeEncaminhada(null)
-            setBuscarEspecialidadeEncaminhada("")
-
-            setEspecialidadeEncaminhada(null)
-            setBuscarEspecialidadeEncaminhada("")
-
-            setProcedimentoFilho(null)
-            setBuscarEspecialidadeFilha("")
-
-            setTipoDeConsulta("")
-
-            setSituacao("")
-            setCondicaoDeRetorno("")
-            setDataDoRetorno("")
-
-            setProcedimentoSelecionado(null)
-            setBuscarProcedimento("")
-
-            setProcedimentoFilhoSelecionado(null)
-            setBuscarProcedimentoFilho("")
-
-            setLado("")
-
-            setEncaminhamentoRemarcado(false)
-
-            setVisible(false)
+            limparFormualario()
 
         } catch (erro) {
             console.error(
@@ -472,7 +481,7 @@ export default function Atendimentos() {
     }
 
     const [first, setFirst] = useState(0)
-    const [rows] = useState(5)
+    const [rows] = useState(7)
 
     const opcoesCampoDeBusca = [
         {
@@ -532,8 +541,6 @@ export default function Atendimentos() {
     ]
 
     const [valorDaBusca, setValorDaBusca] = useState('')
-
-
 
     const [menuContexto, setMenuContexto] = useState<{
         x: number
@@ -640,11 +647,7 @@ export default function Atendimentos() {
         setFirst(0)
         setBuscaRealizada(true)
     }
-
-    console.log(agendamentos)
-
-
-
+    
     return (
         <>
             <div className="p-4 flex flex-col gap-4 row-span-2 h-full">
@@ -823,37 +826,49 @@ export default function Atendimentos() {
                                                                                 cursor-pointer
                                                                                 border-l border-r border-zinc-700
                                                                             `}>
-                                                                            <div className="flex justify-center items-center relative">
-                                                                                {
-                                                                                    agendamento.prioridade === 'URGENTE' ? (<p className="text-amber-500 bg-white flex justify-center items-center h-8 w-8 rounded-full shadow-[0px_0px_1spx_black]"><RxRows /></p>) : ''
-                                                                                }
-                                                                                {
-                                                                                    agendamento.prioridade === 'PRIORIDADE' ? (<p className="text-amber-500 bg-white flex justify-center items-center h-8 w-8 rounded-full shadow-[0px_0px_1spx_black]"><MdTableRows /></p>) : ''
-                                                                                }
-                                                                                {
-                                                                                    agendamento.prioridade === 'NORMAL' ? (<p className="text-zinc-700 bg-white flex justify-center items-center h-8 w-8 rounded-full shadow-[0px_0px_1spx_black]"><LuMinus /></p>) : ''
-                                                                                }
-
-                                                                                {
-                                                                                    agendamento.encaminhamentoRemarcado && (
-                                                                                        <div className="absolute -top-1 -right-1 group">
-                                                                                            {/* ÍCONE */}
-                                                                                            <div className="w-4 h-4 rounded-full bg-verde text-white flex items-center justify-center cursor-help shadow-sm border border-white">
-                                                                                                <FaClockRotateLeft className="text-[9px]" />
-                                                                                            </div>
-
-                                                                                            {/* TOOLTIP */}
-                                                                                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block z-[999] whitespace-nowrap ">
-                                                                                                <div className="bg-zinc-800 text-white text-xs font-medium px-3 py-1.5 rounded-md shadow-lg">
-                                                                                                    Já Marcado
-                                                                                                </div>
-
-                                                                                                {/* SETINHA */}
-                                                                                                <div className="absolute top-full left-1/2 -translate-x-1/2 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-zinc-800 " />
-                                                                                            </div>
+                                                                            <div className="flex justify-center items-center relative gap-1">
+                                                                                <div className="relative group">
+                                                                                    {agendamento.prioridade === "URGENTE" && (
+                                                                                        <div className="text-amber-500 bg-white flex justify-center items-center h-8 w-8 rounded-full shadow-[0px_0px_1px_black] cursor-help">
+                                                                                            <RxRows />
                                                                                         </div>
-                                                                                    )
-                                                                                }
+                                                                                    )}
+                                                                                    {agendamento.prioridade === "PRIORIDADE" && (
+                                                                                        <div className="text-amber-500 bg-white flex justify-center items-center h-8 w-8 rounded-full shadow-[0px_0px_1px_black] cursor-help">
+                                                                                            <MdTableRows />
+                                                                                        </div>
+                                                                                    )}
+                                                                                    {agendamento.prioridade === "NORMAL" && (
+                                                                                        <div className="text-zinc-700 bg-white flex justify-center items-center h-8 w-8 rounded-full shadow-[0px_0px_1px_black] cursor-help">
+                                                                                            <LuMinus />
+                                                                                        </div>
+                                                                                    )}
+                                                                                    {/* TOOLTIP */}
+                                                                                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block z-[999] whitespace-nowrap">
+                                                                                        <div className="bg-zinc-800 text-white text-[.5em] font-medium px-2 py-1 rounded-md  shadow-lg">
+                                                                                            {agendamento.prioridade}
+                                                                                        </div>
+                                                                                        {/* SETINHA */}
+                                                                                        <div className="absolute top-full left-1/2 -translate-x-1/2 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-zinc-800" />
+                                                                                    </div>
+                                                                                </div>
+                                                                                {agendamento.encaminhamentoRemarcado && (
+                                                                                    <div className="absolute -top-1.5 right-0 group">
+                                                                                        {/* ÍCONE */}
+                                                                                        <div className="w-4 h-4 rounded-full bg-verde text-white flex items-center justify-center cursor-help shadow-sm border border-white">
+                                                                                            <FaClockRotateLeft className="text-[.5em]" />
+                                                                                        </div>
+                                                                                        {/* TOOLTIP */}
+                                                                                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block z-[999] whitespace-nowrap">
+                                                                                            <div className="bg-zinc-800 text-white text-xs font-medium px-3 py-1.5 rounded-md shadow-lg">
+                                                                                                Já Marcado
+                                                                                            </div>
+                                                                                            {/* SETINHA */}
+                                                                                            <div className="absolute top-full left-1/2 -translate-x-1/2 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-zinc-800" />
+                                                                                        </div>
+                                                                                    </div>
+                                                                                )}
+
                                                                             </div>
                                                                             <div className="flex justify-center items-center relative">
                                                                                 <p className="cursor-auto">{agendamento.paciente.codigoIds}</p>
@@ -1079,6 +1094,15 @@ export default function Atendimentos() {
                                                         </span>
                                                         <span>
                                                             CNS: {paciente.cartaoSus}
+                                                        </span>
+                                                        <span>
+                                                            Mãe: {paciente.nomeDaMae}
+                                                        </span>
+                                                        <span>
+                                                            Endereço: {`${paciente.rua}, ${paciente.numero} - ${paciente.bairro}`}
+                                                        </span>
+                                                        <span>
+                                                            Agente Comunitário: Agente Bem Legal
                                                         </span>
                                                     </div>
                                                 </button>
@@ -1504,7 +1528,7 @@ export default function Atendimentos() {
                                                     </div>
                                                 </div>
                                                 {/* Condição de retorno */}
-                                                <div className={``}>
+                                                <div className={`${tipoDeConsulta === 'PRIMEIRA_CONSULTA' ? 'opacity-30' : ''}`}>
                                                     <InputSelect
                                                         icone={<AiOutlineSelect />}
                                                         id="condicaoDeRetorno"
@@ -1513,11 +1537,12 @@ export default function Atendimentos() {
                                                         setValor={setCondicaoDeRetorno}
                                                         valor={condicaoDeRetorno}
                                                         opcoes={opcoesCondicaoDeRetorno}
+                                                        disabled={tipoDeConsulta === 'PRIMEIRA_CONSULTA' ? true : false}
                                                     />
                                                 </div>
                                                 {/* Data de retorno */}
-                                                <div className={``}>
-                                                    <InputData icone={<HiOutlineCalendarDateRange />} id="dataDoRetorno" label="Data do Retorno" nome="dataDoRetorno" placeholder="Data do Retorno" setValor={setDataDoRetorno} valor={dataDoRetorno}
+                                                <div className={`${tipoDeConsulta === 'PRIMEIRA_CONSULTA' ? 'opacity-30' : ''}`}>
+                                                    <InputData icone={<HiOutlineCalendarDateRange />} id="dataDoRetorno" label="Data do Retorno" nome="dataDoRetorno" placeholder="Data do Retorno" setValor={setDataDoRetorno} valor={dataDoRetorno} disabled={tipoDeConsulta === 'PRIMEIRA_CONSULTA' ? true : false}
                                                     />
                                                 </div>
                                             </div>
@@ -1710,7 +1735,11 @@ export default function Atendimentos() {
                             }
                             {/* Botões de ação */}
                             <div className="grid grid-cols-2 gap-4 w-fit ml-auto mt-4">
-                                <button className="flex items-center gap-2 rounded-lg px-4 h-[45px] bg-white text-red-600 border border-red-600 font-bold text-xl">
+                                <button
+                                    type="button"
+                                    onClick={limparFormualario}
+                                    className="flex items-center gap-2 rounded-lg px-4 h-[45px] bg-white text-red-600 border border-red-600 font-bold text-xl"
+                                >
                                     <FaPlus />
                                     <p>Cancelar</p>
                                 </button>
@@ -1731,7 +1760,7 @@ export default function Atendimentos() {
                 <MenuContextoPaciente
                     x={menuContexto.x}
                     y={menuContexto.y}
-                    paciente={menuContexto.atendimento}
+                    agendamento={menuContexto.atendimento}
                     onClose={() => setMenuContexto(null)}
                     onAction={handleAction}
                 />
@@ -1755,6 +1784,9 @@ export default function Atendimentos() {
                     <FormIncluirAgendamento
                         agendamento={dialog.agendamento}
                         onClose={() => setDialog(null)}
+                        onAgendamentoSalvo={() => {
+                            buscarAgendamentos()
+                        }}
                     />
                 )}
 

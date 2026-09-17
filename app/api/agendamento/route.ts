@@ -256,14 +256,25 @@ export async function GET(request: NextRequest) {
         const { searchParams } = new URL(request.url);
 
         const pacienteId = searchParams.get("pacienteId");
-        const unidadeDeOrigemId =
-            searchParams.get("unidadeDeOrigemId");
-        const especialidadeId =
-            searchParams.get("especialidadeId");
-        const procedimentoId =
-            searchParams.get("procedimentoId");
+        const unidadeDeOrigemId = searchParams.get("unidadeDeOrigemId");
+        const especialidadeId = searchParams.get("especialidadeId");
+        const procedimentoId = searchParams.get("procedimentoId");
         const status = searchParams.get("status");
         const ativo = searchParams.get("ativo");
+
+        // Novos filtros para a agenda
+        const data = searchParams.get("data");
+        const localDeAtendimentoId =
+            searchParams.get("localDeAtendimentoId");
+        const prestadorId = searchParams.get("prestadorId");
+
+        let inicio: Date | undefined;
+        let fim: Date | undefined;
+
+        if (data) {
+            inicio = new Date(`${data}T00:00:00`);
+            fim = new Date(`${data}T23:59:59`);
+        }
 
         const agendamentos = await prisma.agendamento.findMany({
             where: {
@@ -272,18 +283,15 @@ export async function GET(request: NextRequest) {
                 }),
 
                 ...(unidadeDeOrigemId && {
-                    unidadeDeOrigemId:
-                        Number(unidadeDeOrigemId),
+                    unidadeDeOrigemId: Number(unidadeDeOrigemId),
                 }),
 
                 ...(especialidadeId && {
-                    especialidadeId:
-                        Number(especialidadeId),
+                    especialidadeId: Number(especialidadeId),
                 }),
 
                 ...(procedimentoId && {
-                    procedimentoId:
-                        Number(procedimentoId),
+                    procedimentoId: Number(procedimentoId),
                 }),
 
                 ...(status && {
@@ -292,6 +300,25 @@ export async function GET(request: NextRequest) {
 
                 ...(ativo !== null && {
                     ativo: ativo === "true",
+                }),
+
+                // Filtro da agenda por data
+                ...(data && {
+                    dataDoAgendamento: {
+                        gte: inicio,
+                        lte: fim,
+                    },
+                }),
+
+                // Local onde será realizado
+                ...(localDeAtendimentoId && {
+                    localDeAtendimentoId:
+                        Number(localDeAtendimentoId),
+                }),
+
+                // Prestador que realizará
+                ...(prestadorId && {
+                    prestadorId: Number(prestadorId),
                 }),
             },
 
@@ -303,6 +330,8 @@ export async function GET(request: NextRequest) {
                 especialidadeFilha: true,
                 procedimento: true,
                 procedimentoFilho: true,
+                localDeAtendimento: true,
+                prestador: true,
             },
 
             orderBy: {

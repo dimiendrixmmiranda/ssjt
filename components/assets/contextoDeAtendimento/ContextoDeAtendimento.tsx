@@ -25,19 +25,19 @@ type AcaoPaciente =
 interface MenuContextoPacienteProps {
     x: number
     y: number
-    paciente: any
+    agendamento: any
     onClose: () => void
-    onAction: (acao: AcaoPaciente, paciente: any) => void
+    onAction: (acao: AcaoPaciente, agendamento: any) => void
 }
 
 export default function MenuContextoPaciente({
     x,
     y,
-    paciente,
+    agendamento,
     onClose,
     onAction,
 }: MenuContextoPacienteProps) {
-
+    console.log(agendamento)
     return (
         <>
             {/* Área invisível para fechar ao clicar fora */}
@@ -69,8 +69,9 @@ export default function MenuContextoPaciente({
             >
 
                 <button
-                    className="w-full flex items-center gap-3 px-4 py-3 text-sm text-white hover:bg-zinc-700"
-                    onClick={() => onAction("agendamento", paciente)}
+                    className={`w-full flex items-center gap-3 px-4 py-3 text-sm text-white hover:bg-zinc-700 ${agendamento.status === 'AGENDADO' ? 'opacity-30' : ''}`}
+                    onClick={() => onAction("agendamento", agendamento)}
+                    disabled={agendamento.status === 'AGENDADO' ? true : false}
                 >
                     <MdEventAvailable size={20} />
                     Incluir Agendamento
@@ -79,7 +80,7 @@ export default function MenuContextoPaciente({
                 <button
                     className="w-full flex items-center gap-3 px-4 py-3 text-sm text-white hover:bg-zinc-700"
                     onClick={() => {
-                        console.log("Alterar agendamento", paciente)
+                        console.log("Alterar agendamento", agendamento)
                         onClose()
                     }}
                 >
@@ -90,7 +91,7 @@ export default function MenuContextoPaciente({
                 <button
                     className="w-full flex items-center gap-3 px-4 py-3 text-sm text-white hover:bg-zinc-700"
                     onClick={() => {
-                        console.log("Alterar agendamento", paciente)
+                        console.log("Alterar agendamento", agendamento)
                         onClose()
                     }}
                 >
@@ -101,7 +102,7 @@ export default function MenuContextoPaciente({
                 <button
                     className="w-full flex items-center gap-3 px-4 py-3 text-sm text-white hover:bg-zinc-700"
                     onClick={() => {
-                        console.log("Alterar agendamento", paciente)
+                        console.log("Alterar agendamento", agendamento)
                         onClose()
                     }}
                 >
@@ -112,7 +113,7 @@ export default function MenuContextoPaciente({
                 <button
                     className="w-full flex items-center gap-3 px-4 py-3 text-sm text-white hover:bg-zinc-700"
                     onClick={() => {
-                        console.log("Registrar contato", paciente)
+                        console.log("Registrar contato", agendamento)
                         onClose()
                     }}
                 >
@@ -125,7 +126,7 @@ export default function MenuContextoPaciente({
                 <button
                     className="w-full flex items-center gap-3 px-4 py-3 text-sm text-white hover:bg-zinc-700"
                     onClick={() => {
-                        console.log("Histórico", paciente)
+                        console.log("Histórico", agendamento)
                         onClose()
                     }}
                 >
@@ -136,7 +137,7 @@ export default function MenuContextoPaciente({
                 <button
                     className="w-full flex items-center gap-3 px-4 py-3 text-sm text-white hover:bg-zinc-700"
                     onClick={() => {
-                        console.log("Comprovante", paciente)
+                        console.log("Comprovante", agendamento)
                         onClose()
                     }}
                 >
@@ -146,7 +147,7 @@ export default function MenuContextoPaciente({
                 <button
                     className="w-full flex items-center gap-3 px-4 py-3 text-sm text-white hover:bg-zinc-700"
                     onClick={() => {
-                        console.log("Comprovante", paciente)
+                        console.log("Comprovante", agendamento)
                         onClose()
                     }}
                 >
@@ -156,7 +157,7 @@ export default function MenuContextoPaciente({
                 <button
                     className="w-full flex items-center gap-3 px-4 py-3 text-sm text-white hover:bg-zinc-700"
                     onClick={() => {
-                        console.log("Comprovante", paciente)
+                        console.log("Comprovante", agendamento)
                         onClose()
                     }}
                 >
@@ -166,7 +167,7 @@ export default function MenuContextoPaciente({
                 <button
                     className="w-full flex items-center gap-3 px-4 py-3 text-sm text-white hover:bg-zinc-700"
                     onClick={() => {
-                        console.log("Comprovante", paciente)
+                        console.log("Comprovante", agendamento)
                         onClose()
                     }}
                 >
@@ -177,7 +178,7 @@ export default function MenuContextoPaciente({
                 <button
                     className="w-full flex items-center gap-3 px-4 py-3 text-sm text-white hover:bg-zinc-700"
                     onClick={() => {
-                        console.log("Prioridade", paciente)
+                        console.log("Prioridade", agendamento)
                         onClose()
                     }}
                 >
@@ -188,7 +189,7 @@ export default function MenuContextoPaciente({
                 <button
                     className="w-full flex items-center gap-3 px-4 py-3 text-sm text-white hover:bg-zinc-700"
                     onClick={() => {
-                        console.log("Visualizar", paciente)
+                        console.log("Visualizar", agendamento)
                         onClose()
                     }}
                 >

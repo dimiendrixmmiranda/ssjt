@@ -25,4 +25,9 @@ export const menusDashboardAgendamento: Menu[] = [
         icone: <AiOutlineMedicineBox />,
         url: '/agendamento/agendamento'
     },
+    {
+        titulo: "Agenda dos Prestadores",
+        icone: <AiOutlineMedicineBox />,
+        url: '/agendamento/agendaDosPrestadores'
+    },
 ]
