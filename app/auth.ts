@@ -4,6 +4,8 @@ import bcrypt from "bcrypt";
 import { prisma } from "@/lib/prisma";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+    secret: process.env.AUTH_SECRET,
+
     providers: [
         Credentials({
             credentials: {
@@ -18,31 +20,32 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             },
 
             async authorize(credentials) {
+
                 if (!credentials?.email || !credentials?.senha) {
-                    return null
+                    return null;
                 }
 
                 const usuario = await prisma.usuario.findUnique({
                     where: {
                         email: credentials.email as string,
                     },
-                })
+                });
 
                 if (!usuario) {
-                    return null
+                    return null;
                 }
 
                 if (!usuario.ativo) {
-                    return null
+                    return null;
                 }
 
                 const senhaValida = await bcrypt.compare(
                     credentials.senha as string,
                     usuario.senha
-                )
+                );
 
                 if (!senhaValida) {
-                    return null
+                    return null;
                 }
 
                 return {
@@ -50,12 +53,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                     name: usuario.nome,
                     email: usuario.email,
                     perfil: usuario.perfil,
-                }
+                };
             },
         }),
     ],
+
     callbacks: {
         async jwt({ token, user }) {
+
             if (user) {
                 token.id = user.id;
                 token.perfil = user.perfil;
@@ -65,6 +70,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         },
 
         async session({ session, token }) {
+
             if (session.user) {
                 session.user.id = token.id as string;
                 session.user.perfil = token.perfil as string;
@@ -73,4 +79,4 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             return session;
         },
     },
-})
+});
