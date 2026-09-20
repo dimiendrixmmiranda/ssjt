@@ -1,0 +1,82 @@
+@import "tailwindcss";
+@import "primereact/resources/themes/lara-light-blue/theme.css";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --verde: #07994C;
+  --verde-escuro: #00522c;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-verde: var(--verde);
+  --color-verde-escuro: var(--verde-escuro);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+@theme {
+  --breakpoint-sm: 425px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1440px;
+  --breakpoint-3xl: 1600px;
+  --breakpoint-4xl: 1800px;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.barraDeRolagemBusca::-webkit-scrollbar {
+    width: 8px;
+    height: 6px;
+}
+
+.barraDeRolagemBusca::-webkit-scrollbar-track {
+    background: #18181b;
+}
+
+.barraDeRolagemBusca::-webkit-scrollbar-thumb {
+    background: var(--verde-escuro);
+    border-radius: 999px;
+}
+
+.barraDeRolagemBusca::-webkit-scrollbar-thumb:hover {
+    background: #16a34a;
+}
+
+
+.teste::-webkit-scrollbar {
+    width: 8px;
+    height: 6px;
+}
+
+.teste::-webkit-scrollbar-track {
+    background: #18181b;
+}
+
+.teste::-webkit-scrollbar-thumb {
+    background: var(--verde-escuro);
+    border-radius: 999px;
+}
+
+.teste::-webkit-scrollbar-thumb:hover {
+    background: #16a34a;
+}
+
+button{
+  cursor: pointer;
+}
