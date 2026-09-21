@@ -204,7 +204,7 @@ export default function Home() {
 	)
 }
 
-
+// alteramos o schema
 // model Prestador {
 //   id        String   @id @default(cuid())
 //   createdAt DateTime @default(now())
