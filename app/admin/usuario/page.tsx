@@ -1,6 +1,5 @@
 'use client'
 
-import { Perfil } from "@/app/generated/prisma/enums";
 import InputEmail from "@/components/assets/inputs/InputEmail";
 import InputSelect from "@/components/assets/inputs/InputSelect";
 import InputTexto from "@/components/assets/inputs/InputTexto";
@@ -19,7 +18,7 @@ import InputData from "@/components/assets/inputs/InputData";
 import { HiOutlineCalendarDateRange } from "react-icons/hi2";
 import { Dialog } from "primereact/dialog";
 import { useDialog } from "@/context/DialogContext";
-import { Usuario } from "@/app/generated/prisma/client";
+import { Perfil, Usuario } from "@/app/generated/prisma/client";
 
 export default function Page() {
     const { locais } = useLocaisDeAtendimento()
