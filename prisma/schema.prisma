@@ -1,0 +1,204 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum TipoDeConta {
+  SENIOR_ADMIN
+}
+
+enum TipoDeLocal {
+  HOSPITAL
+  CLINICA
+  POSTO_DE_SAUDE
+  LABORATORIO
+  OUTRO
+}
+
+enum AtendimentoDentroOuForaDoMunicipio{
+  DENTRO_DO_MUNICIPIO
+  FORA_DO_MUNICIPIO
+}
+
+enum CategoriaEspecialidade {
+  NORMAL
+  TFD
+}
+
+enum TipoProcedimento {
+  COMUM
+  COM_MEMBROS
+}
+
+enum Lateralidade {
+  SEM_LADO
+  COM_LADO
+}
+
+enum TipoDoPrestador{
+  MEDICO
+  PRESTADOR_DE_SERVICOS_MEDICOS
+}
+enum PeriodoDeAtendimento{
+  MANHA
+  TARDE
+  NOITE
+}
+
+model Usuario {
+  id                String   @id @default(cuid())
+  nome              String
+  email             String   @unique
+  imagem            String?
+  dataDeNascimento  DateTime?
+  ativo             Boolean  @default(true)
+  senhaHash         String
+  tipoDeConta       TipoDeConta @default(SENIOR_ADMIN)
+
+  localId Int?
+  local   Local? @relation(fields: [localId], references: [id])
+  agendamentosCriados AgendamentoDePrestador[]
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model Local {
+  id           Int       @id @default(autoincrement())
+
+  nome         String
+  tipoDeLocal  TipoDeLocal
+  atendimentoDentroOuForaDoMunicipio         AtendimentoDentroOuForaDoMunicipio
+  quantidadeDeSalas Int
+  ativo        Boolean   @default(true)
+
+  cidade       String
+  cep          String
+  uf           String
+
+  rua          String
+  numero       String
+  bairro       String
+  complemento  String?
+
+  telefone1    String
+  email        String?
+
+  usuarios     Usuario[]
+  agendamentos AgendamentoDePrestador[]
+
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Especialidade {
+  id        Int                       @id @default(autoincrement())
+  nome      String                    @unique
+  codigo    String                    @unique
+  categoria CategoriaEspecialidade[]
+  ativo     Boolean                   @default(true)
+
+  prestadores PrestadorEspecialidade[]
+
+  createdAt DateTime                  @default(now())
+  updatedAt DateTime                  @updatedAt
+}
+
+model Procedimento {
+  id        Int             @id @default(autoincrement())
+  nome      String          @unique
+  codigo    String          @unique
+  tipo      TipoProcedimento @default(COMUM)
+  membros   MembroProcedimento[]
+
+  prestadores PrestadorProcedimento[]
+
+  ativo     Boolean         @default(true)
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+}
+
+model MembroProcedimento {
+  id             Int          @id @default(autoincrement())
+  nome           String
+  lateralidade   Lateralidade @default(SEM_LADO)
+
+  procedimentoId Int
+  procedimento   Procedimento @relation(fields: [procedimentoId], references: [id], onDelete: Cascade)
+
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@unique([nome, procedimentoId])
+}
+
+model Prestador {
+  id    Int           @id @default(autoincrement())
+  nome  String
+  tipo  TipoDoPrestador
+  telefone String
+  email String
+  cor   String        @unique @db.VarChar(7)
+
+  especialidades PrestadorEspecialidade[]
+  procedimentos PrestadorProcedimento[]
+  
+  agendamentos AgendamentoDePrestador[]
+
+  ativo     Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model PrestadorEspecialidade {
+  prestadorId    Int
+  especialidadeId Int
+
+  prestador Prestador @relation(fields: [prestadorId],references: [id],onDelete: Cascade)
+  especialidade Especialidade @relation(fields: [especialidadeId],references: [id],onDelete: Cascade)
+
+  @@id([prestadorId, especialidadeId])
+}
+
+model PrestadorProcedimento {
+  prestadorId   Int
+  procedimentoId Int
+
+  prestador Prestador @relation(fields: [prestadorId],references: [id],onDelete: Cascade)
+  procedimento Procedimento @relation(fields: [procedimentoId],references: [id],onDelete: Cascade)
+
+  @@id([prestadorId, procedimentoId])
+}
+
+model AgendamentoDePrestador {
+  id Int @id @default(autoincrement())
+
+  data DateTime @db.Date
+
+  prestadorId Int
+  prestador Prestador @relation(fields: [prestadorId],references: [id])
+
+  unidadeDeAtendimentoId Int
+  unidadeDeAtendimento Local @relation(fields: [unidadeDeAtendimentoId],references: [id])
+
+  periodo PeriodoDeAtendimento
+  salaNumero Int
+  observacoes String?
+
+  criadoPorId String?
+  criadoPor Usuario? @relation(fields: [criadoPorId],references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([data, unidadeDeAtendimentoId, salaNumero, periodo])
+}
