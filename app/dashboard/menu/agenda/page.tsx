@@ -18,6 +18,9 @@ import { RiExternalLinkFill } from "react-icons/ri";
 import Calendario from "@/components/calendario/Calendario";
 import { useUsuarios } from "@/hooks/useListaDeUsuarios";
 import InputData from "@/components/inputs/InputData";
+import { LinhaAgendaPDF } from "@/components/pdf/TabelaAgenda";
+import { DocumentoAgenda } from "@/components/pdf/DocumentoAgenda";
+import { CalendarioPeriodo } from "@/components/agenda/CalendarioPeriodo";
 
 export default function Page() {
     type AgendamentoDaAgenda = (typeof agendamentoDePrestadores)[number]
@@ -369,53 +372,101 @@ export default function Page() {
         return usuarios.find((usuario) => usuario.id === usuarioId);
     };
 
-    const gerarPdfAgendaDePrestadores = () => {
+
+    const gerarPdfAgendaDePrestadores = async () => {
         if (!dataDeInicio || !dataDeFim) {
-            console.error("Informe a data de início e a data de fim.");
-            return;
+            console.error("Informe a data de início e a data de fim.")
+            return
         }
 
         if (dataDeInicio > dataDeFim) {
-            console.error("A data de início não pode ser maior que a data de fim.");
-            return;
+            console.error("A data de início não pode ser maior que a data de fim.")
+            return
         }
 
         if (!localSelecionado) {
-            console.error("Nenhuma unidade de atendimento selecionada.");
-            return;
+            console.error("Nenhuma unidade de atendimento selecionada.")
+            return
         }
 
-        // Filtra os agendamentos da unidade dentro do período informado
+        // Filtra e ordena os agendamentos
         const agendamentosFiltrados = agendamentoDePrestadores
             .filter((agendamento) => {
-                const dataAgendamento = String(agendamento.data).slice(0, 10);
+                const dataAgendamento = String(agendamento.data).slice(0, 10)
 
                 return (
                     agendamento.unidadeDeAtendimentoId === localSelecionado.id &&
                     dataAgendamento >= dataDeInicio &&
                     dataAgendamento <= dataDeFim
-                );
+                )
             })
-            .map((agendamento) => ({
-                id: agendamento.id,
-                data: agendamento.data,
-                periodo: agendamento.periodo,
-                salaNumero: agendamento.salaNumero,
-                observacoes: agendamento.observacoes,
-                prestador: agendamento.prestador,
-                unidadeDeAtendimento: agendamento.unidadeDeAtendimento,
-                criadoPor: agendamento.criadoPorId,
-            }));
+            .sort((a, b) => {
+                const dataA = String(a.data).slice(0, 10)
+                const dataB = String(b.data).slice(0, 10)
 
-        console.log("Iniciando geração do PDF...");
-        console.log({
-            unidade: localSelecionado.nome,
-            dataDeInicio,
-            dataDeFim,
-            totalAgendamentos: agendamentosFiltrados.length,
-            agendamentos: agendamentosFiltrados,
-        });
-    };
+                return dataA.localeCompare(dataB)
+            })
+
+        // Converte os dados para o formato esperado pelo PDF
+        const dadosPDF: LinhaAgendaPDF[] = agendamentosFiltrados.map(
+            (agendamento) => {
+                const data = String(agendamento.data).slice(0, 10)
+                const [ano, mes, dia] = data.split("-")
+
+                const periodo = {
+                    MANHA: "Manhã",
+                    TARDE: "Tarde",
+                    NOITE: "Noite",
+                }[agendamento.periodo]
+
+                return {
+                    data: `${dia}/${mes}/${ano}`,
+                    profissional: agendamento.prestador.nome,
+                    especialidade: agendamento.prestador.especialidades?.[0]?.especialidade?.nome ?? "",
+                    procedimento: agendamento.prestador.procedimentos?.[0]?.procedimento?.nome ?? "",
+                    periodo: periodo ?? String(agendamento.periodo),
+                    sala: `Sala ${agendamento.salaNumero}`,
+                    observacoes: agendamento.observacoes ?? "-",
+                }
+            }
+        )
+
+        try {
+            // Importa o gerador de PDF somente no navegador
+            const { pdf } = await import("@react-pdf/renderer")
+
+            const documento = pdf(
+                <DocumentoAgenda
+                    nomeUnidade={localSelecionado.nome}
+                    dataDeInicio={new Date(`${dataDeInicio}T12:00:00`)}
+                    dataDeFim={new Date(`${dataDeFim}T12:00:00`)}
+                    agendamentos={dadosPDF}
+                />
+            )
+
+            // Gera o arquivo PDF
+            const arquivo = await documento.toBlob()
+
+            // Inicia o download
+            const url = URL.createObjectURL(arquivo)
+            const link = document.createElement("a")
+
+            link.href = url
+            link.download = `agenda-${localSelecionado.nome
+                .toLowerCase()
+                .replace(/\s+/g, "-")}.pdf`
+
+            document.body.appendChild(link)
+            link.click()
+            document.body.removeChild(link)
+
+            setTimeout(() => URL.revokeObjectURL(url), 1000)
+
+        } catch (erro) {
+            console.error("Erro ao gerar PDF:", erro)
+        }
+    }
+
 
     return (
         <Template>
@@ -985,12 +1036,15 @@ export default function Page() {
                 }}
             >
                 <div className="grid grid-cols-2 gap-4">
-                    <div className="p-4 border border-verde-escuro rounded-lg flex flex-col gap-2 text-verde-escuro">
-
-                    </div>
+                    <CalendarioPeriodo
+                        dataDeInicio={dataDeInicio}
+                        dataDeFim={dataDeFim}
+                        setDataDeInicio={setDataDeInicio}
+                        setDataDeFim={setDataDeFim}
+                    />
                     <div className="p-4 border border-verde-escuro rounded-lg flex flex-col gap-2 text-verde-escuro">
                         <InputData icone={<BsCalendar2Date />} id="dataDeInicio" label="Data de Início" nome="dataDeInicio" placeholder="Informe a data de Inicio" setValor={setDataDeInicio} valor={dataDeInicio} />
-                        <InputData icone={<BsCalendar2Date />} id="dataDeFim" label="Data de Início" nome="dataDeFim" placeholder="Informe a data do fim" setValor={setDataDeFim} valor={dataDeFim} />
+                        <InputData icone={<BsCalendar2Date />} id="dataDeFim" label="Data de Fim" nome="dataDeFim" placeholder="Informe a data do fim" setValor={setDataDeFim} valor={dataDeFim} />
                         <button
                             onClick={gerarPdfAgendaDePrestadores}
                             className="flex items-center justify-center gap-2 bg-verde-escuro text-white mt-4 border border-verde-escuro cursor-pointer transition-all duration-300 font-bold text-lg py-2 rounded-lg"
