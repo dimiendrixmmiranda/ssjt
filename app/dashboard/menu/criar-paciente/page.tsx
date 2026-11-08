@@ -1,9 +1,9 @@
 'use client'
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Template from "../Template";
 import { Local, TipoDeCadastroPaciente } from "@/generated/prisma/browser";
 import { RiUserSearchFill } from "react-icons/ri";
-import { FaPlus, FaRegUser, FaUserFriends } from "react-icons/fa";
+import { FaPlus, FaRegLightbulb, FaRegUser, FaUserFriends } from "react-icons/fa";
 import { Dialog } from "primereact/dialog";
 import InputTexto from "@/components/inputs/InputTexto";
 import InputSelect from "@/components/inputs/InputSelect";
@@ -14,10 +14,15 @@ import InputCheckbox from "@/components/inputs/InputCheckbox";
 import { useLocais } from "@/hooks/useListaDeLocais";
 import { AiOutlineClear } from "react-icons/ai";
 import { HiSaveAs } from "react-icons/hi";
+import DialogPersonalizado from "@/components/dialog/DialogPersonalizado";
+import { FaMagnifyingGlass } from "react-icons/fa6";
+import Image from "next/image";
+import { GiMagnifyingGlass } from "react-icons/gi";
+import { usePacientes } from "@/hooks/usePacientes";
 
 export default function Page() {
     const { locais } = useLocais()
-
+    const { pacientes, buscarPaciente } = usePacientes()
     const [dialogCriarPaciente, setDialogCriarPaciente] = useState(false);
 
     // Identificação pessoal
@@ -112,12 +117,51 @@ export default function Page() {
     const [possuiDeficiencia, setPossuiDeficiencia] = useState(false)
     const [tipoDeDeficiencia, setTipoDeDeficiencia] = useState<string[]>([])
     const [pacienteAtivo, setPacienteAtivo] = useState(true)
-    console.log(pacienteMenorDeIdade)
 
     const [tipoDeCadastro, setTipoDeCadastro] = useState<TipoDeCadastroPaciente>(TipoDeCadastroPaciente.COMPLETO)
 
     const opcoesDeUnidadeDeSaude = opcoesDeLocais(locais)
-    console.log(opcoesDeUnidadeDeSaude)
+
+    const [dialogConfirmacao, setDialogConfirmacao] = useState(false)
+
+    const [dialogResultado, setDialogResultado] = useState(false)
+    const [tituloResultado, setTituloResultado] = useState("")
+    const [mensagemResultado, setMensagemResultado] = useState("")
+
+    const [pesquisarPaciente, setPesquisarPaciente] = useState("")
+
+    const [pacientesFiltrados, setPacientesFiltrados] = useState<typeof pacientes>([])
+
+    console.log(pacientesFiltrados)
+
+    function buscarPacientesFiltrados() {
+        const termos = pesquisarPaciente
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase()
+            .trim()
+            .split(/\s+/)
+            .filter(Boolean)
+
+        if (termos.length === 0) {
+            setPacientesFiltrados([])
+            console.log("Informe um termo para pesquisar.")
+            return
+        }
+
+        const resultado = pacientes.filter((paciente) => {
+            const nome = paciente.nomeDoPaciente
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .toLowerCase()
+
+            return termos.every((termo) => nome.includes(termo))
+        })
+
+        setPacientesFiltrados(resultado)
+        console.log("Pacientes encontrados:", resultado)
+    }
+
 
     useEffect(() => {
         if (!dataDeNascimento) {
@@ -142,9 +186,182 @@ export default function Page() {
         setPacienteMenorDeIdade(idade < 18)
     }, [dataDeNascimento])
 
+    async function criarPaciente() {
+        // Validações básicas
+        if (!nomeDoPaciente.trim()) {
+            setTituloResultado("Nome obrigatório")
+            setMensagemResultado("Informe o nome do paciente.")
+            setDialogResultado(true)
+            return
+        }
+
+        if (!dataDeNascimento || !sexo || !unidadeDeSaude) {
+            setTituloResultado("Campos obrigatórios")
+            setMensagemResultado("Preencha os campos obrigatórios.")
+            setDialogResultado(true)
+            return
+        }
+
+        if (tipoDeCadastro === "COMPLETO") {
+            if (
+                !nomeDaMae.trim() ||
+                !nacionalidade.trim() ||
+                !municipioDeNascimento.trim() ||
+                !ufDeNascimento ||
+                (!CPF.trim() && !cartaoDoSus.trim()) ||
+                !pais.trim() ||
+                !UF ||
+                !municipio.trim() ||
+                !bairro.trim() ||
+                !tipoLogradouro ||
+                !rua.trim() ||
+                !CEP.trim()
+            ) {
+                setTituloResultado("Cadastro incompleto")
+                setMensagemResultado("Preencha todos os campos obrigatórios do cadastro completo.")
+                setDialogResultado(true)
+                return
+            }
+        }
+
+        const limparTexto = (valor: string) =>
+            valor.trim() || null
+
+        const dadosPaciente = {
+            tipoDeCadastro,
+
+            // Identificação
+            nomeDoPaciente: nomeDoPaciente.trim(),
+            nomeSocial: limparTexto(nomeSocial),
+            nomeDaMae: limparTexto(nomeDaMae),
+            nomeDoPai: limparTexto(nomeDoPai),
+            dataDeNascimento,
+            sexo,
+            estadoCivil: limparTexto(estadoCivil),
+            corERaca: limparTexto(corERaca),
+
+            // Unidade de saúde
+            unidadeDeSaudeId: unidadeDeSaude,
+            codigoGSUS: limparTexto(codigoGSUS),
+            codigoIDS: limparTexto(codigoIDS),
+            tipoSanguineo: limparTexto(tipoSanguineo),
+            fatorRH: limparTexto(fatorRH),
+
+            // Naturalidade
+            nacionalidade: limparTexto(nacionalidade),
+            municipioDeNascimento: limparTexto(municipioDeNascimento),
+            ufDeNascimento: limparTexto(ufDeNascimento),
+
+            // Documentos
+            CPF: limparTexto(CPF),
+            cartaoDoSus: limparTexto(cartaoDoSus),
+            NIS: limparTexto(NIS),
+            RG: limparTexto(RG),
+            orgaoEmissorDoRG: limparTexto(orgaoEmissorDoRG),
+            ufDoRG: limparTexto(ufDoRG),
+            dataDaEmissaoDoRG: dataDaEmissaoDoRG || null,
+            cnsMae: limparTexto(cnsMae),
+            orientacaoRegCpf: limparTexto(""),
+            tituloDeEleitor: limparTexto(tituloDeEleitor),
+            zonaEleitoral: limparTexto(zonaEleitoral),
+            secaoEleitoral: limparTexto(secaoEleitoral),
+
+            // Trabalhista
+            CTPSNumero: limparTexto(CTPSNumero),
+            CTPSSerie: limparTexto(CTPSSerie),
+            cTPSUf: limparTexto(cTPSUf),
+            CTPSDataEmissao: CTPSDataEmissao || null,
+            PISPASEP: limparTexto(PISPASEP),
+
+            // Educação
+            frequentaEscola: limparTexto(frequentaEscola),
+            escola: limparTexto(escola),
+            serieEscolar: limparTexto(serieEscolar),
+            grauEscolaridade: limparTexto(grauEscolaridade),
+            cursoProfissionalizante: limparTexto(cursoProfissionalizante),
+
+            // Naturalização
+            paisDeOrigem: limparTexto(paisDeOrigem),
+            entradaNoBrasil: entradaNoBrasil || null,
+
+            // Contato
+            email: limparTexto(email),
+            telefone: limparTexto(telefone),
+            telefoneWhatsApp: limparTexto(telefoneWhatsApp),
+            nomeContatoEmergencia: limparTexto(nomeContatoEmergencia),
+            parentescoContatoEmergencia: limparTexto(parentescoContatoEmergencia),
+            telefoneDeEmergencia: limparTexto(telefoneDeEmergencia),
+
+            // Responsável
+            nomeDoResponsavel: limparTexto(nomeDoResponsavel),
+            CPFDoResponsavel: limparTexto(CPFDoResponsavel),
+            parentescoDoResponsavel: limparTexto(parentescoDoResponsavel),
+            telefoneDoResponsavel: limparTexto(telefoneDoResponsavel),
+
+            // Endereço
+            pais: limparTexto(pais),
+            UF: limparTexto(UF),
+            municipio: limparTexto(municipio),
+            bairro: limparTexto(bairro),
+            rua: limparTexto(rua),
+            numero: limparTexto(numero),
+            complemento: limparTexto(complemento),
+            CEP: limparTexto(CEP),
+            tipoLogradouro: limparTexto(tipoLogradouro),
+            pontoDeReferencia: limparTexto(pontoDeReferencia),
+            latitude: latitude ? Number(latitude) : null,
+            longitude: longitude ? Number(longitude) : null,
+            zona: limparTexto(zona),
+
+            // Informações adicionais
+            possuiDeficiencia,
+            tipoDeDeficiencia: possuiDeficiencia ? tipoDeDeficiencia : [],
+            observacoes: limparTexto(observacoes),
+            ativo: pacienteAtivo,
+        }
+
+        try {
+            const resposta = await fetch("/api/criar-paciente", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(dadosPaciente),
+            })
+
+            const resultado = await resposta.json()
+
+            if (!resposta.ok) {
+                setTituloResultado("Erro ao cadastrar")
+                setMensagemResultado(resultado.erro || "Erro ao cadastrar paciente.")
+                setDialogResultado(true)
+                return
+            }
+
+            await buscarPaciente()
+
+            setTituloResultado("Paciente cadastrado!")
+            setMensagemResultado("O paciente foi cadastrado com sucesso no sistema.")
+            setDialogResultado(true)
+
+            return resultado
+
+        } catch (erro) {
+            console.error("Erro ao cadastrar paciente:", erro)
+
+            setTituloResultado("Erro inesperado")
+            setMensagemResultado(
+                erro instanceof Error
+                    ? erro.message
+                    : "Não foi possível cadastrar o paciente."
+            )
+            setDialogResultado(true)
+        }
+    }
+
     return (
         <Template>
-            <div className="p-4 text-verde-escuro flex flex-col gap-4 max-h-[100vh] overflow-y-scroll">
+            <div className="p-4 text-verde-escuro flex flex-col gap-4 h-full">
                 <div className="flex items-center justify-between gap-6">
                     <div className="flex items-center my-auto gap-2 text-verde-escuro">
                         <RiUserSearchFill className="text-5xl" />
@@ -160,6 +377,61 @@ export default function Page() {
                         </button>
                     </div>
                 </div>
+                <div className="flex flex-col rounded-lg overflow-hidden shadow-[0px_0px_2px_2px_#999] relative p-4 gap-3">
+                    <div className="absolute top-0 left-0 w-2 h-full bg-verde" />
+                    <div className="flex items-center gap-2">
+                        <div className="rounded-full p-2 text-2xl bg-verde/20">
+                            <FaMagnifyingGlass />
+                        </div>
+                        <h3 className="font-bold text-2xl">Pesquisar Paciente</h3>
+                    </div>
+                    <div className="flex items-center gap-4">
+                        <div className="w-full relative">
+                            <input type="search" name="pesquisarPaciente" id="pesquisarPaciente" className="shadow-[0px_0px_2px_1px_var(--verde-escuro)] p-1 rounded-lg pl-8 text-lg transition-all duration-200 focus:outline-verde h-[40px] w-full"
+                                value={pesquisarPaciente} onChange={(e) => setPesquisarPaciente(e.target.value)} />
+                            <GiMagnifyingGlass className="absolute top-2 left-1 text-2xl" />
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={buscarPacientesFiltrados}
+                                className="flex items-center gap-2 font-bold rounded-lg border border-verde p-2 px-4 transition-all duration-300 bg-verde-escuro text-white cursor-pointer hover:scale-105"
+                            >
+                                <FaMagnifyingGlass />
+                                <p>Buscar</p>
+                            </button>
+                            <button className="flex items-center gap-2 font-bold rounded-lg border border-verde p-2 px-4 transition-all duration-300 cursor-pointer hover:text-white hover:bg-verde-escuro"
+                            >
+                                <FaMagnifyingGlass />
+                                <p>Filtros</p>
+                            </button>
+                            <button className="flex items-center gap-2 font-bold rounded-lg border border-verde p-2 px-4 transition-all duration-300 cursor-pointer hover:text-white hover:bg-verde-escuro"
+                            >
+                                <FaMagnifyingGlass />
+                                <p>Limpar</p>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {
+                    pacientesFiltrados.length <= 0 ? (
+                        <div className="rounded-lg overflow-hidden shadow-[0px_0px_2px_2px_#999] relative p-4 flex flex-col gap-3 flex-1">
+                            <div className="relative w-[500px] h-[300px] mx-auto">
+                                <Image alt="Imagem de buscar paciente" src={'/buscar-paciente.png'} fill className="object-contain" />
+                            </div>
+                            <h3 className="text-2xl font-bold text-center">Pesquise um paciente para começar</h3>
+                            <span className="font-semibold text-center flex justify-center items-center">Informe o nome, data de nascimento, CPF ou cartão SUS para visualizar os resultados encontrados</span>
+                            <div className="border border-verde-escuro p-4 bg-verde/20 flex items-center rounded-lg gap-2 w-fit mx-auto">
+                                <FaRegLightbulb className="text-3xl" />
+                                <div className="w-[2px] h-8 bg-verde" />
+                                <span className="font-bold text-lg">Você vera somente os pacientes correspondentes à sua busca.</span>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="rounded-lg overflow-hidden shadow-[0px_0px_2px_2px_#999] relative p-4 flex flex-col gap-3 flex-1">
+                            paciente achado
+                        </div>
+                    )
+                }
             </div>
 
             <div className="card flex justify-content-center">
@@ -327,9 +599,8 @@ export default function Page() {
                                     setValor={setNomeDaMae}
                                     icone={<FaUserFriends />}
                                     placeholder="Digite o nome da mãe"
-                                    disabled={tipoDeCadastro === TipoDeCadastroPaciente.PROVISORIO ? true : false}
-                                    campoObrigatorio={tipoDeCadastro === TipoDeCadastroPaciente.COMPLETO ? true : false}
-                                    estiloPersonalizado={`${tipoDeCadastro == TipoDeCadastroPaciente.PROVISORIO ? 'opacity-40' : 'opacity-100'} ${tipoDeCadastro == TipoDeCadastroPaciente.COMPLETO ? 'opacity-100' : ''}`}
+                                    campoObrigatorio={tipoDeCadastro === TipoDeCadastroPaciente.PROVISORIO || TipoDeCadastroPaciente.COMPLETO ? true : false}
+                                    estiloPersonalizado={`${tipoDeCadastro == TipoDeCadastroPaciente.PROVISORIO ? 'opacity-100' : 'opacity-40'} ${tipoDeCadastro == TipoDeCadastroPaciente.COMPLETO ? 'opacity-100' : ''}`}
                                 />
                                 <InputTexto
                                     label="Nome do pai"
@@ -685,7 +956,9 @@ export default function Page() {
                                     setValor={setCPF}
                                     icone={<BsPerson />}
                                     placeholder="000.000.000-00"
-                                    campoObrigatorio={tipoDeCadastro === TipoDeCadastroPaciente.PROVISORIO || TipoDeCadastroPaciente.COMPLETO ? true : false}
+                                    campoObrigatorio={tipoDeCadastro === TipoDeCadastroPaciente.COMPLETO ? true : false}
+                                    disabled={tipoDeCadastro === TipoDeCadastroPaciente.PROVISORIO ? true : false}
+                                    estiloPersonalizado={`${tipoDeCadastro == TipoDeCadastroPaciente.PROVISORIO ? 'opacity-40' : 'opacity-100'} ${tipoDeCadastro == TipoDeCadastroPaciente.COMPLETO ? 'opacity-100' : ''}`}
                                 />
 
                                 <InputTexto
@@ -1187,7 +1460,7 @@ export default function Page() {
                                 />
                             </div>
                         </section>
-                        
+
                         <div className="flex items-center gap-3 ml-auto text-verde-escuro">
                             <button
                                 type="button"
@@ -1199,6 +1472,7 @@ export default function Page() {
                             </button>
                             <button
                                 type="submit"
+                                onClick={() => setDialogConfirmacao(true)}
                                 className="flex items-center gap-2 font-bold rounded-lg border border-verde p-2 px-4 transition-all duration-300 cursor-pointer hover:text-white hover:bg-verde"
                             >
                                 <HiSaveAs className="text-2xl" />
@@ -1207,6 +1481,26 @@ export default function Page() {
                         </div>
                     </div>
                 </Dialog>
+                <DialogPersonalizado
+                    visivel={dialogConfirmacao}
+                    titulo="Confirmar cadastro"
+                    mensagem={`Deseja realmente cadastrar ${nomeDoPaciente}?`}
+                    textoConfirmar="Confirmar"
+                    textoCancelar="Cancelar"
+                    aoConfirmar={async () => {
+                        setDialogConfirmacao(false)
+                        await criarPaciente()
+                    }}
+                    aoCancelar={() => setDialogConfirmacao(false)}
+                />
+                <DialogPersonalizado
+                    visivel={dialogResultado}
+                    titulo={tituloResultado}
+                    mensagem={mensagemResultado}
+                    textoConfirmar="Entendi"
+                    aoConfirmar={() => setDialogResultado(false)}
+                    aoCancelar={() => setDialogResultado(false)}
+                />
             </div>
         </Template>
     )
