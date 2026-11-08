@@ -6,13 +6,20 @@ interface InputDataProps {
     icone: React.ReactNode
     placeholder: string
     disabled?: boolean
+    campoObrigatorio?: boolean
+    estiloPersonalizado?: string
     setValor: (valor: string) => void
 }
 
-export default function InputData({ label, id, nome, valor, icone, placeholder, disabled, setValor }: InputDataProps) {
+export default function InputData({ label, id, nome, valor, icone, placeholder, disabled, campoObrigatorio, estiloPersonalizado, setValor }: InputDataProps) {
     return (
-        <div className="flex flex-col gap-1 w-full">
-            <label htmlFor={id} className="2xl:text-lg">{label}</label>
+        <div className={`flex flex-col w-full ${estiloPersonalizado}`}>
+            <div className="flex items-center gap-2">
+                <label htmlFor={id} className="2xl:text-lg">{label}</label>
+                {
+                    campoObrigatorio && (<p className="font-bold text-2xl leading-3 text-red-600 mt-2">*</p>)
+                }
+            </div>
             <div className="relative flex flex-col">
                 <input
                     type="date"

@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation"
 import { BiSolidLocationPlus } from "react-icons/bi"
 import { BsMoon } from "react-icons/bs"
 import { FaHome, FaProcedures, FaRegBell, FaUserPlus } from "react-icons/fa"
-import { FaUserDoctor } from "react-icons/fa6"
+import { FaUserDoctor, FaUserPen } from "react-icons/fa6"
 import { GoGear } from "react-icons/go"
 import { IoLogOutOutline } from "react-icons/io5"
 import { LuUserCog } from "react-icons/lu"
@@ -76,6 +76,12 @@ export default function Template({ children }: TemplateProps) {
                             <Link href={'/dashboard/menu/criar-prestador'} className={`flex items-center gap-2 font-bold text-xl p-2 px-4 rounded-lg border border-verde-escuro ${pathname === '/dashboard/menu/criar-prestador' ? "bg-white text-verde": "bg-verde-escuro text-white"}`}>
                                 <RiServiceLine />
                                 <p>Criar Prestador</p>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href={'/dashboard/menu/criar-paciente'} className={`flex items-center gap-2 font-bold text-xl p-2 px-4 rounded-lg border border-verde-escuro ${pathname === '/dashboard/menu/criar-paciente' ? "bg-white text-verde": "bg-verde-escuro text-white"}`}>
+                                <FaUserPen />
+                                <p>Criar Paciente</p>
                             </Link>
                         </li>
                     </ul>

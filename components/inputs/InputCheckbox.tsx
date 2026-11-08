@@ -119,7 +119,8 @@ export default function InputCheckbox({
                         leading-4.5
                         text-gray-700
                         transition-colors
-                        group-hover:text-gray-900 mt-2
+                        group-hover:text-gray-900
+                        capitalize
                     "
                 >
                     {label}

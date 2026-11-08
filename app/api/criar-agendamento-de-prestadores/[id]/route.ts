@@ -208,3 +208,73 @@ export async function PUT(
         );
     }
 }
+
+export async function DELETE(
+    request: Request,
+    { params }: Params
+) {
+    try {
+        const { id } = await params
+        const agendamentoId = Number(id)
+
+        const sessao = await auth()
+
+        if (!sessao?.user?.id) {
+            return NextResponse.json(
+                { erro: "Usuário não autenticado." },
+                { status: 401 }
+            )
+        }
+
+        // Validação do ID
+        if (!Number.isInteger(agendamentoId) || agendamentoId <= 0) {
+            return NextResponse.json(
+                { erro: "ID do agendamento inválido." },
+                { status: 400 }
+            )
+        }
+
+        // Verifica se o agendamento existe
+        const agendamento = await prisma.agendamentoDePrestador.findUnique({
+            where: {
+                id: agendamentoId,
+            },
+        })
+
+        if (!agendamento) {
+            return NextResponse.json(
+                { erro: "Agendamento não encontrado." },
+                { status: 404 }
+            )
+        }
+
+        // Exclui o agendamento
+        await prisma.agendamentoDePrestador.delete({
+            where: {
+                id: agendamentoId,
+            },
+        })
+
+        return NextResponse.json(
+            { mensagem: "Agendamento excluído com sucesso." },
+            { status: 200 }
+        )
+
+    } catch (erro: unknown) {
+        console.error("Erro ao excluir agendamento:", erro)
+
+        const codigo = (erro as { code?: string })?.code
+
+        if (codigo === "P2025") {
+            return NextResponse.json(
+                { erro: "Agendamento não encontrado." },
+                { status: 404 }
+            )
+        }
+
+        return NextResponse.json(
+            { erro: "Erro interno ao excluir o agendamento." },
+            { status: 500 }
+        )
+    }
+}

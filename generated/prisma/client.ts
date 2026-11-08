@@ -86,3 +86,8 @@ export type PrestadorProcedimento = Prisma.PrestadorProcedimentoModel
  * 
  */
 export type AgendamentoDePrestador = Prisma.AgendamentoDePrestadorModel
+/**
+ * Model Paciente
+ * 
+ */
+export type Paciente = Prisma.PacienteModel

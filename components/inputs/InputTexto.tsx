@@ -7,14 +7,20 @@ interface InputTextoProps {
     placeholder: string
     disabled?: boolean
     estiloPersonalizado?: string
+    campoObrigatorio?: boolean
     setValor: (valor: string) => void
     onBlur?: () => void
 }
 
-export default function InputTexto({ label, id, nome, valor, icone, placeholder, estiloPersonalizado, disabled, setValor, onBlur }: InputTextoProps) {
+export default function InputTexto({ label, id, nome, valor, icone, placeholder, estiloPersonalizado, disabled, campoObrigatorio, setValor, onBlur }: InputTextoProps) {
     return (
         <div className={`flex flex-col w-full ${estiloPersonalizado}`}>
-            <label htmlFor={id} className="2xl:text-lg">{label}</label>
+            <div className="flex items-center gap-2">
+                <label htmlFor={id} className="2xl:text-lg">{label}</label>
+                {
+                    campoObrigatorio && (<p className="font-bold text-2xl leading-3 text-red-600 mt-2">*</p>)
+                }
+            </div>
             <div className="relative flex flex-col">
                 <input
                     type="text"

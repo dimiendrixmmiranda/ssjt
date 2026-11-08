@@ -1,2 +1,0 @@
--- CreateEnum
-CREATE TYPE "TipoDoPrestador" AS ENUM ('MEDICO', 'PRESTADOR_DE_SERVICOS_MEDICOS');

@@ -74,3 +74,143 @@ export const PeriodoDeAtendimento = {
 } as const
 
 export type PeriodoDeAtendimento = (typeof PeriodoDeAtendimento)[keyof typeof PeriodoDeAtendimento]
+
+
+export const Sexo = {
+  MASCULINO: 'MASCULINO',
+  FEMININO: 'FEMININO',
+  NAO_INFORMADO: 'NAO_INFORMADO'
+} as const
+
+export type Sexo = (typeof Sexo)[keyof typeof Sexo]
+
+
+export const EstadoCivil = {
+  SOLTEIRO: 'SOLTEIRO',
+  CASADO: 'CASADO',
+  DIVORCIADO: 'DIVORCIADO',
+  VIUVO: 'VIUVO',
+  UNIAO_ESTAVEL: 'UNIAO_ESTAVEL',
+  NAO_INFORMADO: 'NAO_INFORMADO'
+} as const
+
+export type EstadoCivil = (typeof EstadoCivil)[keyof typeof EstadoCivil]
+
+
+export const Raca = {
+  BRANCA: 'BRANCA',
+  PRETA: 'PRETA',
+  PARDA: 'PARDA',
+  AMARELA: 'AMARELA',
+  INDIGENA: 'INDIGENA',
+  NAO_INFORMADO: 'NAO_INFORMADO'
+} as const
+
+export type Raca = (typeof Raca)[keyof typeof Raca]
+
+
+export const TipoSanguineo = {
+  A: 'A',
+  B: 'B',
+  AB: 'AB',
+  O: 'O'
+} as const
+
+export type TipoSanguineo = (typeof TipoSanguineo)[keyof typeof TipoSanguineo]
+
+
+export const FatorRH = {
+  POSITIVO: 'POSITIVO',
+  NEGATIVO: 'NEGATIVO'
+} as const
+
+export type FatorRH = (typeof FatorRH)[keyof typeof FatorRH]
+
+
+export const UF = {
+  AC: 'AC',
+  AL: 'AL',
+  AP: 'AP',
+  AM: 'AM',
+  BA: 'BA',
+  CE: 'CE',
+  DF: 'DF',
+  ES: 'ES',
+  GO: 'GO',
+  MA: 'MA',
+  MT: 'MT',
+  MS: 'MS',
+  MG: 'MG',
+  PA: 'PA',
+  PB: 'PB',
+  PR: 'PR',
+  PE: 'PE',
+  PI: 'PI',
+  RJ: 'RJ',
+  RN: 'RN',
+  RS: 'RS',
+  RO: 'RO',
+  RR: 'RR',
+  SC: 'SC',
+  SP: 'SP',
+  SE: 'SE',
+  TO: 'TO'
+} as const
+
+export type UF = (typeof UF)[keyof typeof UF]
+
+
+export const GrauDeEscolaridade = {
+  NAO_ALFABETIZADO: 'NAO_ALFABETIZADO',
+  FUNDAMENTAL_INCOMPLETO: 'FUNDAMENTAL_INCOMPLETO',
+  FUNDAMENTAL_COMPLETO: 'FUNDAMENTAL_COMPLETO',
+  MEDIO_INCOMPLETO: 'MEDIO_INCOMPLETO',
+  MEDIO_COMPLETO: 'MEDIO_COMPLETO',
+  SUPERIOR_INCOMPLETO: 'SUPERIOR_INCOMPLETO',
+  SUPERIOR_COMPLETO: 'SUPERIOR_COMPLETO',
+  POS_GRADUACAO: 'POS_GRADUACAO'
+} as const
+
+export type GrauDeEscolaridade = (typeof GrauDeEscolaridade)[keyof typeof GrauDeEscolaridade]
+
+
+export const TipoDeLogradouro = {
+  RUA: 'RUA',
+  AVENIDA: 'AVENIDA',
+  ALAMEDA: 'ALAMEDA',
+  ESTRADA: 'ESTRADA',
+  RODOVIA: 'RODOVIA',
+  TRAVESSA: 'TRAVESSA',
+  PRACA: 'PRACA',
+  OUTRO: 'OUTRO'
+} as const
+
+export type TipoDeLogradouro = (typeof TipoDeLogradouro)[keyof typeof TipoDeLogradouro]
+
+
+export const Zona = {
+  URBANA: 'URBANA',
+  RURAL: 'RURAL'
+} as const
+
+export type Zona = (typeof Zona)[keyof typeof Zona]
+
+
+export const Deficiencia = {
+  FISICA: 'FISICA',
+  VISUAL: 'VISUAL',
+  AUDITIVA: 'AUDITIVA',
+  INTELECTUAL: 'INTELECTUAL',
+  MULTIPLA: 'MULTIPLA',
+  TEA: 'TEA'
+} as const
+
+export type Deficiencia = (typeof Deficiencia)[keyof typeof Deficiencia]
+
+
+export const TipoDeCadastroPaciente = {
+  PROVISORIO: 'PROVISORIO',
+  COMPLETO: 'COMPLETO'
+} as const
+
+export type TipoDeCadastroPaciente = (typeof TipoDeCadastroPaciente)[keyof typeof TipoDeCadastroPaciente]

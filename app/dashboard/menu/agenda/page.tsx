@@ -66,6 +66,15 @@ export default function Page() {
     const [dataDeInicio, setDataDeInicio] = useState("")
     const [dataDeFim, setDataDeFim] = useState("")
 
+    // Excluir
+    const [dialogConfirmarExclusao, setDialogConfirmarExclusao] = useState(false)
+    const [agendamentoParaExcluir, setAgendamentoParaExcluir] = useState<number | null>(null)
+
+    function confirmarExclusaoAgendamento(agendamentoId: number) {
+        setAgendamentoParaExcluir(agendamentoId)
+        setDialogConfirmarExclusao(true)
+    }
+
     // Executa o cadastro após a confirmação
     async function cadastrarAgendamento() {
         try {
@@ -467,6 +476,38 @@ export default function Page() {
         }
     }
 
+    async function excluirAgendamentoDePrestador(agendamentoId: number) {
+        try {
+            const resposta = await fetch(
+                `/api/criar-agendamento-de-prestadores/${agendamentoId}`,
+                { method: "DELETE" }
+            )
+
+            const resultado = await resposta.json()
+
+            if (!resposta.ok) {
+                throw new Error(resultado.erro || "Não foi possível excluir o agendamento.")
+            }
+
+            await buscarAgendamentoDePrestadores()
+
+            setDialogConfirmarExclusao(false)
+            setAgendamentoParaExcluir(null)
+
+            setTituloResultado("Agendamento excluído!")
+            setMensagemResultado("O agendamento foi excluído com sucesso.")
+            setDialogResultado(true)
+
+        } catch (erro) {
+            console.error("Erro ao excluir agendamento:", erro)
+
+            setTituloResultado("Erro ao excluir!")
+            setMensagemResultado(
+                erro instanceof Error ? erro.message : "Ocorreu um erro inesperado."
+            )
+            setDialogResultado(true)
+        }
+    }
 
     return (
         <Template>
@@ -759,7 +800,16 @@ export default function Page() {
                                                         >
                                                             <FiEdit />
                                                         </button>
-                                                        <button className="rounded-lg border border-red-600 text-red-600 p-2">
+                                                        <button
+                                                            type="button"
+                                                            disabled={!agendamento}
+                                                            className="rounded-lg border border-red-600 text-red-600 p-2 disabled:opacity-30 disabled:cursor-not-allowed"
+                                                            onClick={() => {
+                                                                if (agendamento) {
+                                                                    confirmarExclusaoAgendamento(agendamento.id)
+                                                                }
+                                                            }}
+                                                        >
                                                             <FaRegTrashAlt />
                                                         </button>
                                                     </div>
@@ -1024,6 +1074,62 @@ export default function Page() {
                 aoCancelar={() => setDialogResultado(false)}
             />
 
+            {/* Dialog de excluir um prestador */}
+            <Dialog
+                header="Confirmar exclusão"
+                visible={dialogConfirmarExclusao}
+                onHide={() => {
+                    setDialogConfirmarExclusao(false)
+                    setAgendamentoParaExcluir(null)
+                }}
+                modal
+                closable
+                draggable={false}
+                className="w-[90%] max-w-[420px]"
+            >
+                <div className="flex flex-col gap-5">
+
+                    <div className="flex items-center gap-3">
+                        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-red-100 text-red-600">
+                            <FaRegTrashAlt size={22} />
+                        </div>
+
+                        <p className="text-gray-600 text-sm">
+                            Tem certeza de que deseja excluir este agendamento?
+                            <span className="block mt-1 font-semibold text-red-600">
+                                Essa ação não poderá ser desfeita.
+                            </span>
+                        </p>
+                    </div>
+
+                    <div className="flex justify-end gap-3">
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setDialogConfirmarExclusao(false)
+                                setAgendamentoParaExcluir(null)
+                            }}
+                            className="px-4 py-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100 transition"
+                        >
+                            Cancelar
+                        </button>
+
+                        <button
+                            type="button"
+                            disabled={agendamentoParaExcluir === null}
+                            onClick={() => {
+                                if (agendamentoParaExcluir !== null) {
+                                    excluirAgendamentoDePrestador(agendamentoParaExcluir)
+                                }
+                            }}
+                            className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 disabled:opacity-50 transition"
+                        >
+                            Sim, excluir
+                        </button>
+                    </div>
+
+                </div>
+            </Dialog>
 
             <Dialog
                 header={`Gerar PDF do Agendamento do ${localSelecionado?.nome}`}

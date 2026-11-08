@@ -405,7 +405,8 @@ export const ModelName = {
   Prestador: 'Prestador',
   PrestadorEspecialidade: 'PrestadorEspecialidade',
   PrestadorProcedimento: 'PrestadorProcedimento',
-  AgendamentoDePrestador: 'AgendamentoDePrestador'
+  AgendamentoDePrestador: 'AgendamentoDePrestador',
+  Paciente: 'Paciente'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -421,7 +422,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "usuario" | "local" | "especialidade" | "procedimento" | "membroProcedimento" | "prestador" | "prestadorEspecialidade" | "prestadorProcedimento" | "agendamentoDePrestador"
+    modelProps: "usuario" | "local" | "especialidade" | "procedimento" | "membroProcedimento" | "prestador" | "prestadorEspecialidade" | "prestadorProcedimento" | "agendamentoDePrestador" | "paciente"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1091,6 +1092,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Paciente: {
+      payload: Prisma.$PacientePayload<ExtArgs>
+      fields: Prisma.PacienteFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PacienteFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PacientePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PacienteFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PacientePayload>
+        }
+        findFirst: {
+          args: Prisma.PacienteFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PacientePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PacienteFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PacientePayload>
+        }
+        findMany: {
+          args: Prisma.PacienteFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PacientePayload>[]
+        }
+        create: {
+          args: Prisma.PacienteCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PacientePayload>
+        }
+        createMany: {
+          args: Prisma.PacienteCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PacienteCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PacientePayload>[]
+        }
+        delete: {
+          args: Prisma.PacienteDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PacientePayload>
+        }
+        update: {
+          args: Prisma.PacienteUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PacientePayload>
+        }
+        deleteMany: {
+          args: Prisma.PacienteDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PacienteUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PacienteUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PacientePayload>[]
+        }
+        upsert: {
+          args: Prisma.PacienteUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PacientePayload>
+        }
+        aggregate: {
+          args: Prisma.PacienteAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePaciente>
+        }
+        groupBy: {
+          args: Prisma.PacienteGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PacienteGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PacienteCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PacienteCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1253,6 +1328,83 @@ export const AgendamentoDePrestadorScalarFieldEnum = {
 } as const
 
 export type AgendamentoDePrestadorScalarFieldEnum = (typeof AgendamentoDePrestadorScalarFieldEnum)[keyof typeof AgendamentoDePrestadorScalarFieldEnum]
+
+
+export const PacienteScalarFieldEnum = {
+  id: 'id',
+  tipoDeCadastro: 'tipoDeCadastro',
+  nomeDoPaciente: 'nomeDoPaciente',
+  nomeSocial: 'nomeSocial',
+  nomeDaMae: 'nomeDaMae',
+  nomeDoPai: 'nomeDoPai',
+  dataDeNascimento: 'dataDeNascimento',
+  sexo: 'sexo',
+  estadoCivil: 'estadoCivil',
+  corERaca: 'corERaca',
+  unidadeDeSaudeId: 'unidadeDeSaudeId',
+  codigoGSUS: 'codigoGSUS',
+  codigoIDS: 'codigoIDS',
+  tipoSanguineo: 'tipoSanguineo',
+  fatorRH: 'fatorRH',
+  nacionalidade: 'nacionalidade',
+  municipioDeNascimento: 'municipioDeNascimento',
+  ufDeNascimento: 'ufDeNascimento',
+  CPF: 'CPF',
+  cartaoDoSus: 'cartaoDoSus',
+  NIS: 'NIS',
+  RG: 'RG',
+  orgaoEmissorDoRG: 'orgaoEmissorDoRG',
+  ufDoRG: 'ufDoRG',
+  dataDaEmissaoDoRG: 'dataDaEmissaoDoRG',
+  cnsMae: 'cnsMae',
+  orientacaoRegCpf: 'orientacaoRegCpf',
+  tituloDeEleitor: 'tituloDeEleitor',
+  zonaEleitoral: 'zonaEleitoral',
+  secaoEleitoral: 'secaoEleitoral',
+  CTPSNumero: 'CTPSNumero',
+  CTPSSerie: 'CTPSSerie',
+  cTPSUf: 'cTPSUf',
+  CTPSDataEmissao: 'CTPSDataEmissao',
+  PISPASEP: 'PISPASEP',
+  frequentaEscola: 'frequentaEscola',
+  escola: 'escola',
+  serieEscolar: 'serieEscolar',
+  grauEscolaridade: 'grauEscolaridade',
+  cursoProfissionalizante: 'cursoProfissionalizante',
+  paisDeOrigem: 'paisDeOrigem',
+  entradaNoBrasil: 'entradaNoBrasil',
+  email: 'email',
+  telefone: 'telefone',
+  telefoneWhatsApp: 'telefoneWhatsApp',
+  nomeContatoEmergencia: 'nomeContatoEmergencia',
+  parentescoContatoEmergencia: 'parentescoContatoEmergencia',
+  telefoneDeEmergencia: 'telefoneDeEmergencia',
+  nomeDoResponsavel: 'nomeDoResponsavel',
+  CPFDoResponsavel: 'CPFDoResponsavel',
+  parentescoDoResponsavel: 'parentescoDoResponsavel',
+  telefoneDoResponsavel: 'telefoneDoResponsavel',
+  pais: 'pais',
+  UF: 'UF',
+  municipio: 'municipio',
+  bairro: 'bairro',
+  rua: 'rua',
+  numero: 'numero',
+  complemento: 'complemento',
+  CEP: 'CEP',
+  tipoLogradouro: 'tipoLogradouro',
+  pontoDeReferencia: 'pontoDeReferencia',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  zona: 'zona',
+  possuiDeficiencia: 'possuiDeficiencia',
+  tipoDeDeficiencia: 'tipoDeDeficiencia',
+  observacoes: 'observacoes',
+  ativo: 'ativo',
+  criadoEm: 'criadoEm',
+  atualizadoEm: 'atualizadoEm'
+} as const
+
+export type PacienteScalarFieldEnum = (typeof PacienteScalarFieldEnum)[keyof typeof PacienteScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1447,6 +1599,132 @@ export type ListEnumPeriodoDeAtendimentoFieldRefInput<$PrismaModel> = FieldRefIn
 
 
 /**
+ * Reference to a field of type 'TipoDeCadastroPaciente'
+ */
+export type EnumTipoDeCadastroPacienteFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TipoDeCadastroPaciente'>
+    
+
+
+/**
+ * Reference to a field of type 'TipoDeCadastroPaciente[]'
+ */
+export type ListEnumTipoDeCadastroPacienteFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TipoDeCadastroPaciente[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Sexo'
+ */
+export type EnumSexoFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Sexo'>
+    
+
+
+/**
+ * Reference to a field of type 'Sexo[]'
+ */
+export type ListEnumSexoFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Sexo[]'>
+    
+
+
+/**
+ * Reference to a field of type 'EstadoCivil'
+ */
+export type EnumEstadoCivilFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EstadoCivil'>
+    
+
+
+/**
+ * Reference to a field of type 'EstadoCivil[]'
+ */
+export type ListEnumEstadoCivilFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EstadoCivil[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Raca'
+ */
+export type EnumRacaFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Raca'>
+    
+
+
+/**
+ * Reference to a field of type 'Raca[]'
+ */
+export type ListEnumRacaFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Raca[]'>
+    
+
+
+/**
+ * Reference to a field of type 'TipoSanguineo'
+ */
+export type EnumTipoSanguineoFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TipoSanguineo'>
+    
+
+
+/**
+ * Reference to a field of type 'TipoSanguineo[]'
+ */
+export type ListEnumTipoSanguineoFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TipoSanguineo[]'>
+    
+
+
+/**
+ * Reference to a field of type 'FatorRH'
+ */
+export type EnumFatorRHFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FatorRH'>
+    
+
+
+/**
+ * Reference to a field of type 'FatorRH[]'
+ */
+export type ListEnumFatorRHFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FatorRH[]'>
+    
+
+
+/**
+ * Reference to a field of type 'UF'
+ */
+export type EnumUFFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UF'>
+    
+
+
+/**
+ * Reference to a field of type 'UF[]'
+ */
+export type ListEnumUFFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UF[]'>
+    
+
+
+/**
+ * Reference to a field of type 'GrauDeEscolaridade'
+ */
+export type EnumGrauDeEscolaridadeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GrauDeEscolaridade'>
+    
+
+
+/**
+ * Reference to a field of type 'GrauDeEscolaridade[]'
+ */
+export type ListEnumGrauDeEscolaridadeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GrauDeEscolaridade[]'>
+    
+
+
+/**
+ * Reference to a field of type 'TipoDeLogradouro'
+ */
+export type EnumTipoDeLogradouroFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TipoDeLogradouro'>
+    
+
+
+/**
+ * Reference to a field of type 'TipoDeLogradouro[]'
+ */
+export type ListEnumTipoDeLogradouroFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TipoDeLogradouro[]'>
+    
+
+
+/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -1457,6 +1735,34 @@ export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, '
  * Reference to a field of type 'Float[]'
  */
 export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Zona'
+ */
+export type EnumZonaFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Zona'>
+    
+
+
+/**
+ * Reference to a field of type 'Zona[]'
+ */
+export type ListEnumZonaFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Zona[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Deficiencia[]'
+ */
+export type ListEnumDeficienciaFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Deficiencia[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Deficiencia'
+ */
+export type EnumDeficienciaFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Deficiencia'>
     
 
 /**
@@ -1619,6 +1925,7 @@ export type GlobalOmitConfig = {
   prestadorEspecialidade?: Prisma.PrestadorEspecialidadeOmit
   prestadorProcedimento?: Prisma.PrestadorProcedimentoOmit
   agendamentoDePrestador?: Prisma.AgendamentoDePrestadorOmit
+  paciente?: Prisma.PacienteOmit
 }
 
 /* Types for Logging */

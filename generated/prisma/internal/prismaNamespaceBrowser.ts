@@ -59,7 +59,8 @@ export const ModelName = {
   Prestador: 'Prestador',
   PrestadorEspecialidade: 'PrestadorEspecialidade',
   PrestadorProcedimento: 'PrestadorProcedimento',
-  AgendamentoDePrestador: 'AgendamentoDePrestador'
+  AgendamentoDePrestador: 'AgendamentoDePrestador',
+  Paciente: 'Paciente'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -201,6 +202,83 @@ export const AgendamentoDePrestadorScalarFieldEnum = {
 } as const
 
 export type AgendamentoDePrestadorScalarFieldEnum = (typeof AgendamentoDePrestadorScalarFieldEnum)[keyof typeof AgendamentoDePrestadorScalarFieldEnum]
+
+
+export const PacienteScalarFieldEnum = {
+  id: 'id',
+  tipoDeCadastro: 'tipoDeCadastro',
+  nomeDoPaciente: 'nomeDoPaciente',
+  nomeSocial: 'nomeSocial',
+  nomeDaMae: 'nomeDaMae',
+  nomeDoPai: 'nomeDoPai',
+  dataDeNascimento: 'dataDeNascimento',
+  sexo: 'sexo',
+  estadoCivil: 'estadoCivil',
+  corERaca: 'corERaca',
+  unidadeDeSaudeId: 'unidadeDeSaudeId',
+  codigoGSUS: 'codigoGSUS',
+  codigoIDS: 'codigoIDS',
+  tipoSanguineo: 'tipoSanguineo',
+  fatorRH: 'fatorRH',
+  nacionalidade: 'nacionalidade',
+  municipioDeNascimento: 'municipioDeNascimento',
+  ufDeNascimento: 'ufDeNascimento',
+  CPF: 'CPF',
+  cartaoDoSus: 'cartaoDoSus',
+  NIS: 'NIS',
+  RG: 'RG',
+  orgaoEmissorDoRG: 'orgaoEmissorDoRG',
+  ufDoRG: 'ufDoRG',
+  dataDaEmissaoDoRG: 'dataDaEmissaoDoRG',
+  cnsMae: 'cnsMae',
+  orientacaoRegCpf: 'orientacaoRegCpf',
+  tituloDeEleitor: 'tituloDeEleitor',
+  zonaEleitoral: 'zonaEleitoral',
+  secaoEleitoral: 'secaoEleitoral',
+  CTPSNumero: 'CTPSNumero',
+  CTPSSerie: 'CTPSSerie',
+  cTPSUf: 'cTPSUf',
+  CTPSDataEmissao: 'CTPSDataEmissao',
+  PISPASEP: 'PISPASEP',
+  frequentaEscola: 'frequentaEscola',
+  escola: 'escola',
+  serieEscolar: 'serieEscolar',
+  grauEscolaridade: 'grauEscolaridade',
+  cursoProfissionalizante: 'cursoProfissionalizante',
+  paisDeOrigem: 'paisDeOrigem',
+  entradaNoBrasil: 'entradaNoBrasil',
+  email: 'email',
+  telefone: 'telefone',
+  telefoneWhatsApp: 'telefoneWhatsApp',
+  nomeContatoEmergencia: 'nomeContatoEmergencia',
+  parentescoContatoEmergencia: 'parentescoContatoEmergencia',
+  telefoneDeEmergencia: 'telefoneDeEmergencia',
+  nomeDoResponsavel: 'nomeDoResponsavel',
+  CPFDoResponsavel: 'CPFDoResponsavel',
+  parentescoDoResponsavel: 'parentescoDoResponsavel',
+  telefoneDoResponsavel: 'telefoneDoResponsavel',
+  pais: 'pais',
+  UF: 'UF',
+  municipio: 'municipio',
+  bairro: 'bairro',
+  rua: 'rua',
+  numero: 'numero',
+  complemento: 'complemento',
+  CEP: 'CEP',
+  tipoLogradouro: 'tipoLogradouro',
+  pontoDeReferencia: 'pontoDeReferencia',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  zona: 'zona',
+  possuiDeficiencia: 'possuiDeficiencia',
+  tipoDeDeficiencia: 'tipoDeDeficiencia',
+  observacoes: 'observacoes',
+  ativo: 'ativo',
+  criadoEm: 'criadoEm',
+  atualizadoEm: 'atualizadoEm'
+} as const
+
+export type PacienteScalarFieldEnum = (typeof PacienteScalarFieldEnum)[keyof typeof PacienteScalarFieldEnum]
 
 
 export const SortOrder = {

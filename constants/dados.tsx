@@ -1,6 +1,6 @@
 'use client'
 import { Local } from "@/generated/prisma/browser"
-import { AtendimentoDentroOuForaDoMunicipio, TipoDeConta, TipoDeLocal } from "@/generated/prisma/enums"
+import { AtendimentoDentroOuForaDoMunicipio, Deficiencia, EstadoCivil, FatorRH, GrauDeEscolaridade, Raca, Sexo, TipoDeConta, TipoDeLocal, TipoDeLogradouro, TipoSanguineo, UF, Zona } from "@/generated/prisma/enums"
 export const opcoesDeTipoDeLocal = [
     {
         valor: '',
@@ -36,7 +36,7 @@ export const opcoesDeLocais = (locais: Local[]) => {
     ];
 };
 
-export const opcoesDeTipoDeConta= [
+export const opcoesDeTipoDeConta = [
     {
         valor: '',
         label: "Selecione"
@@ -46,6 +46,114 @@ export const opcoesDeTipoDeConta= [
         label: tipo.replaceAll('_', ' ').toLowerCase()
     }))
 ]
+
+export const opcoesDeSexo = [
+    {
+        valor: '',
+        label: "Selecione"
+    },
+    ...Object.values(Sexo).map(tipo => ({
+        valor: tipo,
+        label: tipo.replaceAll('_', ' ').toLowerCase()
+    }))
+]
+
+export const opcoesDeEstadoCivil = [
+    {
+        valor: '',
+        label: "Selecione"
+    },
+    ...Object.values(EstadoCivil).map(tipo => ({
+        valor: tipo,
+        label: tipo.replaceAll('_', ' ').toLowerCase()
+    }))
+]
+export const opcoesDeCorERaca = [
+    {
+        valor: '',
+        label: "Selecione"
+    },
+    ...Object.values(Raca).map(tipo => ({
+        valor: tipo,
+        label: tipo.replaceAll('_', ' ').toLowerCase()
+    }))
+]
+export const opcoesDeTipoSanguineo = [
+    {
+        valor: '',
+        label: "Selecione"
+    },
+    ...Object.values(TipoSanguineo).map(tipo => ({
+        valor: tipo,
+        label: tipo.replaceAll('_', ' ').toLowerCase()
+    }))
+]
+export const opcoesFatorRH = [
+    {
+        valor: '',
+        label: "Selecione"
+    },
+    ...Object.values(FatorRH).map(tipo => ({
+        valor: tipo,
+        label: tipo.replaceAll('_', ' ').toLowerCase()
+    }))
+]
+export const opcoesDeUF = [
+    {
+        valor: '',
+        label: "Selecione"
+    },
+    ...Object.values(UF).map(tipo => ({
+        valor: tipo,
+        label: tipo.replaceAll('_', ' ').toLowerCase()
+    }))
+]
+export const opcoesDeGrauEscolaridade = [
+    {
+        valor: '',
+        label: "Selecione"
+    },
+    ...Object.values(GrauDeEscolaridade).map(tipo => ({
+        valor: tipo,
+        label: tipo.replaceAll('_', ' ').toLowerCase()
+    }))
+]
+export const opcoesDeTipoLogradouro = [
+    {
+        valor: '',
+        label: "Selecione"
+    },
+    ...Object.values(TipoDeLogradouro).map(tipo => ({
+        valor: tipo,
+        label: tipo.replaceAll('_', ' ').toLowerCase()
+    }))
+]
+export const opcoesDeZona = [
+    {
+        valor: '',
+        label: "Selecione"
+    },
+    ...Object.values(Zona).map(tipo => ({
+        valor: tipo,
+        label: tipo.replaceAll('_', ' ').toLowerCase()
+    }))
+]
+export const opcoesDeDeficiencia = [
+    {
+        valor: '',
+        label: "Selecione"
+    },
+    ...Object.values(Deficiencia).map(tipo => ({
+        valor: tipo,
+        label: tipo.replaceAll('_', ' ').toLowerCase()
+    }))
+]
+
+export const opcoesSimNao = [
+    { valor: "SIM", label: "Sim" },
+    { valor: "NAO", label: "Não" },
+]
+
 
 export const CORES_PRESTADORES = [
     "#2563EB", // Azul

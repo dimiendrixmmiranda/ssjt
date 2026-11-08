@@ -12,6 +12,8 @@ interface InputSelectProps<T> {
     valor: T;
     icone: React.ReactNode;
     disabled?: boolean;
+    campoObrigatorio?: boolean
+    estiloPersonalizado?: string
     opcoes: OpcaoSelect<T>[];
     setValor: (valor: T) => void;
 }
@@ -24,14 +26,21 @@ export default function InputSelect<T>({
     icone,
     disabled,
     opcoes,
+    campoObrigatorio,
+    estiloPersonalizado,
     setValor,
 }: InputSelectProps<T>) {
 
     return (
-        <div className="flex flex-col w-full">
-            <label htmlFor={id} className="2xl:text-lg">
-                {label}
-            </label>
+        <div className={`flex flex-col w-full ${estiloPersonalizado}`}>
+            <div className="flex items-center gap-2">
+                <label htmlFor={id} className="2xl:text-lg">
+                    {label}
+                </label>
+                {
+                    campoObrigatorio && (<p className="font-bold text-2xl leading-3 text-red-600 mt-2">*</p>)
+                }
+            </div>
             <div className="relative">
                 <div
                     className="absolute left-2 top-[50%] z-10 text-xl"

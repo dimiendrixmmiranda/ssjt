@@ -54,6 +54,113 @@ enum PeriodoDeAtendimento{
   NOITE
 }
 
+enum Sexo{
+  MASCULINO
+  FEMININO
+  NAO_INFORMADO
+}
+
+enum EstadoCivil{
+  SOLTEIRO
+  CASADO
+  DIVORCIADO
+  VIUVO
+  UNIAO_ESTAVEL
+  NAO_INFORMADO
+}
+
+enum Raca{
+  BRANCA
+  PRETA
+  PARDA
+  AMARELA
+  INDIGENA
+  NAO_INFORMADO
+}
+
+enum TipoSanguineo{
+  A
+  B
+  AB
+  O
+}
+
+enum FatorRH{
+  POSITIVO
+  NEGATIVO
+}
+
+enum UF{
+  AC
+  AL
+  AP
+  AM
+  BA
+  CE
+  DF
+  ES
+  GO
+  MA
+  MT
+  MS
+  MG
+  PA
+  PB
+  PR
+  PE
+  PI
+  RJ
+  RN
+  RS
+  RO
+  RR
+  SC
+  SP
+  SE
+  TO
+}
+
+enum GrauDeEscolaridade{
+  NAO_ALFABETIZADO
+  FUNDAMENTAL_INCOMPLETO
+  FUNDAMENTAL_COMPLETO
+  MEDIO_INCOMPLETO
+  MEDIO_COMPLETO
+  SUPERIOR_INCOMPLETO
+  SUPERIOR_COMPLETO
+  POS_GRADUACAO
+}
+
+enum TipoDeLogradouro{
+  RUA
+  AVENIDA
+  ALAMEDA
+  ESTRADA
+  RODOVIA
+  TRAVESSA
+  PRACA
+  OUTRO
+}
+
+enum Zona{
+  URBANA
+  RURAL
+}
+
+enum Deficiencia{
+  FISICA
+  VISUAL
+  AUDITIVA
+  INTELECTUAL
+  MULTIPLA
+  TEA
+}
+
+enum TipoDeCadastroPaciente{
+  PROVISORIO
+  COMPLETO
+}
+
 model Usuario {
   id                String   @id @default(cuid())
   nome              String
@@ -95,6 +202,7 @@ model Local {
 
   usuarios     Usuario[]
   agendamentos AgendamentoDePrestador[]
+  pacientes    Paciente[]
 
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
@@ -201,4 +309,100 @@ model AgendamentoDePrestador {
   updatedAt DateTime @updatedAt
 
   @@unique([data, unidadeDeAtendimentoId, salaNumero, periodo])
+}
+
+
+model Paciente {
+  id Int @id @default(autoincrement())
+
+  tipoDeCadastro TipoDeCadastroPaciente @default(COMPLETO)
+
+  nomeDoPaciente String
+  nomeSocial String?
+  nomeDaMae String?
+  nomeDoPai String?
+  dataDeNascimento DateTime @db.Date
+  sexo Sexo
+  estadoCivil EstadoCivil?
+  corERaca Raca?
+
+  unidadeDeSaudeId Int
+  codigoGSUS String?
+  codigoIDS String?
+  tipoSanguineo TipoSanguineo?
+  fatorRH FatorRH?
+
+  nacionalidade String?
+  municipioDeNascimento String?
+  ufDeNascimento  UF?
+
+  CPF String? @unique
+  cartaoDoSus String? @unique
+  NIS String?
+  RG String?
+  orgaoEmissorDoRG String?
+  ufDoRG UF?
+  dataDaEmissaoDoRG DateTime? @db.Date
+  cnsMae String?
+  orientacaoRegCpf String?
+  tituloDeEleitor String?
+  zonaEleitoral String?
+  secaoEleitoral String?
+
+  CTPSNumero String?
+  CTPSSerie String?
+  cTPSUf UF?
+  CTPSDataEmissao DateTime? @db.Date
+  PISPASEP String?
+
+  frequentaEscola String?
+  escola String?
+  serieEscolar String?
+  grauEscolaridade GrauDeEscolaridade?
+  cursoProfissionalizante String?
+
+  paisDeOrigem String?
+  entradaNoBrasil DateTime? @db.Date
+
+  email String?
+  telefone String?
+  telefoneWhatsApp String?
+  nomeContatoEmergencia String?
+  parentescoContatoEmergencia String?
+  telefoneDeEmergencia String?
+
+  nomeDoResponsavel String?
+  CPFDoResponsavel String?
+  parentescoDoResponsavel String?
+  telefoneDoResponsavel String?
+
+  pais String?
+  UF UF?
+  municipio String?
+  bairro String?
+  rua String?
+  numero String?
+  complemento String?
+  CEP String?
+  tipoLogradouro TipoDeLogradouro?
+  pontoDeReferencia String?
+  latitude Float?
+  longitude Float?
+  zona Zona?
+
+  possuiDeficiencia Boolean @default(false)
+  tipoDeDeficiencia Deficiencia[] @default([])
+  observacoes String?
+
+  ativo Boolean @default(true)
+
+  unidadeDeSaude Local @relation(fields: [unidadeDeSaudeId], references: [id], onDelete: Restrict)
+
+  criadoEm DateTime @default(now())
+  atualizadoEm DateTime @updatedAt
+
+  @@index([nomeDoPaciente])
+  @@index([dataDeNascimento])
+  @@index([unidadeDeSaudeId])
+  @@index([tipoDeCadastro])
 }
