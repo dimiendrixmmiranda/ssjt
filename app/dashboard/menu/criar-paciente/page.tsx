@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import Template from "../Template";
 import { Local, TipoDeCadastroPaciente } from "@/generated/prisma/browser";
 import { RiUserSearchFill } from "react-icons/ri";
-import { FaPlus, FaRegLightbulb, FaRegUser, FaUserFriends } from "react-icons/fa";
+import { FaCheck, FaPlus, FaRegEye, FaRegLightbulb, FaRegUser, FaUser, FaUserFriends } from "react-icons/fa";
 import { Dialog } from "primereact/dialog";
 import InputTexto from "@/components/inputs/InputTexto";
 import InputSelect from "@/components/inputs/InputSelect";
@@ -19,6 +19,7 @@ import { FaMagnifyingGlass } from "react-icons/fa6";
 import Image from "next/image";
 import { GiMagnifyingGlass } from "react-icons/gi";
 import { usePacientes } from "@/hooks/usePacientes";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
 export default function Page() {
     const { locais } = useLocais()
@@ -427,8 +428,98 @@ export default function Page() {
                             </div>
                         </div>
                     ) : (
-                        <div className="rounded-lg overflow-hidden shadow-[0px_0px_2px_2px_#999] relative p-4 flex flex-col gap-3 flex-1">
-                            paciente achado
+                        <div className="rounded-lg overflow-hidden shadow-[0px_0px_2px_2px_#999] relative p-4 flex flex-col gap-3 flex-1 min-w-0">
+                            <div className="flex items-center justify-between gap-3">
+                                <div className="flex items-center gap-3">
+                                    <div className="bg-verde-escuro text-2xl p-2 rounded-full text-white">
+                                        <FaUserFriends />
+                                    </div>
+                                    <h3 className="font-bold text-xl">Resultado da Pesquisa</h3>
+                                </div>
+                                <div className="flex items-center gap-2 rounded-lg bg-verde/20 p-2">
+                                    <div className="rounded-full p-1 bg-verde text-white">
+                                        <FaCheck />
+                                    </div>
+                                    <p>3 pacientes encontrados</p>
+                                </div>
+                            </div>
+                            <div className="w-full overflow-x-auto">
+                                <table className="w-full min-w-[1100px] border-collapse">
+                                    <thead>
+                                        <tr className="bg-verde-escuro text-white">
+                                            <th className="p-3 text-left whitespace-nowrap">Nome</th>
+                                            <th className="p-3 text-left whitespace-nowrap">Data de Nascimento</th>
+                                            <th className="p-3 text-left whitespace-nowrap">Nome da Mãe</th>
+                                            <th className="p-3 text-left whitespace-nowrap">CPF</th>
+                                            <th className="p-3 text-left whitespace-nowrap">Cartão SUS</th>
+                                            <th className="p-3 text-left whitespace-nowrap">Unidade de Saúde</th>
+                                            <th className="p-3 text-center whitespace-nowrap">Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {pacientesFiltrados.map((paciente) => (
+                                            <tr
+                                                key={paciente.id}
+                                                className="border-b border-gray-200 hover:bg-verde/10 transition-colors"
+                                            >
+                                                <td className="p-3 whitespace-nowrap">
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="rounded-full p-2 bg-verde/20 text-verde">
+                                                            <FaUser />
+                                                        </div>
+                                                        <h4>{paciente.nomeDoPaciente}</h4>
+                                                    </div>
+                                                </td>
+
+                                                <td className="p-3 whitespace-nowrap">
+                                                    {new Date(paciente.dataDeNascimento).toLocaleDateString("pt-BR", {
+                                                        timeZone: "UTC"
+                                                    })}
+                                                </td>
+
+                                                <td className="p-3 whitespace-nowrap">
+                                                    {paciente.nomeDaMae || "Não informado"}
+                                                </td>
+
+                                                <td className="p-3 whitespace-nowrap">
+                                                    {paciente.CPF || "Não informado"}
+                                                </td>
+
+                                                <td className="p-3 whitespace-nowrap">
+                                                    {paciente.cartaoDoSus || "Não informado"}
+                                                </td>
+
+                                                <td className="p-3 whitespace-nowrap">
+                                                    Local
+                                                </td>
+
+                                                <td className="p-3">
+                                                    <button className="flex items-center justify-center gap-2 rounded-lg bg-verde-escuro text-white px-3 py-2 whitespace-nowrap">
+                                                        <FaRegEye />
+                                                        <p>Ver Detalhes</p>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div className="mt-auto flex items-center justify-between">
+                                <span className="font-semibold text-lg">Mostrando 1 a 3 de 3 resultados</span>
+                                <div className="flex items-center gap-4">
+                                    <button className="flex items-center gap-2 rounded-lg shadow-[0px_0px_2px_2px_var(--verde-escuro)] p-2">
+                                        <IoIosArrowBack />
+                                        <p>Anterior</p>
+                                    </button>
+                                    <div>
+                                        <button className="bg-verde-escuro text-white p-2.5 px-4 rounded-lg font-bold">1</button>
+                                    </div>
+                                    <button className="flex items-center gap-2 rounded-lg shadow-[0px_0px_2px_2px_var(--verde-escuro)] p-2">
+                                        <IoIosArrowForward />
+                                        <p>Próximo</p>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     )
                 }

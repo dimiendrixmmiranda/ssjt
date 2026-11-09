@@ -10,7 +10,10 @@
 */
 
 export const TipoDeConta = {
-  SENIOR_ADMIN: 'SENIOR_ADMIN'
+  SENIOR_ADMIN: 'SENIOR_ADMIN',
+  ADMIN: 'ADMIN',
+  ENFERMEIRO: 'ENFERMEIRO',
+  RECEPCAO: 'RECEPCAO'
 } as const
 
 export type TipoDeConta = (typeof TipoDeConta)[keyof typeof TipoDeConta]
