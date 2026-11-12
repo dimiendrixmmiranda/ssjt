@@ -122,13 +122,21 @@ export default function Page() {
 
         setDialogAtualizar(true)
     }
+
     function abrirConfirmacaoStatus(especialidade: typeof especialidades[number]) {
         setEspecialidadeAtual(especialidade)
         setDialogStatus(true)
     }
+
     function abrirConfirmacaoExclusao(especialidade: typeof especialidades[number]) {
         setEspecialidadeAtual(especialidade)
         setDialogExcluir(true)
+    }
+
+    function criarCodigoTresDigitos() {
+        return Math.floor(Math.random() * 1000)
+            .toString()
+            .padStart(3, "0")
     }
 
     async function atualizarEspecialidade() {
@@ -231,7 +239,7 @@ export default function Page() {
                             <InputTexto icone={<TbAmbulance />} id="nomeDaEspecialidade" label="Nome da especialidade" nome="nomeDeEspecialidade" placeholder="Digite o nome da especialidade..." setValor={setNomeDaEspecialidade} valor={nomeDaEspecialidade} />
                             <div className="grid grid-cols-4 gap-4">
                                 <InputTexto icone={<TbAmbulance />} id="codigo" label="Código" nome="codigo" placeholder="Digite ou gere um código de 3 dígitos" setValor={setCodigo} valor={codigo} estiloPersonalizado="col-span-3" />
-                                <button className="rounded-lg border border-verde h-[43px] mt-auto">
+                                <button type="button" className="rounded-lg border border-verde h-[43px] mt-auto" onClick={() => setCodigo(criarCodigoTresDigitos())}>
                                     <p>Gerar Cógigo</p>
                                 </button>
                             </div>

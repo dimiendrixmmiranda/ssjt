@@ -180,4 +180,20 @@ export const CORES_PRESTADORES = [
     "#E11D48", // Rosa avermelhado
     "#4D7C0F", // Verde oliva
     "#1D4ED8", // Azul royal
+    "#933F5C", // Bordô
+    "#0E7490", // Azul profundo
+    "#5B8C5A", // Verde musgo
+    "#A855F7", // Lilás
+    "#D97706", // Mostarda
+    "#64748B", // Cinza ardósia
+    "#08916A", // Verde esmeralda
+    "#C026D3", // Fúcsia
+    "#1E40AF", // Azul marinho
+    "#B91C1C", // Vermelho escuro
+    "#84CC16", // Verde lima
+    "#7E22CE", // Roxo escuro
+    "#F97316", // Laranja vivo
+    "#0F9B8E", // Verde água
+    "#9F1239", // Vinho
+    "#A16207", // Dourado escuro
 ]

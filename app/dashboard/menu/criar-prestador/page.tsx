@@ -208,6 +208,15 @@ export default function Page() {
             return
         }
 
+        if (corEstaEmUso(corSelecionada)) {
+            setTituloResultado("Cor indisponível")
+            setMensagemResultado(
+                "Essa cor já está sendo utilizada por outro prestador. Selecione outra cor."
+            )
+            setDialogResultado(true)
+            return
+        }
+
         setDialogConfirmacao(true)
     }
 
@@ -349,6 +358,17 @@ export default function Page() {
         setEspecialidadesSelecionadas([])
         setProcedimentosSelecionados([])
         setCorSelecionada("")
+    }
+
+    function corEstaEmUso(
+        cor: string,
+        ignorarPrestadorId?: PrestadorComRelacoes["id"]
+    ) {
+        return prestadores.some(
+            (prestador) =>
+                prestador.cor.toUpperCase() === cor.toUpperCase() &&
+                prestador.id !== ignorarPrestadorId
+        )
     }
 
     return (
@@ -537,7 +557,7 @@ export default function Page() {
                         <InputTexto icone={<TbAmbulance />} id="telefone" label="Telefone" nome="telefone" placeholder="Digite o telefone do prestador..." setValor={setTelefone} valor={telefone} />
                         <InputTexto icone={<TbAmbulance />} id="email" label="email" nome="email" placeholder="Digite o email do prestador..." setValor={setEmail} valor={email} />
                         {/* Alterar para um textarea depois */}
-                        <InputTexto icone={<TbAmbulance />} id="observacoes" label="observacoes" nome="observacoes" placeholder="Digite o observacoes do prestador..." setValor={setObservacoes} valor={observacoes} />
+                        <InputTexto icone={<TbAmbulance />} id="observacoes" label="Observações" nome="observacoes" placeholder="Digite o observacoes do prestador..." setValor={setObservacoes} valor={observacoes} />
 
                         <div className="flex flex-col gap-3">
                             <div>
@@ -547,21 +567,28 @@ export default function Page() {
                                 </p>
                             </div>
 
-                            <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-12 gap-3">
-                                {CORES_PRESTADORES.map((cor) => (
-                                    <button
-                                        key={cor}
-                                        type="button"
-                                        onClick={() => setCorSelecionada(cor)}
-                                        title={cor}
-                                        aria-label={`Selecionar cor ${cor}`}
-                                        className={`h-10 w-10 rounded-full border-2 transition-all ${corSelecionada === cor
-                                            ? 'border-verde-escuro scale-110 ring-2 ring-verde-escuro ring-offset-2'
-                                            : 'border-transparent hover:scale-110'
-                                            }`}
-                                        style={{ backgroundColor: cor }}
-                                    />
-                                ))}
+                            <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-12 gap-3 2xl:grid-cols-16 3xl:grid-cols-20">
+                                {CORES_PRESTADORES.map((cor) => {
+                                    const indisponivel = corEstaEmUso(cor)
+
+                                    return (
+                                        <button
+                                            key={cor}
+                                            type="button"
+                                            disabled={indisponivel}
+                                            onClick={() => setCorSelecionada(cor)}
+                                            title={indisponivel ? `${cor} - Indisponível` : cor}
+                                            aria-label={`Selecionar cor ${cor}`}
+                                            className={`h-10 w-10 mx-auto rounded-full border-2 transition-all ${indisponivel
+                                                ? "opacity-20 cursor-not-allowed"
+                                                : corSelecionada === cor
+                                                    ? "border-verde-escuro scale-110 ring-2 ring-verde-escuro ring-offset-2"
+                                                    : "border-transparent hover:scale-110"
+                                                }`}
+                                            style={{ backgroundColor: cor }}
+                                        />
+                                    )
+                                })}
                             </div>
 
                             {corSelecionada && (
@@ -769,26 +796,34 @@ export default function Page() {
                     <InputTexto icone={<TbAmbulance />} id="telefone" label="Telefone" nome="telefone" placeholder="Digite o telefone do prestador..." setValor={setTelefone} valor={telefone} />
                     <InputTexto icone={<TbAmbulance />} id="email" label="email" nome="email" placeholder="Digite o email do prestador..." setValor={setEmail} valor={email} />
                     {/* Alterar para um textarea depois */}
-                    <InputTexto icone={<TbAmbulance />} id="observacoes" label="observacoes" nome="observacoes" placeholder="Digite o observacoes do prestador..." setValor={setObservacoes} valor={observacoes} />
+                    <InputTexto icone={<TbAmbulance />} id="observacoes" label="Observações" nome="observacoes" placeholder="Digite o observacoes do prestador..." setValor={setObservacoes} valor={observacoes} />
 
                     {/* Seleção de cor */}
                     <div className="flex flex-col gap-2">
                         <label className="font-semibold">Cor do prestador</label>
 
                         <div className="flex flex-wrap gap-3">
-                            {CORES_PRESTADORES.map((cor) => (
-                                <button
-                                    key={cor}
-                                    type="button"
-                                    onClick={() => setCorEdicao(cor)}
-                                    className={`w-8 h-8 rounded-full transition-all ${corEdicao === cor
-                                        ? "ring-2 ring-offset-2 ring-verde-escuro scale-110"
-                                        : "hover:scale-110"
-                                        }`}
-                                    style={{ backgroundColor: cor }}
-                                    title={cor}
-                                />
-                            ))}
+                            {CORES_PRESTADORES.map((cor) => {
+                                const indisponivel = corEstaEmUso(cor)
+
+                                return (
+                                    <button
+                                        key={cor}
+                                        type="button"
+                                        disabled={indisponivel}
+                                        onClick={() => setCorSelecionada(cor)}
+                                        title={indisponivel ? `${cor} - Indisponível` : cor}
+                                        aria-label={`Selecionar cor ${cor}`}
+                                        className={`h-10 w-10 mx-auto rounded-full border-2 transition-all ${indisponivel
+                                                ? "opacity-20 cursor-not-allowed"
+                                                : corSelecionada === cor
+                                                    ? "border-verde-escuro scale-110 ring-2 ring-verde-escuro ring-offset-2"
+                                                    : "border-transparent hover:scale-110"
+                                            }`}
+                                        style={{ backgroundColor: cor }}
+                                    />
+                                )
+                            })}
                         </div>
                     </div>
 
