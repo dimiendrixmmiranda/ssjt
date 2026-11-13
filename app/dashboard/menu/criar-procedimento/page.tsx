@@ -14,6 +14,7 @@ import DialogPersonalizado from "@/components/dialog/DialogPersonalizado"
 import { Dialog } from "primereact/dialog"
 import { FaList, FaRegTrashAlt } from "react-icons/fa"
 import { FiEdit } from "react-icons/fi"
+import { criarCodigoTresDigitos } from "@/utils/criarCodigoTresDigitos"
 
 export default function Page() {
     const { procedimentos, buscarProcedimentos } = useProcedimentos()
@@ -301,7 +302,7 @@ export default function Page() {
                                 <InputTexto icone={<TbAmbulance />} id="nomeDaEspecialidade" label="Nome da especialidade" nome="nomeDeEspecialidade" placeholder="Digite o nome da especialidade..." setValor={setNomeProcedimento} valor={nomeProcedimento} />
                                 <div className="grid grid-cols-4 gap-4">
                                     <InputTexto icone={<TbAmbulance />} id="codigo" label="Código" nome="codigo" placeholder="Digite ou gere um código de 3 dígitos" setValor={setCodigo} valor={codigo} estiloPersonalizado="col-span-3" />
-                                    <button className="rounded-lg border border-verde h-[43px] mt-auto">
+                                    <button type="button" className="rounded-lg border border-verde h-[43px] mt-auto" onClick={() => setCodigo(criarCodigoTresDigitos())}>
                                         <p>Gerar Cógigo</p>
                                     </button>
                                 </div>
@@ -356,29 +357,31 @@ export default function Page() {
                                             </button>
                                         </div>
 
-                                        {listaDeMembros.map((membro, index) => (
-                                            <div
-                                                key={`${membro.nome}-${index}`}
-                                                className="flex items-center justify-between border rounded-lg p-3"
-                                            >
-                                                <div>
-                                                    <p className="font-bold">{membro.nome}</p>
-                                                    <p className="text-sm">
-                                                        {membro.lateralidade === Lateralidade.COM_LADO
-                                                            ? "Possui Lado"
-                                                            : "Não Possui Lado"}
-                                                    </p>
-                                                </div>
-
-                                                <button
-                                                    type="button"
-                                                    onClick={() => removerMembro(membro.nome)}
-                                                    className="text-red-600"
+                                        <div className="grid grid-cols-2 gap-4">
+                                            {listaDeMembros.map((membro, index) => (
+                                                <div
+                                                    key={`${membro.nome}-${index}`}
+                                                    className="flex items-center justify-between border rounded-lg p-3"
                                                 >
-                                                    Remover
-                                                </button>
-                                            </div>
-                                        ))}
+                                                    <div>
+                                                        <p className="font-bold">{membro.nome}</p>
+                                                        <p className="text-sm">
+                                                            {membro.lateralidade === Lateralidade.COM_LADO
+                                                                ? "Possui Lado"
+                                                                : "Não Possui Lado"}
+                                                        </p>
+                                                    </div>
+
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => removerMembro(membro.nome)}
+                                                        className="text-red-600"
+                                                    >
+                                                        Remover
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
                                     </div>
                                 )
                             }
@@ -452,15 +455,15 @@ export default function Page() {
                                                             type="button"
                                                             onClick={() => abrirConfirmacaoStatus(procedimento)}
                                                             className={`relative inline-flex h-6 w-11 items-center rounded-full ${procedimento.ativo
-                                                                    ? "bg-green-600"
-                                                                    : "bg-gray-300"
+                                                                ? "bg-green-600"
+                                                                : "bg-gray-300"
                                                                 }`}
                                                             title={procedimento.ativo ? "Inativar" : "Ativar"}
                                                         >
                                                             <span
                                                                 className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${procedimento.ativo
-                                                                        ? "translate-x-6"
-                                                                        : "translate-x-1"
+                                                                    ? "translate-x-6"
+                                                                    : "translate-x-1"
                                                                     }`}
                                                             />
                                                         </button>

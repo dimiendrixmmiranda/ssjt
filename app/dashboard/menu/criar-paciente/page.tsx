@@ -440,7 +440,7 @@ export default function Page() {
                                     <div className="rounded-full p-1 bg-verde text-white">
                                         <FaCheck />
                                     </div>
-                                    <p>3 pacientes encontrados</p>
+                                    <p>{pacientesFiltrados.length} pacientes encontrados</p>
                                 </div>
                             </div>
                             <div className="w-full overflow-x-auto">
@@ -452,55 +452,59 @@ export default function Page() {
                                             <th className="p-3 text-left whitespace-nowrap">Nome da Mãe</th>
                                             <th className="p-3 text-left whitespace-nowrap">CPF</th>
                                             <th className="p-3 text-left whitespace-nowrap">Cartão SUS</th>
-                                            <th className="p-3 text-left whitespace-nowrap">Unidade de Saúde</th>
+                                            <th className="p-3 text-left whitespace-nowrap flex justify-center items-center">Unidade de Saúde</th>
                                             <th className="p-3 text-center whitespace-nowrap">Ações</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {pacientesFiltrados.map((paciente) => (
-                                            <tr
-                                                key={paciente.id}
-                                                className="border-b border-gray-200 hover:bg-verde/10 transition-colors"
-                                            >
-                                                <td className="p-3 whitespace-nowrap">
-                                                    <div className="flex items-center gap-2">
-                                                        <div className="rounded-full p-2 bg-verde/20 text-verde">
-                                                            <FaUser />
+                                        {pacientesFiltrados.map((paciente) => {
+                                            console.log(paciente)
+                                            const nomeLocalDeAtendimento = locais.find(local => local.id === paciente.unidadeDeSaudeId)?.nome
+                                            return (
+                                                <tr
+                                                    key={paciente.id}
+                                                    className="border-b border-gray-200 hover:bg-verde/10 transition-colors"
+                                                >
+                                                    <td className="p-3 whitespace-nowrap">
+                                                        <div className="flex items-center gap-2">
+                                                            <div className="rounded-full p-2 bg-verde/20 text-verde">
+                                                                <FaUser />
+                                                            </div>
+                                                            <h4>{paciente.nomeDoPaciente}</h4>
                                                         </div>
-                                                        <h4>{paciente.nomeDoPaciente}</h4>
-                                                    </div>
-                                                </td>
+                                                    </td>
 
-                                                <td className="p-3 whitespace-nowrap">
-                                                    {new Date(paciente.dataDeNascimento).toLocaleDateString("pt-BR", {
-                                                        timeZone: "UTC"
-                                                    })}
-                                                </td>
+                                                    <td className="p-3 whitespace-nowrap">
+                                                        {new Date(paciente.dataDeNascimento).toLocaleDateString("pt-BR", {
+                                                            timeZone: "UTC"
+                                                        })}
+                                                    </td>
 
-                                                <td className="p-3 whitespace-nowrap">
-                                                    {paciente.nomeDaMae || "Não informado"}
-                                                </td>
+                                                    <td className="p-3 whitespace-nowrap">
+                                                        {paciente.nomeDaMae || "Não informado"}
+                                                    </td>
 
-                                                <td className="p-3 whitespace-nowrap">
-                                                    {paciente.CPF || "Não informado"}
-                                                </td>
+                                                    <td className="p-3 whitespace-nowrap">
+                                                        {paciente.CPF || "Não informado"}
+                                                    </td>
 
-                                                <td className="p-3 whitespace-nowrap">
-                                                    {paciente.cartaoDoSus || "Não informado"}
-                                                </td>
+                                                    <td className="p-3 whitespace-nowrap">
+                                                        {paciente.cartaoDoSus || "Não informado"}
+                                                    </td>
 
-                                                <td className="p-3 whitespace-nowrap">
-                                                    Local
-                                                </td>
+                                                    <td className="p-3 whitespace-nowrap">
+                                                        {nomeLocalDeAtendimento}
+                                                    </td>
 
-                                                <td className="p-3">
-                                                    <button className="flex items-center justify-center gap-2 rounded-lg bg-verde-escuro text-white px-3 py-2 whitespace-nowrap">
-                                                        <FaRegEye />
-                                                        <p>Ver Detalhes</p>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        ))}
+                                                    <td className="p-3 flex justify-center items-center">
+                                                        <button className="flex items-center justify-center gap-2 rounded-lg bg-verde-escuro text-white px-3 py-2 whitespace-nowrap">
+                                                            <FaRegEye />
+                                                            <p>Ver Detalhes</p>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            )
+                                        })}
                                     </tbody>
                                 </table>
                             </div>

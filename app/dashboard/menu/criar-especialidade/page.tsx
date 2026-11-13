@@ -12,6 +12,8 @@ import { FaList, FaRegTrashAlt } from "react-icons/fa";
 import { useEspecialidades } from "@/hooks/useEspecialidades";
 import { FiEdit } from "react-icons/fi";
 import { Dialog } from "primereact/dialog";
+import { criarCodigoTresDigitos } from "@/utils/criarCodigoTresDigitos";
+import { Paginator, PaginatorPageChangeEvent } from "primereact/paginator"
 
 export default function Page() {
     const { especialidades, buscarEspecialidades } = useEspecialidades()
@@ -32,6 +34,17 @@ export default function Page() {
     const [dialogAtualizar, setDialogAtualizar] = useState(false)
     const [dialogStatus, setDialogStatus] = useState(false)
     const [dialogExcluir, setDialogExcluir] = useState(false)
+
+
+    const [first, setFirst] = useState(0)
+    const [rows, setRows] = useState(5)
+
+    const especialidadesPaginadas = especialidades.slice(first, first + rows)
+
+    function aoMudarPagina(event: PaginatorPageChangeEvent) {
+        setFirst(event.first)
+        setRows(event.rows)
+    }
 
     async function cadastrarEspecialidade() {
         setDialogConfirmacao(false)
@@ -61,7 +74,7 @@ export default function Page() {
 
             setTituloResultado("Cadastro realizado!")
             setMensagemResultado("Especialidade cadastrada com sucesso.")
-
+            await buscarEspecialidades()
             limparFormulario()
 
         } catch (erro) {
@@ -133,11 +146,7 @@ export default function Page() {
         setDialogExcluir(true)
     }
 
-    function criarCodigoTresDigitos() {
-        return Math.floor(Math.random() * 1000)
-            .toString()
-            .padStart(3, "0")
-    }
+
 
     async function atualizarEspecialidade() {
         if (!especialidadeAtual) return
@@ -295,8 +304,8 @@ export default function Page() {
                                 </thead>
 
                                 <tbody>
-                                    {especialidades.length > 0 ? (
-                                        especialidades.map((especialidade) => (
+                                    {especialidadesPaginadas.length > 0 ? (
+                                        especialidadesPaginadas.map((especialidade) => (
                                             <tr key={especialidade.id} className="border-b border-gray-300">
                                                 <td className="p-2">{especialidade.nome}</td>
                                                 <td className="p-2">{especialidade.codigo}</td>
@@ -345,6 +354,19 @@ export default function Page() {
                                     )}
                                 </tbody>
                             </table>
+                                <div className="w-full flex justify-center items-center">
+                                    {especialidades.length > 0 && (
+                                        <Paginator
+                                            first={first}
+                                            rows={rows}
+                                            totalRecords={especialidades.length}
+                                            rowsPerPageOptions={[5, 10, 15, 20]}
+                                            onPageChange={aoMudarPagina}
+                                            template="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
+                                            className="mt-4"
+                                        />
+                                    )}
+                                </div>
                         </div>
                     </div>
                 </div>

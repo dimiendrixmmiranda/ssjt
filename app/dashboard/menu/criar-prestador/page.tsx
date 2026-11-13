@@ -635,11 +635,11 @@ export default function Page() {
                                 <thead>
                                     <tr className="border-b-2 border-verde-escuro">
                                         <th className="w-[250px] p-2">Nome do prestador</th>
-                                        <th className="w-[180px] p-2">Tipo</th>
+                                        <th className="w-[180px] p-2 text-center">Tipo</th>
                                         <th className="w-[240px] p-2">Especialidade/Procedimento</th>
                                         <th className="w-[120px] p-2">Telefone</th>
                                         <th className="w-[180px] p-2">Email</th>
-                                        <th className="w-[120px] p-2">Ações</th>
+                                        <th className="w-[120px] p-2 text-center">Ações</th>
                                     </tr>
                                 </thead>
 
@@ -650,7 +650,7 @@ export default function Page() {
                                             return (
                                                 <tr key={prestador.id} className="border-b border-gray-300">
                                                     <td className="p-2">{prestador.nome}</td>
-                                                    <td className="p-2 capitalize">{prestador.tipo.replaceAll('_', ' ').toLowerCase()}</td>
+                                                    <td className="p-2 capitalize text-center">{prestador.tipo.replaceAll('_', ' ').toLowerCase()}</td>
 
                                                     <td className="my-auto">
                                                         {
@@ -684,7 +684,7 @@ export default function Page() {
                                                     <td className="p-2">{prestador.telefone}</td>
                                                     <td className="p-2 truncate">{prestador.email}</td>
                                                     <td className="p-2">
-                                                        <div className="flex flex-wrap items-center gap-2">
+                                                        <div className="grid grid-cols-2 gap-2">
                                                             <button
                                                                 type="button"
                                                                 onClick={() => abrirEdicao(prestador)}
