@@ -319,6 +319,8 @@ export type LocalWhereInput = {
   usuarios?: Prisma.UsuarioListRelationFilter
   agendamentos?: Prisma.AgendamentoDePrestadorListRelationFilter
   pacientes?: Prisma.PacienteListRelationFilter
+  encaminhamentosDeOrigem?: Prisma.EncaminhamentoListRelationFilter
+  prestadores?: Prisma.PrestadorListRelationFilter
 }
 
 export type LocalOrderByWithRelationInput = {
@@ -342,6 +344,8 @@ export type LocalOrderByWithRelationInput = {
   usuarios?: Prisma.UsuarioOrderByRelationAggregateInput
   agendamentos?: Prisma.AgendamentoDePrestadorOrderByRelationAggregateInput
   pacientes?: Prisma.PacienteOrderByRelationAggregateInput
+  encaminhamentosDeOrigem?: Prisma.EncaminhamentoOrderByRelationAggregateInput
+  prestadores?: Prisma.PrestadorOrderByRelationAggregateInput
 }
 
 export type LocalWhereUniqueInput = Prisma.AtLeast<{
@@ -368,6 +372,8 @@ export type LocalWhereUniqueInput = Prisma.AtLeast<{
   usuarios?: Prisma.UsuarioListRelationFilter
   agendamentos?: Prisma.AgendamentoDePrestadorListRelationFilter
   pacientes?: Prisma.PacienteListRelationFilter
+  encaminhamentosDeOrigem?: Prisma.EncaminhamentoListRelationFilter
+  prestadores?: Prisma.PrestadorListRelationFilter
 }, "id">
 
 export type LocalOrderByWithAggregationInput = {
@@ -438,6 +444,8 @@ export type LocalCreateInput = {
   usuarios?: Prisma.UsuarioCreateNestedManyWithoutLocalInput
   agendamentos?: Prisma.AgendamentoDePrestadorCreateNestedManyWithoutUnidadeDeAtendimentoInput
   pacientes?: Prisma.PacienteCreateNestedManyWithoutUnidadeDeSaudeInput
+  encaminhamentosDeOrigem?: Prisma.EncaminhamentoCreateNestedManyWithoutUnidadeDeOrigemInput
+  prestadores?: Prisma.PrestadorCreateNestedManyWithoutLocalInput
 }
 
 export type LocalUncheckedCreateInput = {
@@ -461,6 +469,8 @@ export type LocalUncheckedCreateInput = {
   usuarios?: Prisma.UsuarioUncheckedCreateNestedManyWithoutLocalInput
   agendamentos?: Prisma.AgendamentoDePrestadorUncheckedCreateNestedManyWithoutUnidadeDeAtendimentoInput
   pacientes?: Prisma.PacienteUncheckedCreateNestedManyWithoutUnidadeDeSaudeInput
+  encaminhamentosDeOrigem?: Prisma.EncaminhamentoUncheckedCreateNestedManyWithoutUnidadeDeOrigemInput
+  prestadores?: Prisma.PrestadorUncheckedCreateNestedManyWithoutLocalInput
 }
 
 export type LocalUpdateInput = {
@@ -483,6 +493,8 @@ export type LocalUpdateInput = {
   usuarios?: Prisma.UsuarioUpdateManyWithoutLocalNestedInput
   agendamentos?: Prisma.AgendamentoDePrestadorUpdateManyWithoutUnidadeDeAtendimentoNestedInput
   pacientes?: Prisma.PacienteUpdateManyWithoutUnidadeDeSaudeNestedInput
+  encaminhamentosDeOrigem?: Prisma.EncaminhamentoUpdateManyWithoutUnidadeDeOrigemNestedInput
+  prestadores?: Prisma.PrestadorUpdateManyWithoutLocalNestedInput
 }
 
 export type LocalUncheckedUpdateInput = {
@@ -506,6 +518,8 @@ export type LocalUncheckedUpdateInput = {
   usuarios?: Prisma.UsuarioUncheckedUpdateManyWithoutLocalNestedInput
   agendamentos?: Prisma.AgendamentoDePrestadorUncheckedUpdateManyWithoutUnidadeDeAtendimentoNestedInput
   pacientes?: Prisma.PacienteUncheckedUpdateManyWithoutUnidadeDeSaudeNestedInput
+  encaminhamentosDeOrigem?: Prisma.EncaminhamentoUncheckedUpdateManyWithoutUnidadeDeOrigemNestedInput
+  prestadores?: Prisma.PrestadorUncheckedUpdateManyWithoutLocalNestedInput
 }
 
 export type LocalCreateManyInput = {
@@ -679,6 +693,22 @@ export type IntFieldUpdateOperationsInput = {
   divide?: number
 }
 
+export type LocalCreateNestedOneWithoutPrestadoresInput = {
+  create?: Prisma.XOR<Prisma.LocalCreateWithoutPrestadoresInput, Prisma.LocalUncheckedCreateWithoutPrestadoresInput>
+  connectOrCreate?: Prisma.LocalCreateOrConnectWithoutPrestadoresInput
+  connect?: Prisma.LocalWhereUniqueInput
+}
+
+export type LocalUpdateOneWithoutPrestadoresNestedInput = {
+  create?: Prisma.XOR<Prisma.LocalCreateWithoutPrestadoresInput, Prisma.LocalUncheckedCreateWithoutPrestadoresInput>
+  connectOrCreate?: Prisma.LocalCreateOrConnectWithoutPrestadoresInput
+  upsert?: Prisma.LocalUpsertWithoutPrestadoresInput
+  disconnect?: Prisma.LocalWhereInput | boolean
+  delete?: Prisma.LocalWhereInput | boolean
+  connect?: Prisma.LocalWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LocalUpdateToOneWithWhereWithoutPrestadoresInput, Prisma.LocalUpdateWithoutPrestadoresInput>, Prisma.LocalUncheckedUpdateWithoutPrestadoresInput>
+}
+
 export type LocalCreateNestedOneWithoutAgendamentosInput = {
   create?: Prisma.XOR<Prisma.LocalCreateWithoutAgendamentosInput, Prisma.LocalUncheckedCreateWithoutAgendamentosInput>
   connectOrCreate?: Prisma.LocalCreateOrConnectWithoutAgendamentosInput
@@ -707,6 +737,20 @@ export type LocalUpdateOneRequiredWithoutPacientesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.LocalUpdateToOneWithWhereWithoutPacientesInput, Prisma.LocalUpdateWithoutPacientesInput>, Prisma.LocalUncheckedUpdateWithoutPacientesInput>
 }
 
+export type LocalCreateNestedOneWithoutEncaminhamentosDeOrigemInput = {
+  create?: Prisma.XOR<Prisma.LocalCreateWithoutEncaminhamentosDeOrigemInput, Prisma.LocalUncheckedCreateWithoutEncaminhamentosDeOrigemInput>
+  connectOrCreate?: Prisma.LocalCreateOrConnectWithoutEncaminhamentosDeOrigemInput
+  connect?: Prisma.LocalWhereUniqueInput
+}
+
+export type LocalUpdateOneRequiredWithoutEncaminhamentosDeOrigemNestedInput = {
+  create?: Prisma.XOR<Prisma.LocalCreateWithoutEncaminhamentosDeOrigemInput, Prisma.LocalUncheckedCreateWithoutEncaminhamentosDeOrigemInput>
+  connectOrCreate?: Prisma.LocalCreateOrConnectWithoutEncaminhamentosDeOrigemInput
+  upsert?: Prisma.LocalUpsertWithoutEncaminhamentosDeOrigemInput
+  connect?: Prisma.LocalWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LocalUpdateToOneWithWhereWithoutEncaminhamentosDeOrigemInput, Prisma.LocalUpdateWithoutEncaminhamentosDeOrigemInput>, Prisma.LocalUncheckedUpdateWithoutEncaminhamentosDeOrigemInput>
+}
+
 export type LocalCreateWithoutUsuariosInput = {
   nome: string
   tipoDeLocal: $Enums.TipoDeLocal
@@ -726,6 +770,8 @@ export type LocalCreateWithoutUsuariosInput = {
   updatedAt?: Date | string
   agendamentos?: Prisma.AgendamentoDePrestadorCreateNestedManyWithoutUnidadeDeAtendimentoInput
   pacientes?: Prisma.PacienteCreateNestedManyWithoutUnidadeDeSaudeInput
+  encaminhamentosDeOrigem?: Prisma.EncaminhamentoCreateNestedManyWithoutUnidadeDeOrigemInput
+  prestadores?: Prisma.PrestadorCreateNestedManyWithoutLocalInput
 }
 
 export type LocalUncheckedCreateWithoutUsuariosInput = {
@@ -748,6 +794,8 @@ export type LocalUncheckedCreateWithoutUsuariosInput = {
   updatedAt?: Date | string
   agendamentos?: Prisma.AgendamentoDePrestadorUncheckedCreateNestedManyWithoutUnidadeDeAtendimentoInput
   pacientes?: Prisma.PacienteUncheckedCreateNestedManyWithoutUnidadeDeSaudeInput
+  encaminhamentosDeOrigem?: Prisma.EncaminhamentoUncheckedCreateNestedManyWithoutUnidadeDeOrigemInput
+  prestadores?: Prisma.PrestadorUncheckedCreateNestedManyWithoutLocalInput
 }
 
 export type LocalCreateOrConnectWithoutUsuariosInput = {
@@ -785,6 +833,8 @@ export type LocalUpdateWithoutUsuariosInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agendamentos?: Prisma.AgendamentoDePrestadorUpdateManyWithoutUnidadeDeAtendimentoNestedInput
   pacientes?: Prisma.PacienteUpdateManyWithoutUnidadeDeSaudeNestedInput
+  encaminhamentosDeOrigem?: Prisma.EncaminhamentoUpdateManyWithoutUnidadeDeOrigemNestedInput
+  prestadores?: Prisma.PrestadorUpdateManyWithoutLocalNestedInput
 }
 
 export type LocalUncheckedUpdateWithoutUsuariosInput = {
@@ -807,6 +857,118 @@ export type LocalUncheckedUpdateWithoutUsuariosInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   agendamentos?: Prisma.AgendamentoDePrestadorUncheckedUpdateManyWithoutUnidadeDeAtendimentoNestedInput
   pacientes?: Prisma.PacienteUncheckedUpdateManyWithoutUnidadeDeSaudeNestedInput
+  encaminhamentosDeOrigem?: Prisma.EncaminhamentoUncheckedUpdateManyWithoutUnidadeDeOrigemNestedInput
+  prestadores?: Prisma.PrestadorUncheckedUpdateManyWithoutLocalNestedInput
+}
+
+export type LocalCreateWithoutPrestadoresInput = {
+  nome: string
+  tipoDeLocal: $Enums.TipoDeLocal
+  atendimentoDentroOuForaDoMunicipio: $Enums.AtendimentoDentroOuForaDoMunicipio
+  quantidadeDeSalas: number
+  ativo?: boolean
+  cidade: string
+  cep: string
+  uf: string
+  rua: string
+  numero: string
+  bairro: string
+  complemento?: string | null
+  telefone1: string
+  email?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  usuarios?: Prisma.UsuarioCreateNestedManyWithoutLocalInput
+  agendamentos?: Prisma.AgendamentoDePrestadorCreateNestedManyWithoutUnidadeDeAtendimentoInput
+  pacientes?: Prisma.PacienteCreateNestedManyWithoutUnidadeDeSaudeInput
+  encaminhamentosDeOrigem?: Prisma.EncaminhamentoCreateNestedManyWithoutUnidadeDeOrigemInput
+}
+
+export type LocalUncheckedCreateWithoutPrestadoresInput = {
+  id?: number
+  nome: string
+  tipoDeLocal: $Enums.TipoDeLocal
+  atendimentoDentroOuForaDoMunicipio: $Enums.AtendimentoDentroOuForaDoMunicipio
+  quantidadeDeSalas: number
+  ativo?: boolean
+  cidade: string
+  cep: string
+  uf: string
+  rua: string
+  numero: string
+  bairro: string
+  complemento?: string | null
+  telefone1: string
+  email?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  usuarios?: Prisma.UsuarioUncheckedCreateNestedManyWithoutLocalInput
+  agendamentos?: Prisma.AgendamentoDePrestadorUncheckedCreateNestedManyWithoutUnidadeDeAtendimentoInput
+  pacientes?: Prisma.PacienteUncheckedCreateNestedManyWithoutUnidadeDeSaudeInput
+  encaminhamentosDeOrigem?: Prisma.EncaminhamentoUncheckedCreateNestedManyWithoutUnidadeDeOrigemInput
+}
+
+export type LocalCreateOrConnectWithoutPrestadoresInput = {
+  where: Prisma.LocalWhereUniqueInput
+  create: Prisma.XOR<Prisma.LocalCreateWithoutPrestadoresInput, Prisma.LocalUncheckedCreateWithoutPrestadoresInput>
+}
+
+export type LocalUpsertWithoutPrestadoresInput = {
+  update: Prisma.XOR<Prisma.LocalUpdateWithoutPrestadoresInput, Prisma.LocalUncheckedUpdateWithoutPrestadoresInput>
+  create: Prisma.XOR<Prisma.LocalCreateWithoutPrestadoresInput, Prisma.LocalUncheckedCreateWithoutPrestadoresInput>
+  where?: Prisma.LocalWhereInput
+}
+
+export type LocalUpdateToOneWithWhereWithoutPrestadoresInput = {
+  where?: Prisma.LocalWhereInput
+  data: Prisma.XOR<Prisma.LocalUpdateWithoutPrestadoresInput, Prisma.LocalUncheckedUpdateWithoutPrestadoresInput>
+}
+
+export type LocalUpdateWithoutPrestadoresInput = {
+  nome?: Prisma.StringFieldUpdateOperationsInput | string
+  tipoDeLocal?: Prisma.EnumTipoDeLocalFieldUpdateOperationsInput | $Enums.TipoDeLocal
+  atendimentoDentroOuForaDoMunicipio?: Prisma.EnumAtendimentoDentroOuForaDoMunicipioFieldUpdateOperationsInput | $Enums.AtendimentoDentroOuForaDoMunicipio
+  quantidadeDeSalas?: Prisma.IntFieldUpdateOperationsInput | number
+  ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  cidade?: Prisma.StringFieldUpdateOperationsInput | string
+  cep?: Prisma.StringFieldUpdateOperationsInput | string
+  uf?: Prisma.StringFieldUpdateOperationsInput | string
+  rua?: Prisma.StringFieldUpdateOperationsInput | string
+  numero?: Prisma.StringFieldUpdateOperationsInput | string
+  bairro?: Prisma.StringFieldUpdateOperationsInput | string
+  complemento?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telefone1?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  usuarios?: Prisma.UsuarioUpdateManyWithoutLocalNestedInput
+  agendamentos?: Prisma.AgendamentoDePrestadorUpdateManyWithoutUnidadeDeAtendimentoNestedInput
+  pacientes?: Prisma.PacienteUpdateManyWithoutUnidadeDeSaudeNestedInput
+  encaminhamentosDeOrigem?: Prisma.EncaminhamentoUpdateManyWithoutUnidadeDeOrigemNestedInput
+}
+
+export type LocalUncheckedUpdateWithoutPrestadoresInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  nome?: Prisma.StringFieldUpdateOperationsInput | string
+  tipoDeLocal?: Prisma.EnumTipoDeLocalFieldUpdateOperationsInput | $Enums.TipoDeLocal
+  atendimentoDentroOuForaDoMunicipio?: Prisma.EnumAtendimentoDentroOuForaDoMunicipioFieldUpdateOperationsInput | $Enums.AtendimentoDentroOuForaDoMunicipio
+  quantidadeDeSalas?: Prisma.IntFieldUpdateOperationsInput | number
+  ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  cidade?: Prisma.StringFieldUpdateOperationsInput | string
+  cep?: Prisma.StringFieldUpdateOperationsInput | string
+  uf?: Prisma.StringFieldUpdateOperationsInput | string
+  rua?: Prisma.StringFieldUpdateOperationsInput | string
+  numero?: Prisma.StringFieldUpdateOperationsInput | string
+  bairro?: Prisma.StringFieldUpdateOperationsInput | string
+  complemento?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telefone1?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  usuarios?: Prisma.UsuarioUncheckedUpdateManyWithoutLocalNestedInput
+  agendamentos?: Prisma.AgendamentoDePrestadorUncheckedUpdateManyWithoutUnidadeDeAtendimentoNestedInput
+  pacientes?: Prisma.PacienteUncheckedUpdateManyWithoutUnidadeDeSaudeNestedInput
+  encaminhamentosDeOrigem?: Prisma.EncaminhamentoUncheckedUpdateManyWithoutUnidadeDeOrigemNestedInput
 }
 
 export type LocalCreateWithoutAgendamentosInput = {
@@ -828,6 +990,8 @@ export type LocalCreateWithoutAgendamentosInput = {
   updatedAt?: Date | string
   usuarios?: Prisma.UsuarioCreateNestedManyWithoutLocalInput
   pacientes?: Prisma.PacienteCreateNestedManyWithoutUnidadeDeSaudeInput
+  encaminhamentosDeOrigem?: Prisma.EncaminhamentoCreateNestedManyWithoutUnidadeDeOrigemInput
+  prestadores?: Prisma.PrestadorCreateNestedManyWithoutLocalInput
 }
 
 export type LocalUncheckedCreateWithoutAgendamentosInput = {
@@ -850,6 +1014,8 @@ export type LocalUncheckedCreateWithoutAgendamentosInput = {
   updatedAt?: Date | string
   usuarios?: Prisma.UsuarioUncheckedCreateNestedManyWithoutLocalInput
   pacientes?: Prisma.PacienteUncheckedCreateNestedManyWithoutUnidadeDeSaudeInput
+  encaminhamentosDeOrigem?: Prisma.EncaminhamentoUncheckedCreateNestedManyWithoutUnidadeDeOrigemInput
+  prestadores?: Prisma.PrestadorUncheckedCreateNestedManyWithoutLocalInput
 }
 
 export type LocalCreateOrConnectWithoutAgendamentosInput = {
@@ -887,6 +1053,8 @@ export type LocalUpdateWithoutAgendamentosInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   usuarios?: Prisma.UsuarioUpdateManyWithoutLocalNestedInput
   pacientes?: Prisma.PacienteUpdateManyWithoutUnidadeDeSaudeNestedInput
+  encaminhamentosDeOrigem?: Prisma.EncaminhamentoUpdateManyWithoutUnidadeDeOrigemNestedInput
+  prestadores?: Prisma.PrestadorUpdateManyWithoutLocalNestedInput
 }
 
 export type LocalUncheckedUpdateWithoutAgendamentosInput = {
@@ -909,6 +1077,8 @@ export type LocalUncheckedUpdateWithoutAgendamentosInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   usuarios?: Prisma.UsuarioUncheckedUpdateManyWithoutLocalNestedInput
   pacientes?: Prisma.PacienteUncheckedUpdateManyWithoutUnidadeDeSaudeNestedInput
+  encaminhamentosDeOrigem?: Prisma.EncaminhamentoUncheckedUpdateManyWithoutUnidadeDeOrigemNestedInput
+  prestadores?: Prisma.PrestadorUncheckedUpdateManyWithoutLocalNestedInput
 }
 
 export type LocalCreateWithoutPacientesInput = {
@@ -930,6 +1100,8 @@ export type LocalCreateWithoutPacientesInput = {
   updatedAt?: Date | string
   usuarios?: Prisma.UsuarioCreateNestedManyWithoutLocalInput
   agendamentos?: Prisma.AgendamentoDePrestadorCreateNestedManyWithoutUnidadeDeAtendimentoInput
+  encaminhamentosDeOrigem?: Prisma.EncaminhamentoCreateNestedManyWithoutUnidadeDeOrigemInput
+  prestadores?: Prisma.PrestadorCreateNestedManyWithoutLocalInput
 }
 
 export type LocalUncheckedCreateWithoutPacientesInput = {
@@ -952,6 +1124,8 @@ export type LocalUncheckedCreateWithoutPacientesInput = {
   updatedAt?: Date | string
   usuarios?: Prisma.UsuarioUncheckedCreateNestedManyWithoutLocalInput
   agendamentos?: Prisma.AgendamentoDePrestadorUncheckedCreateNestedManyWithoutUnidadeDeAtendimentoInput
+  encaminhamentosDeOrigem?: Prisma.EncaminhamentoUncheckedCreateNestedManyWithoutUnidadeDeOrigemInput
+  prestadores?: Prisma.PrestadorUncheckedCreateNestedManyWithoutLocalInput
 }
 
 export type LocalCreateOrConnectWithoutPacientesInput = {
@@ -989,6 +1163,8 @@ export type LocalUpdateWithoutPacientesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   usuarios?: Prisma.UsuarioUpdateManyWithoutLocalNestedInput
   agendamentos?: Prisma.AgendamentoDePrestadorUpdateManyWithoutUnidadeDeAtendimentoNestedInput
+  encaminhamentosDeOrigem?: Prisma.EncaminhamentoUpdateManyWithoutUnidadeDeOrigemNestedInput
+  prestadores?: Prisma.PrestadorUpdateManyWithoutLocalNestedInput
 }
 
 export type LocalUncheckedUpdateWithoutPacientesInput = {
@@ -1011,6 +1187,118 @@ export type LocalUncheckedUpdateWithoutPacientesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   usuarios?: Prisma.UsuarioUncheckedUpdateManyWithoutLocalNestedInput
   agendamentos?: Prisma.AgendamentoDePrestadorUncheckedUpdateManyWithoutUnidadeDeAtendimentoNestedInput
+  encaminhamentosDeOrigem?: Prisma.EncaminhamentoUncheckedUpdateManyWithoutUnidadeDeOrigemNestedInput
+  prestadores?: Prisma.PrestadorUncheckedUpdateManyWithoutLocalNestedInput
+}
+
+export type LocalCreateWithoutEncaminhamentosDeOrigemInput = {
+  nome: string
+  tipoDeLocal: $Enums.TipoDeLocal
+  atendimentoDentroOuForaDoMunicipio: $Enums.AtendimentoDentroOuForaDoMunicipio
+  quantidadeDeSalas: number
+  ativo?: boolean
+  cidade: string
+  cep: string
+  uf: string
+  rua: string
+  numero: string
+  bairro: string
+  complemento?: string | null
+  telefone1: string
+  email?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  usuarios?: Prisma.UsuarioCreateNestedManyWithoutLocalInput
+  agendamentos?: Prisma.AgendamentoDePrestadorCreateNestedManyWithoutUnidadeDeAtendimentoInput
+  pacientes?: Prisma.PacienteCreateNestedManyWithoutUnidadeDeSaudeInput
+  prestadores?: Prisma.PrestadorCreateNestedManyWithoutLocalInput
+}
+
+export type LocalUncheckedCreateWithoutEncaminhamentosDeOrigemInput = {
+  id?: number
+  nome: string
+  tipoDeLocal: $Enums.TipoDeLocal
+  atendimentoDentroOuForaDoMunicipio: $Enums.AtendimentoDentroOuForaDoMunicipio
+  quantidadeDeSalas: number
+  ativo?: boolean
+  cidade: string
+  cep: string
+  uf: string
+  rua: string
+  numero: string
+  bairro: string
+  complemento?: string | null
+  telefone1: string
+  email?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  usuarios?: Prisma.UsuarioUncheckedCreateNestedManyWithoutLocalInput
+  agendamentos?: Prisma.AgendamentoDePrestadorUncheckedCreateNestedManyWithoutUnidadeDeAtendimentoInput
+  pacientes?: Prisma.PacienteUncheckedCreateNestedManyWithoutUnidadeDeSaudeInput
+  prestadores?: Prisma.PrestadorUncheckedCreateNestedManyWithoutLocalInput
+}
+
+export type LocalCreateOrConnectWithoutEncaminhamentosDeOrigemInput = {
+  where: Prisma.LocalWhereUniqueInput
+  create: Prisma.XOR<Prisma.LocalCreateWithoutEncaminhamentosDeOrigemInput, Prisma.LocalUncheckedCreateWithoutEncaminhamentosDeOrigemInput>
+}
+
+export type LocalUpsertWithoutEncaminhamentosDeOrigemInput = {
+  update: Prisma.XOR<Prisma.LocalUpdateWithoutEncaminhamentosDeOrigemInput, Prisma.LocalUncheckedUpdateWithoutEncaminhamentosDeOrigemInput>
+  create: Prisma.XOR<Prisma.LocalCreateWithoutEncaminhamentosDeOrigemInput, Prisma.LocalUncheckedCreateWithoutEncaminhamentosDeOrigemInput>
+  where?: Prisma.LocalWhereInput
+}
+
+export type LocalUpdateToOneWithWhereWithoutEncaminhamentosDeOrigemInput = {
+  where?: Prisma.LocalWhereInput
+  data: Prisma.XOR<Prisma.LocalUpdateWithoutEncaminhamentosDeOrigemInput, Prisma.LocalUncheckedUpdateWithoutEncaminhamentosDeOrigemInput>
+}
+
+export type LocalUpdateWithoutEncaminhamentosDeOrigemInput = {
+  nome?: Prisma.StringFieldUpdateOperationsInput | string
+  tipoDeLocal?: Prisma.EnumTipoDeLocalFieldUpdateOperationsInput | $Enums.TipoDeLocal
+  atendimentoDentroOuForaDoMunicipio?: Prisma.EnumAtendimentoDentroOuForaDoMunicipioFieldUpdateOperationsInput | $Enums.AtendimentoDentroOuForaDoMunicipio
+  quantidadeDeSalas?: Prisma.IntFieldUpdateOperationsInput | number
+  ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  cidade?: Prisma.StringFieldUpdateOperationsInput | string
+  cep?: Prisma.StringFieldUpdateOperationsInput | string
+  uf?: Prisma.StringFieldUpdateOperationsInput | string
+  rua?: Prisma.StringFieldUpdateOperationsInput | string
+  numero?: Prisma.StringFieldUpdateOperationsInput | string
+  bairro?: Prisma.StringFieldUpdateOperationsInput | string
+  complemento?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telefone1?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  usuarios?: Prisma.UsuarioUpdateManyWithoutLocalNestedInput
+  agendamentos?: Prisma.AgendamentoDePrestadorUpdateManyWithoutUnidadeDeAtendimentoNestedInput
+  pacientes?: Prisma.PacienteUpdateManyWithoutUnidadeDeSaudeNestedInput
+  prestadores?: Prisma.PrestadorUpdateManyWithoutLocalNestedInput
+}
+
+export type LocalUncheckedUpdateWithoutEncaminhamentosDeOrigemInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  nome?: Prisma.StringFieldUpdateOperationsInput | string
+  tipoDeLocal?: Prisma.EnumTipoDeLocalFieldUpdateOperationsInput | $Enums.TipoDeLocal
+  atendimentoDentroOuForaDoMunicipio?: Prisma.EnumAtendimentoDentroOuForaDoMunicipioFieldUpdateOperationsInput | $Enums.AtendimentoDentroOuForaDoMunicipio
+  quantidadeDeSalas?: Prisma.IntFieldUpdateOperationsInput | number
+  ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  cidade?: Prisma.StringFieldUpdateOperationsInput | string
+  cep?: Prisma.StringFieldUpdateOperationsInput | string
+  uf?: Prisma.StringFieldUpdateOperationsInput | string
+  rua?: Prisma.StringFieldUpdateOperationsInput | string
+  numero?: Prisma.StringFieldUpdateOperationsInput | string
+  bairro?: Prisma.StringFieldUpdateOperationsInput | string
+  complemento?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telefone1?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  usuarios?: Prisma.UsuarioUncheckedUpdateManyWithoutLocalNestedInput
+  agendamentos?: Prisma.AgendamentoDePrestadorUncheckedUpdateManyWithoutUnidadeDeAtendimentoNestedInput
+  pacientes?: Prisma.PacienteUncheckedUpdateManyWithoutUnidadeDeSaudeNestedInput
+  prestadores?: Prisma.PrestadorUncheckedUpdateManyWithoutLocalNestedInput
 }
 
 
@@ -1022,12 +1310,16 @@ export type LocalCountOutputType = {
   usuarios: number
   agendamentos: number
   pacientes: number
+  encaminhamentosDeOrigem: number
+  prestadores: number
 }
 
 export type LocalCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   usuarios?: boolean | LocalCountOutputTypeCountUsuariosArgs
   agendamentos?: boolean | LocalCountOutputTypeCountAgendamentosArgs
   pacientes?: boolean | LocalCountOutputTypeCountPacientesArgs
+  encaminhamentosDeOrigem?: boolean | LocalCountOutputTypeCountEncaminhamentosDeOrigemArgs
+  prestadores?: boolean | LocalCountOutputTypeCountPrestadoresArgs
 }
 
 /**
@@ -1061,6 +1353,20 @@ export type LocalCountOutputTypeCountPacientesArgs<ExtArgs extends runtime.Types
   where?: Prisma.PacienteWhereInput
 }
 
+/**
+ * LocalCountOutputType without action
+ */
+export type LocalCountOutputTypeCountEncaminhamentosDeOrigemArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EncaminhamentoWhereInput
+}
+
+/**
+ * LocalCountOutputType without action
+ */
+export type LocalCountOutputTypeCountPrestadoresArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PrestadorWhereInput
+}
+
 
 export type LocalSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1083,6 +1389,8 @@ export type LocalSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   usuarios?: boolean | Prisma.Local$usuariosArgs<ExtArgs>
   agendamentos?: boolean | Prisma.Local$agendamentosArgs<ExtArgs>
   pacientes?: boolean | Prisma.Local$pacientesArgs<ExtArgs>
+  encaminhamentosDeOrigem?: boolean | Prisma.Local$encaminhamentosDeOrigemArgs<ExtArgs>
+  prestadores?: boolean | Prisma.Local$prestadoresArgs<ExtArgs>
   _count?: boolean | Prisma.LocalCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["local"]>
 
@@ -1151,6 +1459,8 @@ export type LocalInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   usuarios?: boolean | Prisma.Local$usuariosArgs<ExtArgs>
   agendamentos?: boolean | Prisma.Local$agendamentosArgs<ExtArgs>
   pacientes?: boolean | Prisma.Local$pacientesArgs<ExtArgs>
+  encaminhamentosDeOrigem?: boolean | Prisma.Local$encaminhamentosDeOrigemArgs<ExtArgs>
+  prestadores?: boolean | Prisma.Local$prestadoresArgs<ExtArgs>
   _count?: boolean | Prisma.LocalCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type LocalIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1162,6 +1472,8 @@ export type $LocalPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     usuarios: Prisma.$UsuarioPayload<ExtArgs>[]
     agendamentos: Prisma.$AgendamentoDePrestadorPayload<ExtArgs>[]
     pacientes: Prisma.$PacientePayload<ExtArgs>[]
+    encaminhamentosDeOrigem: Prisma.$EncaminhamentoPayload<ExtArgs>[]
+    prestadores: Prisma.$PrestadorPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1578,6 +1890,8 @@ export interface Prisma__LocalClient<T, Null = never, ExtArgs extends runtime.Ty
   usuarios<T extends Prisma.Local$usuariosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Local$usuariosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UsuarioPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   agendamentos<T extends Prisma.Local$agendamentosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Local$agendamentosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AgendamentoDePrestadorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   pacientes<T extends Prisma.Local$pacientesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Local$pacientesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PacientePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  encaminhamentosDeOrigem<T extends Prisma.Local$encaminhamentosDeOrigemArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Local$encaminhamentosDeOrigemArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EncaminhamentoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  prestadores<T extends Prisma.Local$prestadoresArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Local$prestadoresArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PrestadorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2086,6 +2400,54 @@ export type Local$pacientesArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.PacienteScalarFieldEnum | Prisma.PacienteScalarFieldEnum[]
+}
+
+/**
+ * Local.encaminhamentosDeOrigem
+ */
+export type Local$encaminhamentosDeOrigemArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Encaminhamento
+   */
+  select?: Prisma.EncaminhamentoSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Encaminhamento
+   */
+  omit?: Prisma.EncaminhamentoOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EncaminhamentoInclude<ExtArgs> | null
+  where?: Prisma.EncaminhamentoWhereInput
+  orderBy?: Prisma.EncaminhamentoOrderByWithRelationInput | Prisma.EncaminhamentoOrderByWithRelationInput[]
+  cursor?: Prisma.EncaminhamentoWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EncaminhamentoScalarFieldEnum | Prisma.EncaminhamentoScalarFieldEnum[]
+}
+
+/**
+ * Local.prestadores
+ */
+export type Local$prestadoresArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Prestador
+   */
+  select?: Prisma.PrestadorSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Prestador
+   */
+  omit?: Prisma.PrestadorOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PrestadorInclude<ExtArgs> | null
+  where?: Prisma.PrestadorWhereInput
+  orderBy?: Prisma.PrestadorOrderByWithRelationInput | Prisma.PrestadorOrderByWithRelationInput[]
+  cursor?: Prisma.PrestadorWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PrestadorScalarFieldEnum | Prisma.PrestadorScalarFieldEnum[]
 }
 
 /**

@@ -3,8 +3,14 @@
 import { Especialidade } from "@/generated/prisma/browser";
 import { useEffect, useState } from "react";
 
+export type EspecialidadeComCirurgias = Especialidade & {
+    tiposDeCirurgia: {
+        id: number;
+        nome: string;
+    }[];
+};
 export function useEspecialidades() {
-    const [especialidades, setEspecialidades] = useState<Especialidade[]>([])
+    const [especialidades, setEspecialidades] = useState<EspecialidadeComCirurgias[]>([])
     const [carregando, setCarregando] = useState(true)
     const [erro, setErro] = useState("")
 
@@ -19,8 +25,7 @@ export function useEspecialidades() {
                 throw new Error("Não foi possível buscar os especialidades.")
             }
 
-            const dados: Especialidade[] = await resposta.json()
-
+            const dados: EspecialidadeComCirurgias[] = await resposta.json()
             setEspecialidades(dados)
         } catch (erro) {
             setErro(

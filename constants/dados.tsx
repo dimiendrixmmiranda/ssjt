@@ -1,6 +1,6 @@
 'use client'
 import { Local } from "@/generated/prisma/browser"
-import { AtendimentoDentroOuForaDoMunicipio, Deficiencia, EstadoCivil, FatorRH, GrauDeEscolaridade, Raca, Sexo, TipoDeConta, TipoDeLocal, TipoDeLogradouro, TipoSanguineo, UF, Zona } from "@/generated/prisma/enums"
+import { AtendimentoDentroOuForaDoMunicipio, CampoDeBusca, CategoriaEspecialidade, Deficiencia, EstadoCivil, FatorRH, GrauDeEscolaridade, LadoDoCorpo, PossibilidadeDeRetorno, Raca, Sexo, SituacaoDeEncaminhamento, StatusDeAgendamento, TipoDeAtendimentoDoPrestador, TipoDeConsulta, TipoDeConta, TipoDeLocal, TipoDeLogradouro, TipoSanguineo, UF, Zona } from "@/generated/prisma/enums"
 export const opcoesDeTipoDeLocal = [
     {
         valor: '',
@@ -26,15 +26,15 @@ export const opcoesDeAtendimentoDentroOuForaDoMunicipio = [
 export const opcoesDeLocais = (locais: Local[]) => {
     return [
         {
-            valor: null,
+            valor: "",
             label: "Selecione"
         },
         ...locais.map(local => ({
-            valor: local.id,
+            valor: String(local.id),
             label: local.nome
         }))
     ];
-};
+}
 
 export const opcoesDeTipoDeConta = [
     {
@@ -138,6 +138,23 @@ export const opcoesDeZona = [
         label: tipo.replaceAll('_', ' ').toLowerCase()
     }))
 ]
+export const opcoesCampoDeBusca = [
+    {
+        valor: '',
+        label: "Selecione"
+    },
+    ...Object.values(CampoDeBusca).map(tipo => ({
+        valor: tipo,
+        label: tipo.replaceAll('_', ' ').toLowerCase()
+    }))
+]
+export const opcoesStatusDeAgendamento = [
+    ...Object.values(StatusDeAgendamento).map(tipo => ({
+        valor: tipo,
+        label: tipo.replaceAll('_', ' ').toLowerCase()
+    }))
+]
+
 export const opcoesDeDeficiencia = [
     {
         valor: '',
@@ -154,6 +171,82 @@ export const opcoesSimNao = [
     { valor: "NAO", label: "Não" },
 ]
 
+
+export const opcoesCategoriaDaConsulta = [
+    {
+        valor: null,
+        label: "Selecione"
+    },
+    {
+        valor: CategoriaEspecialidade.NORMAL,
+        label: "Normal"
+    },
+    {
+        valor: CategoriaEspecialidade.TFD,
+        label: "TFD"
+    }
+]
+
+
+export const opcoesTipoDeConsulta = [
+    {
+        valor: '',
+        label: "Selecione"
+    },
+    ...Object.values(TipoDeConsulta).map(tipo => ({
+        valor: tipo,
+        label: tipo.replaceAll('_', ' ').toLowerCase()
+    }))
+]
+
+export const opcoesTipoDeAtendimentoDoPrestador = [
+    {
+        valor: '',
+        label: "Selecione"
+    },
+    ...Object.values(TipoDeAtendimentoDoPrestador).map(tipo => ({
+        valor: tipo,
+        label: tipo.replaceAll('_', ' ').toLowerCase()
+    }))
+]
+export const opcoesSituacaoDeEncaminhamento = [
+    {
+        valor: '',
+        label: "Selecione"
+    },
+    ...Object.values(SituacaoDeEncaminhamento).map(tipo => ({
+        valor: tipo,
+        label: tipo.replaceAll('_', ' ').toLowerCase()
+    }))
+]
+export const opcoesPossibilidadeDeRetorno = [
+    {
+        valor: '',
+        label: "Selecione"
+    },
+    ...Object.values(PossibilidadeDeRetorno).map(tipo => ({
+        valor: tipo,
+        label: tipo.replaceAll('_', ' ').toLowerCase()
+    }))
+]
+export const opcoesLadoDoCorpo = [
+    {
+        valor: '',
+        label: "Selecione"
+    },
+    ...Object.values(LadoDoCorpo).map(tipo => ({
+        valor: tipo,
+        label: tipo.replaceAll('_', ' ').toLowerCase()
+    }))
+]
+
+export const normalizarTexto = (texto: string) =>
+    texto
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replace(/\s+/g, " ")
+        .trim()
 
 export const CORES_PRESTADORES = [
     "#2563EB", // Azul

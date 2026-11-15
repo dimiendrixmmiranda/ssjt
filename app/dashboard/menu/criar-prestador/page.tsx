@@ -8,19 +8,22 @@ import { TbAmbulance, TbListDetails } from "react-icons/tb"
 import { FaHandHoldingMedical, FaList, FaRegTrashAlt } from "react-icons/fa"
 import { useEspecialidades } from "@/hooks/useEspecialidades"
 import { useProcedimentos } from "@/hooks/useProcedimentos"
-import { CORES_PRESTADORES } from "@/constants/dados"
-import { TipoDoPrestador } from "@/generated/prisma/enums"
+import { CORES_PRESTADORES, opcoesDeLocais, opcoesTipoDeAtendimentoDoPrestador } from "@/constants/dados"
+import { AtendimentoDentroOuForaDoMunicipio, TipoDeAtendimentoDoPrestador, TipoDoPrestador } from "@/generated/prisma/enums"
 import DialogPersonalizado from "@/components/dialog/DialogPersonalizado"
 import { PrestadorComRelacoes, usePrestadores } from "@/hooks/usePrestadores"
 import { FiEdit } from "react-icons/fi"
 import { Dialog } from "primereact/dialog"
+import InputSelect from "@/components/inputs/InputSelect"
+import { MdOutlineHomeRepairService } from "react-icons/md"
+import { useLocais } from "@/hooks/useListaDeLocais"
 
 export default function Page() {
     const { especialidades } = useEspecialidades()
     const { procedimentos } = useProcedimentos()
-
+    const { locais } = useLocais()
     const { prestadores, buscarPrestadores } = usePrestadores()
-    console.log(prestadores)
+
     const [tipo, setTipo] = useState<TipoDoPrestador>(TipoDoPrestador.MEDICO)
     const [nomeDoPrestador, setNomeDoPrestador] = useState('')
 
@@ -93,6 +96,14 @@ export default function Page() {
         )
     }
 
+    const [tipoDeAtendimentoDoPrestador, setTipoDeAtendimentoDoPrestador] = useState<TipoDeAtendimentoDoPrestador | "">("")
+    const [localDeAtendimentoDoPrestador, setLocalDeAtendimentoDoPrestador] = useState("")
+
+    const [tipoDeAtendimentoEdicao, setTipoDeAtendimentoEdicao] = useState<TipoDeAtendimentoDoPrestador | "">("")
+    const [localDeAtendimentoEdicao, setLocalDeAtendimentoEdicao] = useState("")
+
+
+    const opcoesLocalDeAtendimentoDoPrestador = opcoesDeLocais(locais.filter(local => local.atendimentoDentroOuForaDoMunicipio == AtendimentoDentroOuForaDoMunicipio.FORA_DO_MUNICIPIO))
 
     // Dialogs
     const [tituloResultado, setTituloResultado] = useState("");
@@ -107,7 +118,6 @@ export default function Page() {
     const [dialogConfirmacaoExclusao, setDialogConfirmacaoExclusao] = useState(false)
     const [dialogEdicao, setDialogEdicao] = useState(false)
     const [dialogDetalhes, setDialogDetalhes] = useState(false)
-
 
     const [nomeEdicao, setNomeEdicao] = useState("")
     const [corEdicao, setCorEdicao] = useState("")
@@ -130,15 +140,22 @@ export default function Page() {
                     nome: nomeDoPrestador.trim(),
                     tipo,
                     cor: corSelecionada,
-                    telefone: telefone,
-                    email: email,
+                    telefone,
+                    email,
+
+                    tipoDeAtendimento: tipoDeAtendimentoDoPrestador,
+                    localId:
+                        tipoDeAtendimentoDoPrestador === TipoDeAtendimentoDoPrestador.ITINERANTE
+                            ? null
+                            : Number(localDeAtendimentoDoPrestador),
+
                     especialidadesIds:
-                        tipo === "MEDICO"
+                        tipo === TipoDoPrestador.MEDICO
                             ? especialidadesSelecionadas.map((item) => item.id)
                             : [],
 
                     procedimentosIds:
-                        tipo === "PRESTADOR_DE_SERVICOS_MEDICOS"
+                        tipo === TipoDoPrestador.PRESTADOR_DE_SERVICOS_MEDICOS
                             ? procedimentosSelecionados.map((item) => item.id)
                             : [],
                 }),
@@ -216,10 +233,25 @@ export default function Page() {
             setDialogResultado(true)
             return
         }
+        if (!tipoDeAtendimentoDoPrestador) {
+            setTituloResultado("Atenção")
+            setMensagemResultado("Selecione o tipo de atendimento do prestador.")
+            setDialogResultado(true)
+            return
+        }
+
+        if (
+            tipoDeAtendimentoDoPrestador !== TipoDeAtendimentoDoPrestador.ITINERANTE &&
+            !localDeAtendimentoDoPrestador
+        ) {
+            setTituloResultado("Atenção")
+            setMensagemResultado("Selecione o local de atendimento do prestador.")
+            setDialogResultado(true)
+            return
+        }
 
         setDialogConfirmacao(true)
     }
-
 
     function abrirEdicao(prestador: PrestadorComRelacoes) {
         setPrestadorSelecionado(prestador)
@@ -236,6 +268,12 @@ export default function Page() {
 
         setProcedimentosEdicao(
             prestador.procedimentos.map((item) => item.procedimentoId)
+        )
+
+        setTipoDeAtendimentoEdicao(prestador.tipoDeAtendimento)
+
+        setLocalDeAtendimentoEdicao(
+            prestador.localId ? String(prestador.localId) : ""
         )
 
         setDialogEdicao(true)
@@ -300,6 +338,23 @@ export default function Page() {
 
     async function editarPrestador() {
         if (!prestadorSelecionado) return
+
+        if (!tipoDeAtendimentoEdicao) {
+            setTituloResultado("Atenção")
+            setMensagemResultado("Selecione o tipo de atendimento do prestador.")
+            setDialogResultado(true)
+            return
+        }
+
+        if (
+            tipoDeAtendimentoEdicao !== TipoDeAtendimentoDoPrestador.ITINERANTE &&
+            !localDeAtendimentoEdicao
+        ) {
+            setTituloResultado("Atenção")
+            setMensagemResultado("Selecione o local de atendimento do prestador.")
+            setDialogResultado(true)
+            return
+        }
 
         try {
             const resposta = await fetch(
@@ -394,6 +449,28 @@ export default function Page() {
                             </button>
                         </div>
                         <InputTexto icone={<TbAmbulance />} id="nomeDoPrestador" label="Nome da prestador" nome="nomeDoPrestador" placeholder="Digite o nome do prestador..." setValor={setNomeDoPrestador} valor={nomeDoPrestador} />
+                        <InputSelect
+                            icone={<MdOutlineHomeRepairService />}
+                            id="tipoDeAtendimentoDoPrestador"
+                            label="Selecione o tipo de atendimento do prestador"
+                            nome="tipoDeAtendimentoDoPrestador"
+                            setValor={(valor) => {
+                                setTipoDeAtendimentoDoPrestador(valor as TipoDeAtendimentoDoPrestador)
+                                if (valor === TipoDeAtendimentoDoPrestador.ITINERANTE) {
+                                    setLocalDeAtendimentoDoPrestador("")
+                                }
+                            }}
+                            valor={tipoDeAtendimentoDoPrestador}
+                            opcoes={opcoesTipoDeAtendimentoDoPrestador}
+                        />
+
+                        {
+                            tipoDeAtendimentoDoPrestador === TipoDeAtendimentoDoPrestador.ITINERANTE ? ("") : (
+                                <div>
+                                    <InputSelect icone={<MdOutlineHomeRepairService />} id="localDeAtendimentoDoPrestador" label="Selecione o local de atendimento do prestador" nome="localDeAtendimentoDoPrestador" setValor={setLocalDeAtendimentoDoPrestador} valor={localDeAtendimentoDoPrestador} opcoes={opcoesLocalDeAtendimentoDoPrestador} />
+                                </div>
+                            )
+                        }
 
                         {
                             tipo === TipoDoPrestador.MEDICO ? (
@@ -792,6 +869,36 @@ export default function Page() {
                         setValor={setNomeEdicao}
                         valor={nomeEdicao}
                     />
+                    <InputSelect
+                        icone={<MdOutlineHomeRepairService />}
+                        id="tipoDeAtendimentoEdicao"
+                        label="Tipo de atendimento do prestador"
+                        nome="tipoDeAtendimentoEdicao"
+                        setValor={(valor) => {
+                            setTipoDeAtendimentoEdicao(valor as TipoDeAtendimentoDoPrestador)
+
+                            if (valor === TipoDeAtendimentoDoPrestador.ITINERANTE) {
+                                setLocalDeAtendimentoEdicao("")
+                            }
+                        }}
+                        valor={tipoDeAtendimentoEdicao}
+                        opcoes={opcoesTipoDeAtendimentoDoPrestador}
+                    />
+
+                    {(
+                        tipoDeAtendimentoEdicao === TipoDeAtendimentoDoPrestador.EXTERNO ||
+                        tipoDeAtendimentoEdicao === TipoDeAtendimentoDoPrestador.AMBOS
+                    ) && (
+                            <InputSelect
+                                icone={<MdOutlineHomeRepairService />}
+                                id="localDeAtendimentoEdicao"
+                                label="Local de atendimento do prestador"
+                                nome="localDeAtendimentoEdicao"
+                                setValor={setLocalDeAtendimentoEdicao}
+                                valor={localDeAtendimentoEdicao}
+                                opcoes={opcoesLocalDeAtendimentoDoPrestador}
+                            />
+                        )}
 
                     <InputTexto icone={<TbAmbulance />} id="telefone" label="Telefone" nome="telefone" placeholder="Digite o telefone do prestador..." setValor={setTelefone} valor={telefone} />
                     <InputTexto icone={<TbAmbulance />} id="email" label="email" nome="email" placeholder="Digite o email do prestador..." setValor={setEmail} valor={email} />
@@ -815,10 +922,10 @@ export default function Page() {
                                         title={indisponivel ? `${cor} - Indisponível` : cor}
                                         aria-label={`Selecionar cor ${cor}`}
                                         className={`h-10 w-10 mx-auto rounded-full border-2 transition-all ${indisponivel
-                                                ? "opacity-20 cursor-not-allowed"
-                                                : corSelecionada === cor
-                                                    ? "border-verde-escuro scale-110 ring-2 ring-verde-escuro ring-offset-2"
-                                                    : "border-transparent hover:scale-110"
+                                            ? "opacity-20 cursor-not-allowed"
+                                            : corSelecionada === cor
+                                                ? "border-verde-escuro scale-110 ring-2 ring-verde-escuro ring-offset-2"
+                                                : "border-transparent hover:scale-110"
                                             }`}
                                         style={{ backgroundColor: cor }}
                                     />

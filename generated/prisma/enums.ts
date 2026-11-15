@@ -62,6 +62,15 @@ export const Lateralidade = {
 export type Lateralidade = (typeof Lateralidade)[keyof typeof Lateralidade]
 
 
+export const LadoDoCorpo = {
+  DIREITO: 'DIREITO',
+  ESQUERDO: 'ESQUERDO',
+  BILATERAL: 'BILATERAL'
+} as const
+
+export type LadoDoCorpo = (typeof LadoDoCorpo)[keyof typeof LadoDoCorpo]
+
+
 export const TipoDoPrestador = {
   MEDICO: 'MEDICO',
   PRESTADOR_DE_SERVICOS_MEDICOS: 'PRESTADOR_DE_SERVICOS_MEDICOS'
@@ -217,3 +226,69 @@ export const TipoDeCadastroPaciente = {
 } as const
 
 export type TipoDeCadastroPaciente = (typeof TipoDeCadastroPaciente)[keyof typeof TipoDeCadastroPaciente]
+
+
+export const CampoDeBusca = {
+  NOME: 'NOME',
+  CPF: 'CPF',
+  CARTAO_SUS: 'CARTAO_SUS'
+} as const
+
+export type CampoDeBusca = (typeof CampoDeBusca)[keyof typeof CampoDeBusca]
+
+
+export const StatusDeAgendamento = {
+  AGUARDANDO_REGULACAO: 'AGUARDANDO_REGULACAO',
+  EM_ESPERA: 'EM_ESPERA',
+  AGENDADO: 'AGENDADO',
+  TIRADO_DA_FILA: 'TIRADO_DA_FILA',
+  TODOS: 'TODOS'
+} as const
+
+export type StatusDeAgendamento = (typeof StatusDeAgendamento)[keyof typeof StatusDeAgendamento]
+
+
+export const TipoDeConsulta = {
+  PRIMEIRA_CONSULTA: 'PRIMEIRA_CONSULTA',
+  RETORNO: 'RETORNO'
+} as const
+
+export type TipoDeConsulta = (typeof TipoDeConsulta)[keyof typeof TipoDeConsulta]
+
+
+export const TipoDeEncaminhamento = {
+  CONSULTA: 'CONSULTA',
+  PROCEDIMENTO: 'PROCEDIMENTO'
+} as const
+
+export type TipoDeEncaminhamento = (typeof TipoDeEncaminhamento)[keyof typeof TipoDeEncaminhamento]
+
+
+export const TipoDeAtendimentoDoPrestador = {
+  ITINERANTE: 'ITINERANTE',
+  EXTERNO: 'EXTERNO',
+  AMBOS: 'AMBOS'
+} as const
+
+export type TipoDeAtendimentoDoPrestador = (typeof TipoDeAtendimentoDoPrestador)[keyof typeof TipoDeAtendimentoDoPrestador]
+
+
+export const SituacaoDeEncaminhamento = {
+  URGENTE: 'URGENTE',
+  POUCO_URGENTE: 'POUCO_URGENTE',
+  PRIORIDADE: 'PRIORIDADE',
+  NORMAL: 'NORMAL'
+} as const
+
+export type SituacaoDeEncaminhamento = (typeof SituacaoDeEncaminhamento)[keyof typeof SituacaoDeEncaminhamento]
+
+
+export const PossibilidadeDeRetorno = {
+  COM_EXAMES_REALIZADOS: 'COM_EXAMES_REALIZADOS',
+  SE_NECESSARIO: 'SE_NECESSARIO',
+  REAVALIACAO_MEDICA: 'REAVALIACAO_MEDICA',
+  SEM_NECESSIDADE: 'SEM_NECESSIDADE',
+  COM_DETERMINADO_PERIODO: 'COM_DETERMINADO_PERIODO'
+} as const
+
+export type PossibilidadeDeRetorno = (typeof PossibilidadeDeRetorno)[keyof typeof PossibilidadeDeRetorno]

@@ -47,6 +47,12 @@ enum Lateralidade {
   COM_LADO
 }
 
+enum LadoDoCorpo {
+  DIREITO
+  ESQUERDO
+  BILATERAL
+}
+
 enum TipoDoPrestador{
   MEDICO
   PRESTADOR_DE_SERVICOS_MEDICOS
@@ -164,6 +170,36 @@ enum TipoDeCadastroPaciente{
   COMPLETO
 }
 
+enum CampoDeBusca{
+  NOME
+  CPF
+  CARTAO_SUS
+}
+
+enum StatusDeAgendamento{
+  AGUARDANDO_REGULACAO
+  EM_ESPERA
+  AGENDADO
+  TIRADO_DA_FILA
+  TODOS
+}
+
+enum TipoDeConsulta {
+  PRIMEIRA_CONSULTA
+  RETORNO
+}
+
+enum TipoDeEncaminhamento {
+  CONSULTA
+  PROCEDIMENTO
+}
+
+enum TipoDeAtendimentoDoPrestador {
+  ITINERANTE
+  EXTERNO
+  AMBOS
+}
+
 model Usuario {
   id                String   @id @default(cuid())
   nome              String
@@ -206,9 +242,37 @@ model Local {
   usuarios     Usuario[]
   agendamentos AgendamentoDePrestador[]
   pacientes    Paciente[]
+  encaminhamentosDeOrigem Encaminhamento[]
+  prestadores Prestador[]
 
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
+}
+
+model TipoDeCirurgia {
+  id              Int           @id @default(autoincrement())
+  nome            String
+  especialidadeId Int
+  ativo           Boolean       @default(true)
+
+  especialidade   Especialidade @relation(fields: [especialidadeId],references: [id])
+
+  @@unique([nome, especialidadeId])
+}
+
+enum SituacaoDeEncaminhamento{
+  URGENTE
+  POUCO_URGENTE
+  PRIORIDADE
+  NORMAL
+}
+
+enum PossibilidadeDeRetorno {
+  COM_EXAMES_REALIZADOS
+  SE_NECESSARIO
+  REAVALIACAO_MEDICA
+  SEM_NECESSIDADE
+  COM_DETERMINADO_PERIODO
 }
 
 model Especialidade {
@@ -218,12 +282,15 @@ model Especialidade {
   categoria CategoriaEspecialidade[]
   ativo     Boolean                   @default(true)
 
-  prestadores PrestadorEspecialidade[]
+  prestadores    PrestadorEspecialidade[]
+  tiposDeCirurgia TipoDeCirurgia[]
 
-  createdAt DateTime                  @default(now())
-  updatedAt DateTime                  @updatedAt
+  encaminhamentosComoEspecialidadeDoMedico Encaminhamento[] @relation("EspecialidadeDoMedico")
+  encaminhamentosComoDestino Encaminhamento[] @relation("EspecialidadeEncaminhada")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
-
 model Procedimento {
   id        Int             @id @default(autoincrement())
   nome      String          @unique
@@ -232,6 +299,7 @@ model Procedimento {
   membros   MembroProcedimento[]
 
   prestadores PrestadorProcedimento[]
+  encaminhamentos Encaminhamento[]
 
   ativo     Boolean         @default(true)
   createdAt DateTime        @default(now())
@@ -249,6 +317,8 @@ model MembroProcedimento {
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
 
+  encaminhamentos Encaminhamento[]
+
   @@unique([nome, procedimentoId])
 }
 
@@ -263,7 +333,13 @@ model Prestador {
   especialidades PrestadorEspecialidade[]
   procedimentos PrestadorProcedimento[]
   
+  tipoDeAtendimento TipoDeAtendimentoDoPrestador @default(ITINERANTE)
+  localId Int?
+  local   Local? @relation(fields: [localId], references: [id])
+
   agendamentos AgendamentoDePrestador[]
+  encaminhamentosSolicitados Encaminhamento[]
+  encaminhamentosExecutados Encaminhamento[] @relation("PrestadorExecutante")
 
   ativo     Boolean   @default(true)
   createdAt DateTime  @default(now())
@@ -400,6 +476,7 @@ model Paciente {
   ativo Boolean @default(true)
 
   unidadeDeSaude Local @relation(fields: [unidadeDeSaudeId], references: [id], onDelete: Restrict)
+  encaminhamentos Encaminhamento[]
 
   criadoEm DateTime @default(now())
   atualizadoEm DateTime @updatedAt
@@ -408,4 +485,57 @@ model Paciente {
   @@index([dataDeNascimento])
   @@index([unidadeDeSaudeId])
   @@index([tipoDeCadastro])
+}
+
+
+model Encaminhamento {
+  id Int @id @default(autoincrement())
+
+  tipo TipoDeEncaminhamento
+
+  pacienteId Int
+  paciente Paciente @relation(fields: [pacienteId], references: [id])
+
+  unidadeDeOrigemId Int
+  unidadeDeOrigem Local @relation(fields: [unidadeDeOrigemId], references: [id])
+
+  dataDeEntrada DateTime @db.Date
+
+  statusDeAgendamento StatusDeAgendamento @default(EM_ESPERA)
+
+  medicoSolicitanteId Int?
+  medicoSolicitante Prestador? @relation(fields: [medicoSolicitanteId], references: [id])
+
+  especialidadeDoPrestadorId Int?
+  especialidadeDoPrestador Especialidade? @relation("EspecialidadeDoMedico",fields: [especialidadeDoPrestadorId],references: [id])
+
+  categoria CategoriaEspecialidade?
+  tipoDeConsulta TipoDeConsulta?
+
+  especialidadeEncaminhadaId Int?
+  especialidadeEncaminhada Especialidade? @relation("EspecialidadeEncaminhada",fields: [especialidadeEncaminhadaId],references: [id])
+
+  tipoDeCirurgia String?
+
+  procedimentoId Int?
+  procedimento Procedimento? @relation(fields: [procedimentoId],references: [id])
+
+  membroProcedimentoId Int?
+  membroProcedimento MembroProcedimento? @relation(fields: [membroProcedimentoId],references: [id])
+
+  lado LadoDoCorpo?
+
+  situacao String
+  encaminhamentoRemarcado Boolean @default(false)
+
+  condicaoDeRetorno String?
+  dataDoRetorno DateTime? @db.Date
+
+  dataDeSaida             DateTime? @db.Date
+  dataDeAgendamentoLocal  DateTime? @db.Date
+  prestadorExecutanteId   Int?
+  prestadorExecutante     Prestador? @relation("PrestadorExecutante",fields: [prestadorExecutanteId],references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

@@ -1,0 +1,2 @@
+-- CreateEnum
+CREATE TYPE "LadoDoCorpo" AS ENUM ('DIREITO', 'ESQUERDO', 'BILATERAL');

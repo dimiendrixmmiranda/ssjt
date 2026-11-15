@@ -6,6 +6,7 @@ type Contexto = {
     params: Promise<{ id: string }>
 }
 
+
 export async function PATCH(request: Request, { params }: Contexto) {
     try {
         const { id } = await params
@@ -18,8 +19,11 @@ export async function PATCH(request: Request, { params }: Contexto) {
             )
         }
 
-        const { nome, codigo, categoria } = await request.json()
+        const dados = await request.json()
 
+        const { nome, codigo, categoria, tiposDeCirurgia } = dados
+
+        // Validação dos campos obrigatórios
         if (
             typeof nome !== "string" ||
             !nome.trim() ||
@@ -34,6 +38,7 @@ export async function PATCH(request: Request, { params }: Contexto) {
             )
         }
 
+        // Validação do código
         if (!/^\d{3}$/.test(codigo.trim())) {
             return NextResponse.json(
                 { erro: "O código deve conter exatamente 3 dígitos." },
@@ -41,22 +46,94 @@ export async function PATCH(request: Request, { params }: Contexto) {
             )
         }
 
+        // Validação das categorias
         const categoriasValidas = Object.values(CategoriaEspecialidade)
 
-        if (!categoria.every((item: string) => categoriasValidas.includes(item as CategoriaEspecialidade))) {
+        if (
+            !categoria.every(
+                (item: string) =>
+                    categoriasValidas.includes(item as CategoriaEspecialidade)
+            )
+        ) {
             return NextResponse.json(
                 { erro: "Categoria inválida." },
                 { status: 400 }
             )
         }
 
-        const especialidade = await prisma.especialidade.update({
-            where: { id: idNumerico },
-            data: {
-                nome: nome.trim(),
-                codigo: codigo.trim(),
-                categoria,
-            },
+        // Validação dos tipos de cirurgia
+        const cirurgiasRecebidas: unknown = tiposDeCirurgia ?? []
+
+        if (
+            !Array.isArray(cirurgiasRecebidas) ||
+            cirurgiasRecebidas.some(
+                (cirurgia: unknown) =>
+                    typeof cirurgia !== "string" || !cirurgia.trim()
+            )
+        ) {
+            return NextResponse.json(
+                { erro: "Informe uma lista válida de tipos de cirurgia." },
+                { status: 400 }
+            )
+        }
+
+        const cirurgias = (cirurgiasRecebidas as string[]).map(
+            cirurgia => cirurgia.trim()
+        )
+
+        // Impede cirurgias duplicadas
+        const cirurgiasNormalizadas = cirurgias.map(
+            cirurgia => cirurgia.toLowerCase()
+        )
+
+        if (new Set(cirurgiasNormalizadas).size !== cirurgias.length) {
+            return NextResponse.json(
+                { erro: "Existem tipos de cirurgia duplicados na lista." },
+                { status: 400 }
+            )
+        }
+
+        // Atualiza a especialidade e sincroniza as cirurgias
+        const especialidade = await prisma.$transaction(async (tx) => {
+
+            const especialidadeAtualizada = await tx.especialidade.update({
+                where: {
+                    id: idNumerico,
+                },
+                data: {
+                    nome: nome.trim(),
+                    codigo: codigo.trim(),
+                    categoria,
+                },
+            })
+
+            // Remove cirurgias que não estão mais na lista
+            await tx.tipoDeCirurgia.deleteMany({
+                where: {
+                    especialidadeId: idNumerico,
+                    nome: {
+                        notIn: cirurgias,
+                    },
+                },
+            })
+
+            // Cadastra as novas cirurgias sem duplicar as existentes
+            await tx.tipoDeCirurgia.createMany({
+                data: cirurgias.map(nome => ({
+                    nome,
+                    especialidadeId: idNumerico,
+                })),
+                skipDuplicates: true,
+            })
+
+            return tx.especialidade.findUnique({
+                where: {
+                    id: idNumerico,
+                },
+                include: {
+                    tiposDeCirurgia: true,
+                },
+            })
         })
 
         return NextResponse.json(especialidade)
@@ -94,6 +171,7 @@ export async function PATCH(request: Request, { params }: Contexto) {
         )
     }
 }
+
 
 export async function PUT(
     request: Request,

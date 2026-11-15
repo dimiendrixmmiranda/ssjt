@@ -37,51 +37,57 @@ export default function Template({ children }: TemplateProps) {
                 <div className="bg-verde h-full w-full p-4 flex flex-col gap-4">
                     <ul className="flex flex-col gap-2">
                         <li>
-                            <Link href={'/dashboard'} className={`flex items-center gap-2 font-bold text-xl p-2 px-4 rounded-lg border border-verde-escuro ${pathname === '/dashboard' ? "bg-white text-verde": "bg-verde-escuro text-white"}`}>
+                            <Link href={'/dashboard'} className={`flex items-center gap-2 font-bold text-xl p-2 px-4 rounded-lg border border-verde-escuro ${pathname === '/dashboard' ? "bg-white text-verde" : "bg-verde-escuro text-white"}`}>
                                 <FaHome />
                                 <p>Início</p>
                             </Link>
                         </li>
                         <li>
-                            <Link href={'/dashboard/menu/criar-usuario'} className={`flex items-center gap-2 font-bold text-xl p-2 px-4 rounded-lg border border-verde-escuro ${pathname === '/dashboard/menu/criar-usuario' ? "bg-white text-verde": "bg-verde-escuro text-white"}`}>
+                            <Link href={'/dashboard/menu/criar-usuario'} className={`flex items-center gap-2 font-bold text-xl p-2 px-4 rounded-lg border border-verde-escuro ${pathname === '/dashboard/menu/criar-usuario' ? "bg-white text-verde" : "bg-verde-escuro text-white"}`}>
                                 <FaUserPlus />
                                 <p>Criar Usuário</p>
                             </Link>
                         </li>
                         <li>
-                            <Link href={'/dashboard/menu/criar-local'} className={`flex items-center gap-2 font-bold text-xl p-2 px-4 rounded-lg border border-verde-escuro ${pathname === '/dashboard/menu/criar-local' ? "bg-white text-verde": "bg-verde-escuro text-white"}`}>
+                            <Link href={'/dashboard/menu/criar-local'} className={`flex items-center gap-2 font-bold text-xl p-2 px-4 rounded-lg border border-verde-escuro ${pathname === '/dashboard/menu/criar-local' ? "bg-white text-verde" : "bg-verde-escuro text-white"}`}>
                                 <BiSolidLocationPlus />
                                 <p>Criar Local</p>
                             </Link>
                         </li>
                         <li>
-                            <Link href={'/dashboard/menu/agenda'} className={`flex items-center gap-2 font-bold text-xl p-2 px-4 rounded-lg border border-verde-escuro ${pathname === '/dashboard/menu/agenda' ? "bg-white text-verde": "bg-verde-escuro text-white"}`}>
+                            <Link href={'/dashboard/menu/agenda'} className={`flex items-center gap-2 font-bold text-xl p-2 px-4 rounded-lg border border-verde-escuro ${pathname === '/dashboard/menu/agenda' ? "bg-white text-verde" : "bg-verde-escuro text-white"}`}>
                                 <TbNotebook />
                                 <p>Agenda</p>
                             </Link>
                         </li>
                         <li>
-                            <Link href={'/dashboard/menu/criar-especialidade'} className={`flex items-center gap-2 font-bold text-xl p-2 px-4 rounded-lg border border-verde-escuro ${pathname === '/dashboard/menu/criar-especialidade' ? "bg-white text-verde": "bg-verde-escuro text-white"}`}>
+                            <Link href={'/dashboard/menu/criar-especialidade'} className={`flex items-center gap-2 font-bold text-xl p-2 px-4 rounded-lg border border-verde-escuro ${pathname === '/dashboard/menu/criar-especialidade' ? "bg-white text-verde" : "bg-verde-escuro text-white"}`}>
                                 <FaUserDoctor />
                                 <p>Criar Especialidade</p>
                             </Link>
                         </li>
                         <li>
-                            <Link href={'/dashboard/menu/criar-procedimento'} className={`flex items-center gap-2 font-bold text-xl p-2 px-4 rounded-lg border border-verde-escuro ${pathname === '/dashboard/menu/criar-procedimento' ? "bg-white text-verde": "bg-verde-escuro text-white"}`}>
+                            <Link href={'/dashboard/menu/criar-procedimento'} className={`flex items-center gap-2 font-bold text-xl p-2 px-4 rounded-lg border border-verde-escuro ${pathname === '/dashboard/menu/criar-procedimento' ? "bg-white text-verde" : "bg-verde-escuro text-white"}`}>
                                 <FaProcedures />
                                 <p>Criar Procedimento</p>
                             </Link>
                         </li>
                         <li>
-                            <Link href={'/dashboard/menu/criar-prestador'} className={`flex items-center gap-2 font-bold text-xl p-2 px-4 rounded-lg border border-verde-escuro ${pathname === '/dashboard/menu/criar-prestador' ? "bg-white text-verde": "bg-verde-escuro text-white"}`}>
+                            <Link href={'/dashboard/menu/criar-prestador'} className={`flex items-center gap-2 font-bold text-xl p-2 px-4 rounded-lg border border-verde-escuro ${pathname === '/dashboard/menu/criar-prestador' ? "bg-white text-verde" : "bg-verde-escuro text-white"}`}>
                                 <RiServiceLine />
                                 <p>Criar Prestador</p>
                             </Link>
                         </li>
                         <li>
-                            <Link href={'/dashboard/menu/criar-paciente'} className={`flex items-center gap-2 font-bold text-xl p-2 px-4 rounded-lg border border-verde-escuro ${pathname === '/dashboard/menu/criar-paciente' ? "bg-white text-verde": "bg-verde-escuro text-white"}`}>
+                            <Link href={'/dashboard/menu/criar-paciente'} className={`flex items-center gap-2 font-bold text-xl p-2 px-4 rounded-lg border border-verde-escuro ${pathname === '/dashboard/menu/criar-paciente' ? "bg-white text-verde" : "bg-verde-escuro text-white"}`}>
                                 <FaUserPen />
                                 <p>Criar Paciente</p>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href={'/dashboard/menu/consultas-e-exames'} className={`flex items-center gap-2 font-bold text-xl p-2 px-4 rounded-lg border border-verde-escuro ${pathname === '/dashboard/menu/consultas-e-exames' ? "bg-white text-verde" : "bg-verde-escuro text-white"}`}>
+                                <FaUserPen />
+                                <p>Consultas e Exames</p>
                             </Link>
                         </li>
                     </ul>

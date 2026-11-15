@@ -302,7 +302,17 @@ export default function Page() {
                             <InputTexto icone={<AiOutlineUsergroupAdd />} id="nomeDoUsuario" label="Nome do Usuário" nome="nomeDoUsuario" placeholder="Digite o nome do usuário..." setValor={setNomeDoUsuario} valor={nomeDoUsuario} />
                             <InputEmail icone={<MdOutlineEmail />} id="emailDoUsuario" label="Email do Usuário" nome="emailDoUsuario" placeholder="Digite o email do usuário..." setValor={setEmailDoUsuario} valor={emailDoUsuario} />
                             <InputData icone={<BsCalendarDate />} id="dataDeNascimento" label="Data de Nascimento" nome="dataDeNascimento" placeholder="Data de Nascimento" setValor={setDataDeNascimento} valor={dataDeNascimento} />
-                            <InputSelect icone={<MdOutlineLocationCity />} id="unidadeDeOrigem" label="Selecione a unidade de origem" nome="unidadeDeOrigem" setValor={setUnidadeDeOrigem} valor={unidadeDeOrigem} opcoes={opcoesDeLocaisDeOrigem} />
+                            <InputSelect
+                                icone={<MdOutlineLocationCity />}
+                                id="unidadeDeOrigem"
+                                label="Selecione a unidade de origem"
+                                nome="unidadeDeOrigem"
+                                setValor={(valor) => {
+                                    setUnidadeDeOrigem(valor === "" ? null : Number(valor));
+                                }}
+                                valor={unidadeDeOrigem === null ? "" : String(unidadeDeOrigem)}
+                                opcoes={opcoesDeLocaisDeOrigem}
+                            />
                             <div className="grid grid-cols-2 gap-4">
                                 <InputSenha icone={<GiPadlock />} id="senha" label="Informe uma senha" nome="senha" placeholder="Senha..." setValor={setSenha} valor={senha} />
                                 <InputSenha icone={<GiPadlock />} id="confirmarSenha" label="Confirme sua senha" nome="confirmarSenha" placeholder="Confirmar Senha..." setValor={setConfirmarSenha} valor={confirmarSenha} />
@@ -467,7 +477,17 @@ export default function Page() {
                         <InputTexto icone={<AiOutlineUsergroupAdd />} id="nomeDoUsuario" label="Nome do Usuário" nome="nomeDoUsuario" placeholder="Digite o nome do usuário..." setValor={setNomeDoUsuario} valor={nomeDoUsuario} />
                         <InputEmail icone={<MdOutlineEmail />} id="emailDoUsuario" label="Email do Usuário" nome="emailDoUsuario" placeholder="Digite o email do usuário..." setValor={setEmailDoUsuario} valor={emailDoUsuario} />
                         <InputData icone={<BsCalendarDate />} id="dataDeNascimento" label="Data de Nascimento" nome="dataDeNascimento" placeholder="Data de Nascimento" setValor={setDataDeNascimento} valor={dataDeNascimento} />
-                        <InputSelect icone={<MdOutlineLocationCity />} id="unidadeDeOrigem" label="Selecione a unidade de origem" nome="unidadeDeOrigem" setValor={setUnidadeDeOrigem} valor={unidadeDeOrigem} opcoes={opcoesDeLocaisDeOrigem} />
+                        <InputSelect
+                            icone={<MdOutlineLocationCity />}
+                            id="unidadeDeOrigem"
+                            label="Selecione a unidade de origem"
+                            nome="unidadeDeOrigem"
+                            setValor={(valor) => {
+                                setUnidadeDeOrigem(valor === "" ? null : Number(valor));
+                            }}
+                            valor={unidadeDeOrigem === null ? "" : String(unidadeDeOrigem)}
+                            opcoes={opcoesDeLocaisDeOrigem}
+                        />
                         <div className="grid grid-cols-2 gap-4">
                             <InputSenha icone={<GiPadlock />} id="senha" label="Informe uma senha" nome="senha" placeholder="Senha..." setValor={setSenha} valor={senha} />
                             <InputSenha icone={<GiPadlock />} id="confirmarSenha" label="Confirme sua senha" nome="confirmarSenha" placeholder="Confirmar Senha..." setValor={setConfirmarSenha} valor={confirmarSenha} />

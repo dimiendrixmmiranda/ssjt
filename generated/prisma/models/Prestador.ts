@@ -28,10 +28,12 @@ export type AggregatePrestador = {
 
 export type PrestadorAvgAggregateOutputType = {
   id: number | null
+  localId: number | null
 }
 
 export type PrestadorSumAggregateOutputType = {
   id: number | null
+  localId: number | null
 }
 
 export type PrestadorMinAggregateOutputType = {
@@ -41,6 +43,8 @@ export type PrestadorMinAggregateOutputType = {
   telefone: string | null
   email: string | null
   cor: string | null
+  tipoDeAtendimento: $Enums.TipoDeAtendimentoDoPrestador | null
+  localId: number | null
   ativo: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -53,6 +57,8 @@ export type PrestadorMaxAggregateOutputType = {
   telefone: string | null
   email: string | null
   cor: string | null
+  tipoDeAtendimento: $Enums.TipoDeAtendimentoDoPrestador | null
+  localId: number | null
   ativo: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -65,6 +71,8 @@ export type PrestadorCountAggregateOutputType = {
   telefone: number
   email: number
   cor: number
+  tipoDeAtendimento: number
+  localId: number
   ativo: number
   createdAt: number
   updatedAt: number
@@ -74,10 +82,12 @@ export type PrestadorCountAggregateOutputType = {
 
 export type PrestadorAvgAggregateInputType = {
   id?: true
+  localId?: true
 }
 
 export type PrestadorSumAggregateInputType = {
   id?: true
+  localId?: true
 }
 
 export type PrestadorMinAggregateInputType = {
@@ -87,6 +97,8 @@ export type PrestadorMinAggregateInputType = {
   telefone?: true
   email?: true
   cor?: true
+  tipoDeAtendimento?: true
+  localId?: true
   ativo?: true
   createdAt?: true
   updatedAt?: true
@@ -99,6 +111,8 @@ export type PrestadorMaxAggregateInputType = {
   telefone?: true
   email?: true
   cor?: true
+  tipoDeAtendimento?: true
+  localId?: true
   ativo?: true
   createdAt?: true
   updatedAt?: true
@@ -111,6 +125,8 @@ export type PrestadorCountAggregateInputType = {
   telefone?: true
   email?: true
   cor?: true
+  tipoDeAtendimento?: true
+  localId?: true
   ativo?: true
   createdAt?: true
   updatedAt?: true
@@ -210,6 +226,8 @@ export type PrestadorGroupByOutputType = {
   telefone: string
   email: string
   cor: string
+  tipoDeAtendimento: $Enums.TipoDeAtendimentoDoPrestador
+  localId: number | null
   ativo: boolean
   createdAt: Date
   updatedAt: Date
@@ -245,12 +263,17 @@ export type PrestadorWhereInput = {
   telefone?: Prisma.StringFilter<"Prestador"> | string
   email?: Prisma.StringFilter<"Prestador"> | string
   cor?: Prisma.StringFilter<"Prestador"> | string
+  tipoDeAtendimento?: Prisma.EnumTipoDeAtendimentoDoPrestadorFilter<"Prestador"> | $Enums.TipoDeAtendimentoDoPrestador
+  localId?: Prisma.IntNullableFilter<"Prestador"> | number | null
   ativo?: Prisma.BoolFilter<"Prestador"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Prestador"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Prestador"> | Date | string
   especialidades?: Prisma.PrestadorEspecialidadeListRelationFilter
   procedimentos?: Prisma.PrestadorProcedimentoListRelationFilter
+  local?: Prisma.XOR<Prisma.LocalNullableScalarRelationFilter, Prisma.LocalWhereInput> | null
   agendamentos?: Prisma.AgendamentoDePrestadorListRelationFilter
+  encaminhamentosSolicitados?: Prisma.EncaminhamentoListRelationFilter
+  encaminhamentosExecutados?: Prisma.EncaminhamentoListRelationFilter
 }
 
 export type PrestadorOrderByWithRelationInput = {
@@ -260,12 +283,17 @@ export type PrestadorOrderByWithRelationInput = {
   telefone?: Prisma.SortOrder
   email?: Prisma.SortOrder
   cor?: Prisma.SortOrder
+  tipoDeAtendimento?: Prisma.SortOrder
+  localId?: Prisma.SortOrderInput | Prisma.SortOrder
   ativo?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   especialidades?: Prisma.PrestadorEspecialidadeOrderByRelationAggregateInput
   procedimentos?: Prisma.PrestadorProcedimentoOrderByRelationAggregateInput
+  local?: Prisma.LocalOrderByWithRelationInput
   agendamentos?: Prisma.AgendamentoDePrestadorOrderByRelationAggregateInput
+  encaminhamentosSolicitados?: Prisma.EncaminhamentoOrderByRelationAggregateInput
+  encaminhamentosExecutados?: Prisma.EncaminhamentoOrderByRelationAggregateInput
 }
 
 export type PrestadorWhereUniqueInput = Prisma.AtLeast<{
@@ -278,12 +306,17 @@ export type PrestadorWhereUniqueInput = Prisma.AtLeast<{
   tipo?: Prisma.EnumTipoDoPrestadorFilter<"Prestador"> | $Enums.TipoDoPrestador
   telefone?: Prisma.StringFilter<"Prestador"> | string
   email?: Prisma.StringFilter<"Prestador"> | string
+  tipoDeAtendimento?: Prisma.EnumTipoDeAtendimentoDoPrestadorFilter<"Prestador"> | $Enums.TipoDeAtendimentoDoPrestador
+  localId?: Prisma.IntNullableFilter<"Prestador"> | number | null
   ativo?: Prisma.BoolFilter<"Prestador"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Prestador"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Prestador"> | Date | string
   especialidades?: Prisma.PrestadorEspecialidadeListRelationFilter
   procedimentos?: Prisma.PrestadorProcedimentoListRelationFilter
+  local?: Prisma.XOR<Prisma.LocalNullableScalarRelationFilter, Prisma.LocalWhereInput> | null
   agendamentos?: Prisma.AgendamentoDePrestadorListRelationFilter
+  encaminhamentosSolicitados?: Prisma.EncaminhamentoListRelationFilter
+  encaminhamentosExecutados?: Prisma.EncaminhamentoListRelationFilter
 }, "id" | "cor">
 
 export type PrestadorOrderByWithAggregationInput = {
@@ -293,6 +326,8 @@ export type PrestadorOrderByWithAggregationInput = {
   telefone?: Prisma.SortOrder
   email?: Prisma.SortOrder
   cor?: Prisma.SortOrder
+  tipoDeAtendimento?: Prisma.SortOrder
+  localId?: Prisma.SortOrderInput | Prisma.SortOrder
   ativo?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -313,6 +348,8 @@ export type PrestadorScalarWhereWithAggregatesInput = {
   telefone?: Prisma.StringWithAggregatesFilter<"Prestador"> | string
   email?: Prisma.StringWithAggregatesFilter<"Prestador"> | string
   cor?: Prisma.StringWithAggregatesFilter<"Prestador"> | string
+  tipoDeAtendimento?: Prisma.EnumTipoDeAtendimentoDoPrestadorWithAggregatesFilter<"Prestador"> | $Enums.TipoDeAtendimentoDoPrestador
+  localId?: Prisma.IntNullableWithAggregatesFilter<"Prestador"> | number | null
   ativo?: Prisma.BoolWithAggregatesFilter<"Prestador"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Prestador"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Prestador"> | Date | string
@@ -324,12 +361,16 @@ export type PrestadorCreateInput = {
   telefone: string
   email: string
   cor: string
+  tipoDeAtendimento?: $Enums.TipoDeAtendimentoDoPrestador
   ativo?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   especialidades?: Prisma.PrestadorEspecialidadeCreateNestedManyWithoutPrestadorInput
   procedimentos?: Prisma.PrestadorProcedimentoCreateNestedManyWithoutPrestadorInput
+  local?: Prisma.LocalCreateNestedOneWithoutPrestadoresInput
   agendamentos?: Prisma.AgendamentoDePrestadorCreateNestedManyWithoutPrestadorInput
+  encaminhamentosSolicitados?: Prisma.EncaminhamentoCreateNestedManyWithoutMedicoSolicitanteInput
+  encaminhamentosExecutados?: Prisma.EncaminhamentoCreateNestedManyWithoutPrestadorExecutanteInput
 }
 
 export type PrestadorUncheckedCreateInput = {
@@ -339,12 +380,16 @@ export type PrestadorUncheckedCreateInput = {
   telefone: string
   email: string
   cor: string
+  tipoDeAtendimento?: $Enums.TipoDeAtendimentoDoPrestador
+  localId?: number | null
   ativo?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   especialidades?: Prisma.PrestadorEspecialidadeUncheckedCreateNestedManyWithoutPrestadorInput
   procedimentos?: Prisma.PrestadorProcedimentoUncheckedCreateNestedManyWithoutPrestadorInput
   agendamentos?: Prisma.AgendamentoDePrestadorUncheckedCreateNestedManyWithoutPrestadorInput
+  encaminhamentosSolicitados?: Prisma.EncaminhamentoUncheckedCreateNestedManyWithoutMedicoSolicitanteInput
+  encaminhamentosExecutados?: Prisma.EncaminhamentoUncheckedCreateNestedManyWithoutPrestadorExecutanteInput
 }
 
 export type PrestadorUpdateInput = {
@@ -353,12 +398,16 @@ export type PrestadorUpdateInput = {
   telefone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   cor?: Prisma.StringFieldUpdateOperationsInput | string
+  tipoDeAtendimento?: Prisma.EnumTipoDeAtendimentoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDeAtendimentoDoPrestador
   ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   especialidades?: Prisma.PrestadorEspecialidadeUpdateManyWithoutPrestadorNestedInput
   procedimentos?: Prisma.PrestadorProcedimentoUpdateManyWithoutPrestadorNestedInput
+  local?: Prisma.LocalUpdateOneWithoutPrestadoresNestedInput
   agendamentos?: Prisma.AgendamentoDePrestadorUpdateManyWithoutPrestadorNestedInput
+  encaminhamentosSolicitados?: Prisma.EncaminhamentoUpdateManyWithoutMedicoSolicitanteNestedInput
+  encaminhamentosExecutados?: Prisma.EncaminhamentoUpdateManyWithoutPrestadorExecutanteNestedInput
 }
 
 export type PrestadorUncheckedUpdateInput = {
@@ -368,12 +417,16 @@ export type PrestadorUncheckedUpdateInput = {
   telefone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   cor?: Prisma.StringFieldUpdateOperationsInput | string
+  tipoDeAtendimento?: Prisma.EnumTipoDeAtendimentoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDeAtendimentoDoPrestador
+  localId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   especialidades?: Prisma.PrestadorEspecialidadeUncheckedUpdateManyWithoutPrestadorNestedInput
   procedimentos?: Prisma.PrestadorProcedimentoUncheckedUpdateManyWithoutPrestadorNestedInput
   agendamentos?: Prisma.AgendamentoDePrestadorUncheckedUpdateManyWithoutPrestadorNestedInput
+  encaminhamentosSolicitados?: Prisma.EncaminhamentoUncheckedUpdateManyWithoutMedicoSolicitanteNestedInput
+  encaminhamentosExecutados?: Prisma.EncaminhamentoUncheckedUpdateManyWithoutPrestadorExecutanteNestedInput
 }
 
 export type PrestadorCreateManyInput = {
@@ -383,6 +436,8 @@ export type PrestadorCreateManyInput = {
   telefone: string
   email: string
   cor: string
+  tipoDeAtendimento?: $Enums.TipoDeAtendimentoDoPrestador
+  localId?: number | null
   ativo?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -394,6 +449,7 @@ export type PrestadorUpdateManyMutationInput = {
   telefone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   cor?: Prisma.StringFieldUpdateOperationsInput | string
+  tipoDeAtendimento?: Prisma.EnumTipoDeAtendimentoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDeAtendimentoDoPrestador
   ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -406,9 +462,21 @@ export type PrestadorUncheckedUpdateManyInput = {
   telefone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   cor?: Prisma.StringFieldUpdateOperationsInput | string
+  tipoDeAtendimento?: Prisma.EnumTipoDeAtendimentoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDeAtendimentoDoPrestador
+  localId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type PrestadorListRelationFilter = {
+  every?: Prisma.PrestadorWhereInput
+  some?: Prisma.PrestadorWhereInput
+  none?: Prisma.PrestadorWhereInput
+}
+
+export type PrestadorOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
 }
 
 export type PrestadorCountOrderByAggregateInput = {
@@ -418,6 +486,8 @@ export type PrestadorCountOrderByAggregateInput = {
   telefone?: Prisma.SortOrder
   email?: Prisma.SortOrder
   cor?: Prisma.SortOrder
+  tipoDeAtendimento?: Prisma.SortOrder
+  localId?: Prisma.SortOrder
   ativo?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -425,6 +495,7 @@ export type PrestadorCountOrderByAggregateInput = {
 
 export type PrestadorAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  localId?: Prisma.SortOrder
 }
 
 export type PrestadorMaxOrderByAggregateInput = {
@@ -434,6 +505,8 @@ export type PrestadorMaxOrderByAggregateInput = {
   telefone?: Prisma.SortOrder
   email?: Prisma.SortOrder
   cor?: Prisma.SortOrder
+  tipoDeAtendimento?: Prisma.SortOrder
+  localId?: Prisma.SortOrder
   ativo?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -446,6 +519,8 @@ export type PrestadorMinOrderByAggregateInput = {
   telefone?: Prisma.SortOrder
   email?: Prisma.SortOrder
   cor?: Prisma.SortOrder
+  tipoDeAtendimento?: Prisma.SortOrder
+  localId?: Prisma.SortOrder
   ativo?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -453,6 +528,7 @@ export type PrestadorMinOrderByAggregateInput = {
 
 export type PrestadorSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  localId?: Prisma.SortOrder
 }
 
 export type PrestadorScalarRelationFilter = {
@@ -460,8 +536,59 @@ export type PrestadorScalarRelationFilter = {
   isNot?: Prisma.PrestadorWhereInput
 }
 
+export type PrestadorNullableScalarRelationFilter = {
+  is?: Prisma.PrestadorWhereInput | null
+  isNot?: Prisma.PrestadorWhereInput | null
+}
+
+export type PrestadorCreateNestedManyWithoutLocalInput = {
+  create?: Prisma.XOR<Prisma.PrestadorCreateWithoutLocalInput, Prisma.PrestadorUncheckedCreateWithoutLocalInput> | Prisma.PrestadorCreateWithoutLocalInput[] | Prisma.PrestadorUncheckedCreateWithoutLocalInput[]
+  connectOrCreate?: Prisma.PrestadorCreateOrConnectWithoutLocalInput | Prisma.PrestadorCreateOrConnectWithoutLocalInput[]
+  createMany?: Prisma.PrestadorCreateManyLocalInputEnvelope
+  connect?: Prisma.PrestadorWhereUniqueInput | Prisma.PrestadorWhereUniqueInput[]
+}
+
+export type PrestadorUncheckedCreateNestedManyWithoutLocalInput = {
+  create?: Prisma.XOR<Prisma.PrestadorCreateWithoutLocalInput, Prisma.PrestadorUncheckedCreateWithoutLocalInput> | Prisma.PrestadorCreateWithoutLocalInput[] | Prisma.PrestadorUncheckedCreateWithoutLocalInput[]
+  connectOrCreate?: Prisma.PrestadorCreateOrConnectWithoutLocalInput | Prisma.PrestadorCreateOrConnectWithoutLocalInput[]
+  createMany?: Prisma.PrestadorCreateManyLocalInputEnvelope
+  connect?: Prisma.PrestadorWhereUniqueInput | Prisma.PrestadorWhereUniqueInput[]
+}
+
+export type PrestadorUpdateManyWithoutLocalNestedInput = {
+  create?: Prisma.XOR<Prisma.PrestadorCreateWithoutLocalInput, Prisma.PrestadorUncheckedCreateWithoutLocalInput> | Prisma.PrestadorCreateWithoutLocalInput[] | Prisma.PrestadorUncheckedCreateWithoutLocalInput[]
+  connectOrCreate?: Prisma.PrestadorCreateOrConnectWithoutLocalInput | Prisma.PrestadorCreateOrConnectWithoutLocalInput[]
+  upsert?: Prisma.PrestadorUpsertWithWhereUniqueWithoutLocalInput | Prisma.PrestadorUpsertWithWhereUniqueWithoutLocalInput[]
+  createMany?: Prisma.PrestadorCreateManyLocalInputEnvelope
+  set?: Prisma.PrestadorWhereUniqueInput | Prisma.PrestadorWhereUniqueInput[]
+  disconnect?: Prisma.PrestadorWhereUniqueInput | Prisma.PrestadorWhereUniqueInput[]
+  delete?: Prisma.PrestadorWhereUniqueInput | Prisma.PrestadorWhereUniqueInput[]
+  connect?: Prisma.PrestadorWhereUniqueInput | Prisma.PrestadorWhereUniqueInput[]
+  update?: Prisma.PrestadorUpdateWithWhereUniqueWithoutLocalInput | Prisma.PrestadorUpdateWithWhereUniqueWithoutLocalInput[]
+  updateMany?: Prisma.PrestadorUpdateManyWithWhereWithoutLocalInput | Prisma.PrestadorUpdateManyWithWhereWithoutLocalInput[]
+  deleteMany?: Prisma.PrestadorScalarWhereInput | Prisma.PrestadorScalarWhereInput[]
+}
+
+export type PrestadorUncheckedUpdateManyWithoutLocalNestedInput = {
+  create?: Prisma.XOR<Prisma.PrestadorCreateWithoutLocalInput, Prisma.PrestadorUncheckedCreateWithoutLocalInput> | Prisma.PrestadorCreateWithoutLocalInput[] | Prisma.PrestadorUncheckedCreateWithoutLocalInput[]
+  connectOrCreate?: Prisma.PrestadorCreateOrConnectWithoutLocalInput | Prisma.PrestadorCreateOrConnectWithoutLocalInput[]
+  upsert?: Prisma.PrestadorUpsertWithWhereUniqueWithoutLocalInput | Prisma.PrestadorUpsertWithWhereUniqueWithoutLocalInput[]
+  createMany?: Prisma.PrestadorCreateManyLocalInputEnvelope
+  set?: Prisma.PrestadorWhereUniqueInput | Prisma.PrestadorWhereUniqueInput[]
+  disconnect?: Prisma.PrestadorWhereUniqueInput | Prisma.PrestadorWhereUniqueInput[]
+  delete?: Prisma.PrestadorWhereUniqueInput | Prisma.PrestadorWhereUniqueInput[]
+  connect?: Prisma.PrestadorWhereUniqueInput | Prisma.PrestadorWhereUniqueInput[]
+  update?: Prisma.PrestadorUpdateWithWhereUniqueWithoutLocalInput | Prisma.PrestadorUpdateWithWhereUniqueWithoutLocalInput[]
+  updateMany?: Prisma.PrestadorUpdateManyWithWhereWithoutLocalInput | Prisma.PrestadorUpdateManyWithWhereWithoutLocalInput[]
+  deleteMany?: Prisma.PrestadorScalarWhereInput | Prisma.PrestadorScalarWhereInput[]
+}
+
 export type EnumTipoDoPrestadorFieldUpdateOperationsInput = {
   set?: $Enums.TipoDoPrestador
+}
+
+export type EnumTipoDeAtendimentoDoPrestadorFieldUpdateOperationsInput = {
+  set?: $Enums.TipoDeAtendimentoDoPrestador
 }
 
 export type PrestadorCreateNestedOneWithoutEspecialidadesInput = {
@@ -506,17 +633,131 @@ export type PrestadorUpdateOneRequiredWithoutAgendamentosNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.PrestadorUpdateToOneWithWhereWithoutAgendamentosInput, Prisma.PrestadorUpdateWithoutAgendamentosInput>, Prisma.PrestadorUncheckedUpdateWithoutAgendamentosInput>
 }
 
+export type PrestadorCreateNestedOneWithoutEncaminhamentosSolicitadosInput = {
+  create?: Prisma.XOR<Prisma.PrestadorCreateWithoutEncaminhamentosSolicitadosInput, Prisma.PrestadorUncheckedCreateWithoutEncaminhamentosSolicitadosInput>
+  connectOrCreate?: Prisma.PrestadorCreateOrConnectWithoutEncaminhamentosSolicitadosInput
+  connect?: Prisma.PrestadorWhereUniqueInput
+}
+
+export type PrestadorCreateNestedOneWithoutEncaminhamentosExecutadosInput = {
+  create?: Prisma.XOR<Prisma.PrestadorCreateWithoutEncaminhamentosExecutadosInput, Prisma.PrestadorUncheckedCreateWithoutEncaminhamentosExecutadosInput>
+  connectOrCreate?: Prisma.PrestadorCreateOrConnectWithoutEncaminhamentosExecutadosInput
+  connect?: Prisma.PrestadorWhereUniqueInput
+}
+
+export type PrestadorUpdateOneWithoutEncaminhamentosSolicitadosNestedInput = {
+  create?: Prisma.XOR<Prisma.PrestadorCreateWithoutEncaminhamentosSolicitadosInput, Prisma.PrestadorUncheckedCreateWithoutEncaminhamentosSolicitadosInput>
+  connectOrCreate?: Prisma.PrestadorCreateOrConnectWithoutEncaminhamentosSolicitadosInput
+  upsert?: Prisma.PrestadorUpsertWithoutEncaminhamentosSolicitadosInput
+  disconnect?: Prisma.PrestadorWhereInput | boolean
+  delete?: Prisma.PrestadorWhereInput | boolean
+  connect?: Prisma.PrestadorWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PrestadorUpdateToOneWithWhereWithoutEncaminhamentosSolicitadosInput, Prisma.PrestadorUpdateWithoutEncaminhamentosSolicitadosInput>, Prisma.PrestadorUncheckedUpdateWithoutEncaminhamentosSolicitadosInput>
+}
+
+export type PrestadorUpdateOneWithoutEncaminhamentosExecutadosNestedInput = {
+  create?: Prisma.XOR<Prisma.PrestadorCreateWithoutEncaminhamentosExecutadosInput, Prisma.PrestadorUncheckedCreateWithoutEncaminhamentosExecutadosInput>
+  connectOrCreate?: Prisma.PrestadorCreateOrConnectWithoutEncaminhamentosExecutadosInput
+  upsert?: Prisma.PrestadorUpsertWithoutEncaminhamentosExecutadosInput
+  disconnect?: Prisma.PrestadorWhereInput | boolean
+  delete?: Prisma.PrestadorWhereInput | boolean
+  connect?: Prisma.PrestadorWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PrestadorUpdateToOneWithWhereWithoutEncaminhamentosExecutadosInput, Prisma.PrestadorUpdateWithoutEncaminhamentosExecutadosInput>, Prisma.PrestadorUncheckedUpdateWithoutEncaminhamentosExecutadosInput>
+}
+
+export type PrestadorCreateWithoutLocalInput = {
+  nome: string
+  tipo: $Enums.TipoDoPrestador
+  telefone: string
+  email: string
+  cor: string
+  tipoDeAtendimento?: $Enums.TipoDeAtendimentoDoPrestador
+  ativo?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  especialidades?: Prisma.PrestadorEspecialidadeCreateNestedManyWithoutPrestadorInput
+  procedimentos?: Prisma.PrestadorProcedimentoCreateNestedManyWithoutPrestadorInput
+  agendamentos?: Prisma.AgendamentoDePrestadorCreateNestedManyWithoutPrestadorInput
+  encaminhamentosSolicitados?: Prisma.EncaminhamentoCreateNestedManyWithoutMedicoSolicitanteInput
+  encaminhamentosExecutados?: Prisma.EncaminhamentoCreateNestedManyWithoutPrestadorExecutanteInput
+}
+
+export type PrestadorUncheckedCreateWithoutLocalInput = {
+  id?: number
+  nome: string
+  tipo: $Enums.TipoDoPrestador
+  telefone: string
+  email: string
+  cor: string
+  tipoDeAtendimento?: $Enums.TipoDeAtendimentoDoPrestador
+  ativo?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  especialidades?: Prisma.PrestadorEspecialidadeUncheckedCreateNestedManyWithoutPrestadorInput
+  procedimentos?: Prisma.PrestadorProcedimentoUncheckedCreateNestedManyWithoutPrestadorInput
+  agendamentos?: Prisma.AgendamentoDePrestadorUncheckedCreateNestedManyWithoutPrestadorInput
+  encaminhamentosSolicitados?: Prisma.EncaminhamentoUncheckedCreateNestedManyWithoutMedicoSolicitanteInput
+  encaminhamentosExecutados?: Prisma.EncaminhamentoUncheckedCreateNestedManyWithoutPrestadorExecutanteInput
+}
+
+export type PrestadorCreateOrConnectWithoutLocalInput = {
+  where: Prisma.PrestadorWhereUniqueInput
+  create: Prisma.XOR<Prisma.PrestadorCreateWithoutLocalInput, Prisma.PrestadorUncheckedCreateWithoutLocalInput>
+}
+
+export type PrestadorCreateManyLocalInputEnvelope = {
+  data: Prisma.PrestadorCreateManyLocalInput | Prisma.PrestadorCreateManyLocalInput[]
+  skipDuplicates?: boolean
+}
+
+export type PrestadorUpsertWithWhereUniqueWithoutLocalInput = {
+  where: Prisma.PrestadorWhereUniqueInput
+  update: Prisma.XOR<Prisma.PrestadorUpdateWithoutLocalInput, Prisma.PrestadorUncheckedUpdateWithoutLocalInput>
+  create: Prisma.XOR<Prisma.PrestadorCreateWithoutLocalInput, Prisma.PrestadorUncheckedCreateWithoutLocalInput>
+}
+
+export type PrestadorUpdateWithWhereUniqueWithoutLocalInput = {
+  where: Prisma.PrestadorWhereUniqueInput
+  data: Prisma.XOR<Prisma.PrestadorUpdateWithoutLocalInput, Prisma.PrestadorUncheckedUpdateWithoutLocalInput>
+}
+
+export type PrestadorUpdateManyWithWhereWithoutLocalInput = {
+  where: Prisma.PrestadorScalarWhereInput
+  data: Prisma.XOR<Prisma.PrestadorUpdateManyMutationInput, Prisma.PrestadorUncheckedUpdateManyWithoutLocalInput>
+}
+
+export type PrestadorScalarWhereInput = {
+  AND?: Prisma.PrestadorScalarWhereInput | Prisma.PrestadorScalarWhereInput[]
+  OR?: Prisma.PrestadorScalarWhereInput[]
+  NOT?: Prisma.PrestadorScalarWhereInput | Prisma.PrestadorScalarWhereInput[]
+  id?: Prisma.IntFilter<"Prestador"> | number
+  nome?: Prisma.StringFilter<"Prestador"> | string
+  tipo?: Prisma.EnumTipoDoPrestadorFilter<"Prestador"> | $Enums.TipoDoPrestador
+  telefone?: Prisma.StringFilter<"Prestador"> | string
+  email?: Prisma.StringFilter<"Prestador"> | string
+  cor?: Prisma.StringFilter<"Prestador"> | string
+  tipoDeAtendimento?: Prisma.EnumTipoDeAtendimentoDoPrestadorFilter<"Prestador"> | $Enums.TipoDeAtendimentoDoPrestador
+  localId?: Prisma.IntNullableFilter<"Prestador"> | number | null
+  ativo?: Prisma.BoolFilter<"Prestador"> | boolean
+  createdAt?: Prisma.DateTimeFilter<"Prestador"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Prestador"> | Date | string
+}
+
 export type PrestadorCreateWithoutEspecialidadesInput = {
   nome: string
   tipo: $Enums.TipoDoPrestador
   telefone: string
   email: string
   cor: string
+  tipoDeAtendimento?: $Enums.TipoDeAtendimentoDoPrestador
   ativo?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   procedimentos?: Prisma.PrestadorProcedimentoCreateNestedManyWithoutPrestadorInput
+  local?: Prisma.LocalCreateNestedOneWithoutPrestadoresInput
   agendamentos?: Prisma.AgendamentoDePrestadorCreateNestedManyWithoutPrestadorInput
+  encaminhamentosSolicitados?: Prisma.EncaminhamentoCreateNestedManyWithoutMedicoSolicitanteInput
+  encaminhamentosExecutados?: Prisma.EncaminhamentoCreateNestedManyWithoutPrestadorExecutanteInput
 }
 
 export type PrestadorUncheckedCreateWithoutEspecialidadesInput = {
@@ -526,11 +767,15 @@ export type PrestadorUncheckedCreateWithoutEspecialidadesInput = {
   telefone: string
   email: string
   cor: string
+  tipoDeAtendimento?: $Enums.TipoDeAtendimentoDoPrestador
+  localId?: number | null
   ativo?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   procedimentos?: Prisma.PrestadorProcedimentoUncheckedCreateNestedManyWithoutPrestadorInput
   agendamentos?: Prisma.AgendamentoDePrestadorUncheckedCreateNestedManyWithoutPrestadorInput
+  encaminhamentosSolicitados?: Prisma.EncaminhamentoUncheckedCreateNestedManyWithoutMedicoSolicitanteInput
+  encaminhamentosExecutados?: Prisma.EncaminhamentoUncheckedCreateNestedManyWithoutPrestadorExecutanteInput
 }
 
 export type PrestadorCreateOrConnectWithoutEspecialidadesInput = {
@@ -555,11 +800,15 @@ export type PrestadorUpdateWithoutEspecialidadesInput = {
   telefone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   cor?: Prisma.StringFieldUpdateOperationsInput | string
+  tipoDeAtendimento?: Prisma.EnumTipoDeAtendimentoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDeAtendimentoDoPrestador
   ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   procedimentos?: Prisma.PrestadorProcedimentoUpdateManyWithoutPrestadorNestedInput
+  local?: Prisma.LocalUpdateOneWithoutPrestadoresNestedInput
   agendamentos?: Prisma.AgendamentoDePrestadorUpdateManyWithoutPrestadorNestedInput
+  encaminhamentosSolicitados?: Prisma.EncaminhamentoUpdateManyWithoutMedicoSolicitanteNestedInput
+  encaminhamentosExecutados?: Prisma.EncaminhamentoUpdateManyWithoutPrestadorExecutanteNestedInput
 }
 
 export type PrestadorUncheckedUpdateWithoutEspecialidadesInput = {
@@ -569,11 +818,15 @@ export type PrestadorUncheckedUpdateWithoutEspecialidadesInput = {
   telefone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   cor?: Prisma.StringFieldUpdateOperationsInput | string
+  tipoDeAtendimento?: Prisma.EnumTipoDeAtendimentoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDeAtendimentoDoPrestador
+  localId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   procedimentos?: Prisma.PrestadorProcedimentoUncheckedUpdateManyWithoutPrestadorNestedInput
   agendamentos?: Prisma.AgendamentoDePrestadorUncheckedUpdateManyWithoutPrestadorNestedInput
+  encaminhamentosSolicitados?: Prisma.EncaminhamentoUncheckedUpdateManyWithoutMedicoSolicitanteNestedInput
+  encaminhamentosExecutados?: Prisma.EncaminhamentoUncheckedUpdateManyWithoutPrestadorExecutanteNestedInput
 }
 
 export type PrestadorCreateWithoutProcedimentosInput = {
@@ -582,11 +835,15 @@ export type PrestadorCreateWithoutProcedimentosInput = {
   telefone: string
   email: string
   cor: string
+  tipoDeAtendimento?: $Enums.TipoDeAtendimentoDoPrestador
   ativo?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   especialidades?: Prisma.PrestadorEspecialidadeCreateNestedManyWithoutPrestadorInput
+  local?: Prisma.LocalCreateNestedOneWithoutPrestadoresInput
   agendamentos?: Prisma.AgendamentoDePrestadorCreateNestedManyWithoutPrestadorInput
+  encaminhamentosSolicitados?: Prisma.EncaminhamentoCreateNestedManyWithoutMedicoSolicitanteInput
+  encaminhamentosExecutados?: Prisma.EncaminhamentoCreateNestedManyWithoutPrestadorExecutanteInput
 }
 
 export type PrestadorUncheckedCreateWithoutProcedimentosInput = {
@@ -596,11 +853,15 @@ export type PrestadorUncheckedCreateWithoutProcedimentosInput = {
   telefone: string
   email: string
   cor: string
+  tipoDeAtendimento?: $Enums.TipoDeAtendimentoDoPrestador
+  localId?: number | null
   ativo?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   especialidades?: Prisma.PrestadorEspecialidadeUncheckedCreateNestedManyWithoutPrestadorInput
   agendamentos?: Prisma.AgendamentoDePrestadorUncheckedCreateNestedManyWithoutPrestadorInput
+  encaminhamentosSolicitados?: Prisma.EncaminhamentoUncheckedCreateNestedManyWithoutMedicoSolicitanteInput
+  encaminhamentosExecutados?: Prisma.EncaminhamentoUncheckedCreateNestedManyWithoutPrestadorExecutanteInput
 }
 
 export type PrestadorCreateOrConnectWithoutProcedimentosInput = {
@@ -625,11 +886,15 @@ export type PrestadorUpdateWithoutProcedimentosInput = {
   telefone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   cor?: Prisma.StringFieldUpdateOperationsInput | string
+  tipoDeAtendimento?: Prisma.EnumTipoDeAtendimentoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDeAtendimentoDoPrestador
   ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   especialidades?: Prisma.PrestadorEspecialidadeUpdateManyWithoutPrestadorNestedInput
+  local?: Prisma.LocalUpdateOneWithoutPrestadoresNestedInput
   agendamentos?: Prisma.AgendamentoDePrestadorUpdateManyWithoutPrestadorNestedInput
+  encaminhamentosSolicitados?: Prisma.EncaminhamentoUpdateManyWithoutMedicoSolicitanteNestedInput
+  encaminhamentosExecutados?: Prisma.EncaminhamentoUpdateManyWithoutPrestadorExecutanteNestedInput
 }
 
 export type PrestadorUncheckedUpdateWithoutProcedimentosInput = {
@@ -639,11 +904,15 @@ export type PrestadorUncheckedUpdateWithoutProcedimentosInput = {
   telefone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   cor?: Prisma.StringFieldUpdateOperationsInput | string
+  tipoDeAtendimento?: Prisma.EnumTipoDeAtendimentoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDeAtendimentoDoPrestador
+  localId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   especialidades?: Prisma.PrestadorEspecialidadeUncheckedUpdateManyWithoutPrestadorNestedInput
   agendamentos?: Prisma.AgendamentoDePrestadorUncheckedUpdateManyWithoutPrestadorNestedInput
+  encaminhamentosSolicitados?: Prisma.EncaminhamentoUncheckedUpdateManyWithoutMedicoSolicitanteNestedInput
+  encaminhamentosExecutados?: Prisma.EncaminhamentoUncheckedUpdateManyWithoutPrestadorExecutanteNestedInput
 }
 
 export type PrestadorCreateWithoutAgendamentosInput = {
@@ -652,11 +921,15 @@ export type PrestadorCreateWithoutAgendamentosInput = {
   telefone: string
   email: string
   cor: string
+  tipoDeAtendimento?: $Enums.TipoDeAtendimentoDoPrestador
   ativo?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   especialidades?: Prisma.PrestadorEspecialidadeCreateNestedManyWithoutPrestadorInput
   procedimentos?: Prisma.PrestadorProcedimentoCreateNestedManyWithoutPrestadorInput
+  local?: Prisma.LocalCreateNestedOneWithoutPrestadoresInput
+  encaminhamentosSolicitados?: Prisma.EncaminhamentoCreateNestedManyWithoutMedicoSolicitanteInput
+  encaminhamentosExecutados?: Prisma.EncaminhamentoCreateNestedManyWithoutPrestadorExecutanteInput
 }
 
 export type PrestadorUncheckedCreateWithoutAgendamentosInput = {
@@ -666,11 +939,15 @@ export type PrestadorUncheckedCreateWithoutAgendamentosInput = {
   telefone: string
   email: string
   cor: string
+  tipoDeAtendimento?: $Enums.TipoDeAtendimentoDoPrestador
+  localId?: number | null
   ativo?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   especialidades?: Prisma.PrestadorEspecialidadeUncheckedCreateNestedManyWithoutPrestadorInput
   procedimentos?: Prisma.PrestadorProcedimentoUncheckedCreateNestedManyWithoutPrestadorInput
+  encaminhamentosSolicitados?: Prisma.EncaminhamentoUncheckedCreateNestedManyWithoutMedicoSolicitanteInput
+  encaminhamentosExecutados?: Prisma.EncaminhamentoUncheckedCreateNestedManyWithoutPrestadorExecutanteInput
 }
 
 export type PrestadorCreateOrConnectWithoutAgendamentosInput = {
@@ -695,11 +972,15 @@ export type PrestadorUpdateWithoutAgendamentosInput = {
   telefone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   cor?: Prisma.StringFieldUpdateOperationsInput | string
+  tipoDeAtendimento?: Prisma.EnumTipoDeAtendimentoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDeAtendimentoDoPrestador
   ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   especialidades?: Prisma.PrestadorEspecialidadeUpdateManyWithoutPrestadorNestedInput
   procedimentos?: Prisma.PrestadorProcedimentoUpdateManyWithoutPrestadorNestedInput
+  local?: Prisma.LocalUpdateOneWithoutPrestadoresNestedInput
+  encaminhamentosSolicitados?: Prisma.EncaminhamentoUpdateManyWithoutMedicoSolicitanteNestedInput
+  encaminhamentosExecutados?: Prisma.EncaminhamentoUpdateManyWithoutPrestadorExecutanteNestedInput
 }
 
 export type PrestadorUncheckedUpdateWithoutAgendamentosInput = {
@@ -709,11 +990,248 @@ export type PrestadorUncheckedUpdateWithoutAgendamentosInput = {
   telefone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   cor?: Prisma.StringFieldUpdateOperationsInput | string
+  tipoDeAtendimento?: Prisma.EnumTipoDeAtendimentoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDeAtendimentoDoPrestador
+  localId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   especialidades?: Prisma.PrestadorEspecialidadeUncheckedUpdateManyWithoutPrestadorNestedInput
   procedimentos?: Prisma.PrestadorProcedimentoUncheckedUpdateManyWithoutPrestadorNestedInput
+  encaminhamentosSolicitados?: Prisma.EncaminhamentoUncheckedUpdateManyWithoutMedicoSolicitanteNestedInput
+  encaminhamentosExecutados?: Prisma.EncaminhamentoUncheckedUpdateManyWithoutPrestadorExecutanteNestedInput
+}
+
+export type PrestadorCreateWithoutEncaminhamentosSolicitadosInput = {
+  nome: string
+  tipo: $Enums.TipoDoPrestador
+  telefone: string
+  email: string
+  cor: string
+  tipoDeAtendimento?: $Enums.TipoDeAtendimentoDoPrestador
+  ativo?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  especialidades?: Prisma.PrestadorEspecialidadeCreateNestedManyWithoutPrestadorInput
+  procedimentos?: Prisma.PrestadorProcedimentoCreateNestedManyWithoutPrestadorInput
+  local?: Prisma.LocalCreateNestedOneWithoutPrestadoresInput
+  agendamentos?: Prisma.AgendamentoDePrestadorCreateNestedManyWithoutPrestadorInput
+  encaminhamentosExecutados?: Prisma.EncaminhamentoCreateNestedManyWithoutPrestadorExecutanteInput
+}
+
+export type PrestadorUncheckedCreateWithoutEncaminhamentosSolicitadosInput = {
+  id?: number
+  nome: string
+  tipo: $Enums.TipoDoPrestador
+  telefone: string
+  email: string
+  cor: string
+  tipoDeAtendimento?: $Enums.TipoDeAtendimentoDoPrestador
+  localId?: number | null
+  ativo?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  especialidades?: Prisma.PrestadorEspecialidadeUncheckedCreateNestedManyWithoutPrestadorInput
+  procedimentos?: Prisma.PrestadorProcedimentoUncheckedCreateNestedManyWithoutPrestadorInput
+  agendamentos?: Prisma.AgendamentoDePrestadorUncheckedCreateNestedManyWithoutPrestadorInput
+  encaminhamentosExecutados?: Prisma.EncaminhamentoUncheckedCreateNestedManyWithoutPrestadorExecutanteInput
+}
+
+export type PrestadorCreateOrConnectWithoutEncaminhamentosSolicitadosInput = {
+  where: Prisma.PrestadorWhereUniqueInput
+  create: Prisma.XOR<Prisma.PrestadorCreateWithoutEncaminhamentosSolicitadosInput, Prisma.PrestadorUncheckedCreateWithoutEncaminhamentosSolicitadosInput>
+}
+
+export type PrestadorCreateWithoutEncaminhamentosExecutadosInput = {
+  nome: string
+  tipo: $Enums.TipoDoPrestador
+  telefone: string
+  email: string
+  cor: string
+  tipoDeAtendimento?: $Enums.TipoDeAtendimentoDoPrestador
+  ativo?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  especialidades?: Prisma.PrestadorEspecialidadeCreateNestedManyWithoutPrestadorInput
+  procedimentos?: Prisma.PrestadorProcedimentoCreateNestedManyWithoutPrestadorInput
+  local?: Prisma.LocalCreateNestedOneWithoutPrestadoresInput
+  agendamentos?: Prisma.AgendamentoDePrestadorCreateNestedManyWithoutPrestadorInput
+  encaminhamentosSolicitados?: Prisma.EncaminhamentoCreateNestedManyWithoutMedicoSolicitanteInput
+}
+
+export type PrestadorUncheckedCreateWithoutEncaminhamentosExecutadosInput = {
+  id?: number
+  nome: string
+  tipo: $Enums.TipoDoPrestador
+  telefone: string
+  email: string
+  cor: string
+  tipoDeAtendimento?: $Enums.TipoDeAtendimentoDoPrestador
+  localId?: number | null
+  ativo?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  especialidades?: Prisma.PrestadorEspecialidadeUncheckedCreateNestedManyWithoutPrestadorInput
+  procedimentos?: Prisma.PrestadorProcedimentoUncheckedCreateNestedManyWithoutPrestadorInput
+  agendamentos?: Prisma.AgendamentoDePrestadorUncheckedCreateNestedManyWithoutPrestadorInput
+  encaminhamentosSolicitados?: Prisma.EncaminhamentoUncheckedCreateNestedManyWithoutMedicoSolicitanteInput
+}
+
+export type PrestadorCreateOrConnectWithoutEncaminhamentosExecutadosInput = {
+  where: Prisma.PrestadorWhereUniqueInput
+  create: Prisma.XOR<Prisma.PrestadorCreateWithoutEncaminhamentosExecutadosInput, Prisma.PrestadorUncheckedCreateWithoutEncaminhamentosExecutadosInput>
+}
+
+export type PrestadorUpsertWithoutEncaminhamentosSolicitadosInput = {
+  update: Prisma.XOR<Prisma.PrestadorUpdateWithoutEncaminhamentosSolicitadosInput, Prisma.PrestadorUncheckedUpdateWithoutEncaminhamentosSolicitadosInput>
+  create: Prisma.XOR<Prisma.PrestadorCreateWithoutEncaminhamentosSolicitadosInput, Prisma.PrestadorUncheckedCreateWithoutEncaminhamentosSolicitadosInput>
+  where?: Prisma.PrestadorWhereInput
+}
+
+export type PrestadorUpdateToOneWithWhereWithoutEncaminhamentosSolicitadosInput = {
+  where?: Prisma.PrestadorWhereInput
+  data: Prisma.XOR<Prisma.PrestadorUpdateWithoutEncaminhamentosSolicitadosInput, Prisma.PrestadorUncheckedUpdateWithoutEncaminhamentosSolicitadosInput>
+}
+
+export type PrestadorUpdateWithoutEncaminhamentosSolicitadosInput = {
+  nome?: Prisma.StringFieldUpdateOperationsInput | string
+  tipo?: Prisma.EnumTipoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDoPrestador
+  telefone?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  cor?: Prisma.StringFieldUpdateOperationsInput | string
+  tipoDeAtendimento?: Prisma.EnumTipoDeAtendimentoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDeAtendimentoDoPrestador
+  ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  especialidades?: Prisma.PrestadorEspecialidadeUpdateManyWithoutPrestadorNestedInput
+  procedimentos?: Prisma.PrestadorProcedimentoUpdateManyWithoutPrestadorNestedInput
+  local?: Prisma.LocalUpdateOneWithoutPrestadoresNestedInput
+  agendamentos?: Prisma.AgendamentoDePrestadorUpdateManyWithoutPrestadorNestedInput
+  encaminhamentosExecutados?: Prisma.EncaminhamentoUpdateManyWithoutPrestadorExecutanteNestedInput
+}
+
+export type PrestadorUncheckedUpdateWithoutEncaminhamentosSolicitadosInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  nome?: Prisma.StringFieldUpdateOperationsInput | string
+  tipo?: Prisma.EnumTipoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDoPrestador
+  telefone?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  cor?: Prisma.StringFieldUpdateOperationsInput | string
+  tipoDeAtendimento?: Prisma.EnumTipoDeAtendimentoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDeAtendimentoDoPrestador
+  localId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  especialidades?: Prisma.PrestadorEspecialidadeUncheckedUpdateManyWithoutPrestadorNestedInput
+  procedimentos?: Prisma.PrestadorProcedimentoUncheckedUpdateManyWithoutPrestadorNestedInput
+  agendamentos?: Prisma.AgendamentoDePrestadorUncheckedUpdateManyWithoutPrestadorNestedInput
+  encaminhamentosExecutados?: Prisma.EncaminhamentoUncheckedUpdateManyWithoutPrestadorExecutanteNestedInput
+}
+
+export type PrestadorUpsertWithoutEncaminhamentosExecutadosInput = {
+  update: Prisma.XOR<Prisma.PrestadorUpdateWithoutEncaminhamentosExecutadosInput, Prisma.PrestadorUncheckedUpdateWithoutEncaminhamentosExecutadosInput>
+  create: Prisma.XOR<Prisma.PrestadorCreateWithoutEncaminhamentosExecutadosInput, Prisma.PrestadorUncheckedCreateWithoutEncaminhamentosExecutadosInput>
+  where?: Prisma.PrestadorWhereInput
+}
+
+export type PrestadorUpdateToOneWithWhereWithoutEncaminhamentosExecutadosInput = {
+  where?: Prisma.PrestadorWhereInput
+  data: Prisma.XOR<Prisma.PrestadorUpdateWithoutEncaminhamentosExecutadosInput, Prisma.PrestadorUncheckedUpdateWithoutEncaminhamentosExecutadosInput>
+}
+
+export type PrestadorUpdateWithoutEncaminhamentosExecutadosInput = {
+  nome?: Prisma.StringFieldUpdateOperationsInput | string
+  tipo?: Prisma.EnumTipoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDoPrestador
+  telefone?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  cor?: Prisma.StringFieldUpdateOperationsInput | string
+  tipoDeAtendimento?: Prisma.EnumTipoDeAtendimentoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDeAtendimentoDoPrestador
+  ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  especialidades?: Prisma.PrestadorEspecialidadeUpdateManyWithoutPrestadorNestedInput
+  procedimentos?: Prisma.PrestadorProcedimentoUpdateManyWithoutPrestadorNestedInput
+  local?: Prisma.LocalUpdateOneWithoutPrestadoresNestedInput
+  agendamentos?: Prisma.AgendamentoDePrestadorUpdateManyWithoutPrestadorNestedInput
+  encaminhamentosSolicitados?: Prisma.EncaminhamentoUpdateManyWithoutMedicoSolicitanteNestedInput
+}
+
+export type PrestadorUncheckedUpdateWithoutEncaminhamentosExecutadosInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  nome?: Prisma.StringFieldUpdateOperationsInput | string
+  tipo?: Prisma.EnumTipoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDoPrestador
+  telefone?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  cor?: Prisma.StringFieldUpdateOperationsInput | string
+  tipoDeAtendimento?: Prisma.EnumTipoDeAtendimentoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDeAtendimentoDoPrestador
+  localId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  especialidades?: Prisma.PrestadorEspecialidadeUncheckedUpdateManyWithoutPrestadorNestedInput
+  procedimentos?: Prisma.PrestadorProcedimentoUncheckedUpdateManyWithoutPrestadorNestedInput
+  agendamentos?: Prisma.AgendamentoDePrestadorUncheckedUpdateManyWithoutPrestadorNestedInput
+  encaminhamentosSolicitados?: Prisma.EncaminhamentoUncheckedUpdateManyWithoutMedicoSolicitanteNestedInput
+}
+
+export type PrestadorCreateManyLocalInput = {
+  id?: number
+  nome: string
+  tipo: $Enums.TipoDoPrestador
+  telefone: string
+  email: string
+  cor: string
+  tipoDeAtendimento?: $Enums.TipoDeAtendimentoDoPrestador
+  ativo?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type PrestadorUpdateWithoutLocalInput = {
+  nome?: Prisma.StringFieldUpdateOperationsInput | string
+  tipo?: Prisma.EnumTipoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDoPrestador
+  telefone?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  cor?: Prisma.StringFieldUpdateOperationsInput | string
+  tipoDeAtendimento?: Prisma.EnumTipoDeAtendimentoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDeAtendimentoDoPrestador
+  ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  especialidades?: Prisma.PrestadorEspecialidadeUpdateManyWithoutPrestadorNestedInput
+  procedimentos?: Prisma.PrestadorProcedimentoUpdateManyWithoutPrestadorNestedInput
+  agendamentos?: Prisma.AgendamentoDePrestadorUpdateManyWithoutPrestadorNestedInput
+  encaminhamentosSolicitados?: Prisma.EncaminhamentoUpdateManyWithoutMedicoSolicitanteNestedInput
+  encaminhamentosExecutados?: Prisma.EncaminhamentoUpdateManyWithoutPrestadorExecutanteNestedInput
+}
+
+export type PrestadorUncheckedUpdateWithoutLocalInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  nome?: Prisma.StringFieldUpdateOperationsInput | string
+  tipo?: Prisma.EnumTipoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDoPrestador
+  telefone?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  cor?: Prisma.StringFieldUpdateOperationsInput | string
+  tipoDeAtendimento?: Prisma.EnumTipoDeAtendimentoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDeAtendimentoDoPrestador
+  ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  especialidades?: Prisma.PrestadorEspecialidadeUncheckedUpdateManyWithoutPrestadorNestedInput
+  procedimentos?: Prisma.PrestadorProcedimentoUncheckedUpdateManyWithoutPrestadorNestedInput
+  agendamentos?: Prisma.AgendamentoDePrestadorUncheckedUpdateManyWithoutPrestadorNestedInput
+  encaminhamentosSolicitados?: Prisma.EncaminhamentoUncheckedUpdateManyWithoutMedicoSolicitanteNestedInput
+  encaminhamentosExecutados?: Prisma.EncaminhamentoUncheckedUpdateManyWithoutPrestadorExecutanteNestedInput
+}
+
+export type PrestadorUncheckedUpdateManyWithoutLocalInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  nome?: Prisma.StringFieldUpdateOperationsInput | string
+  tipo?: Prisma.EnumTipoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDoPrestador
+  telefone?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  cor?: Prisma.StringFieldUpdateOperationsInput | string
+  tipoDeAtendimento?: Prisma.EnumTipoDeAtendimentoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDeAtendimentoDoPrestador
+  ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -725,12 +1243,16 @@ export type PrestadorCountOutputType = {
   especialidades: number
   procedimentos: number
   agendamentos: number
+  encaminhamentosSolicitados: number
+  encaminhamentosExecutados: number
 }
 
 export type PrestadorCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   especialidades?: boolean | PrestadorCountOutputTypeCountEspecialidadesArgs
   procedimentos?: boolean | PrestadorCountOutputTypeCountProcedimentosArgs
   agendamentos?: boolean | PrestadorCountOutputTypeCountAgendamentosArgs
+  encaminhamentosSolicitados?: boolean | PrestadorCountOutputTypeCountEncaminhamentosSolicitadosArgs
+  encaminhamentosExecutados?: boolean | PrestadorCountOutputTypeCountEncaminhamentosExecutadosArgs
 }
 
 /**
@@ -764,6 +1286,20 @@ export type PrestadorCountOutputTypeCountAgendamentosArgs<ExtArgs extends runtim
   where?: Prisma.AgendamentoDePrestadorWhereInput
 }
 
+/**
+ * PrestadorCountOutputType without action
+ */
+export type PrestadorCountOutputTypeCountEncaminhamentosSolicitadosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EncaminhamentoWhereInput
+}
+
+/**
+ * PrestadorCountOutputType without action
+ */
+export type PrestadorCountOutputTypeCountEncaminhamentosExecutadosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EncaminhamentoWhereInput
+}
+
 
 export type PrestadorSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -772,12 +1308,17 @@ export type PrestadorSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   telefone?: boolean
   email?: boolean
   cor?: boolean
+  tipoDeAtendimento?: boolean
+  localId?: boolean
   ativo?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   especialidades?: boolean | Prisma.Prestador$especialidadesArgs<ExtArgs>
   procedimentos?: boolean | Prisma.Prestador$procedimentosArgs<ExtArgs>
+  local?: boolean | Prisma.Prestador$localArgs<ExtArgs>
   agendamentos?: boolean | Prisma.Prestador$agendamentosArgs<ExtArgs>
+  encaminhamentosSolicitados?: boolean | Prisma.Prestador$encaminhamentosSolicitadosArgs<ExtArgs>
+  encaminhamentosExecutados?: boolean | Prisma.Prestador$encaminhamentosExecutadosArgs<ExtArgs>
   _count?: boolean | Prisma.PrestadorCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["prestador"]>
 
@@ -788,9 +1329,12 @@ export type PrestadorSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   telefone?: boolean
   email?: boolean
   cor?: boolean
+  tipoDeAtendimento?: boolean
+  localId?: boolean
   ativo?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  local?: boolean | Prisma.Prestador$localArgs<ExtArgs>
 }, ExtArgs["result"]["prestador"]>
 
 export type PrestadorSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -800,9 +1344,12 @@ export type PrestadorSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   telefone?: boolean
   email?: boolean
   cor?: boolean
+  tipoDeAtendimento?: boolean
+  localId?: boolean
   ativo?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  local?: boolean | Prisma.Prestador$localArgs<ExtArgs>
 }, ExtArgs["result"]["prestador"]>
 
 export type PrestadorSelectScalar = {
@@ -812,27 +1359,39 @@ export type PrestadorSelectScalar = {
   telefone?: boolean
   email?: boolean
   cor?: boolean
+  tipoDeAtendimento?: boolean
+  localId?: boolean
   ativo?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type PrestadorOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nome" | "tipo" | "telefone" | "email" | "cor" | "ativo" | "createdAt" | "updatedAt", ExtArgs["result"]["prestador"]>
+export type PrestadorOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nome" | "tipo" | "telefone" | "email" | "cor" | "tipoDeAtendimento" | "localId" | "ativo" | "createdAt" | "updatedAt", ExtArgs["result"]["prestador"]>
 export type PrestadorInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   especialidades?: boolean | Prisma.Prestador$especialidadesArgs<ExtArgs>
   procedimentos?: boolean | Prisma.Prestador$procedimentosArgs<ExtArgs>
+  local?: boolean | Prisma.Prestador$localArgs<ExtArgs>
   agendamentos?: boolean | Prisma.Prestador$agendamentosArgs<ExtArgs>
+  encaminhamentosSolicitados?: boolean | Prisma.Prestador$encaminhamentosSolicitadosArgs<ExtArgs>
+  encaminhamentosExecutados?: boolean | Prisma.Prestador$encaminhamentosExecutadosArgs<ExtArgs>
   _count?: boolean | Prisma.PrestadorCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type PrestadorIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type PrestadorIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type PrestadorIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  local?: boolean | Prisma.Prestador$localArgs<ExtArgs>
+}
+export type PrestadorIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  local?: boolean | Prisma.Prestador$localArgs<ExtArgs>
+}
 
 export type $PrestadorPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Prestador"
   objects: {
     especialidades: Prisma.$PrestadorEspecialidadePayload<ExtArgs>[]
     procedimentos: Prisma.$PrestadorProcedimentoPayload<ExtArgs>[]
+    local: Prisma.$LocalPayload<ExtArgs> | null
     agendamentos: Prisma.$AgendamentoDePrestadorPayload<ExtArgs>[]
+    encaminhamentosSolicitados: Prisma.$EncaminhamentoPayload<ExtArgs>[]
+    encaminhamentosExecutados: Prisma.$EncaminhamentoPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -841,6 +1400,8 @@ export type $PrestadorPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     telefone: string
     email: string
     cor: string
+    tipoDeAtendimento: $Enums.TipoDeAtendimentoDoPrestador
+    localId: number | null
     ativo: boolean
     createdAt: Date
     updatedAt: Date
@@ -1240,7 +1801,10 @@ export interface Prisma__PrestadorClient<T, Null = never, ExtArgs extends runtim
   readonly [Symbol.toStringTag]: "PrismaPromise"
   especialidades<T extends Prisma.Prestador$especialidadesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Prestador$especialidadesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PrestadorEspecialidadePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   procedimentos<T extends Prisma.Prestador$procedimentosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Prestador$procedimentosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PrestadorProcedimentoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  local<T extends Prisma.Prestador$localArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Prestador$localArgs<ExtArgs>>): Prisma.Prisma__LocalClient<runtime.Types.Result.GetResult<Prisma.$LocalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   agendamentos<T extends Prisma.Prestador$agendamentosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Prestador$agendamentosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AgendamentoDePrestadorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  encaminhamentosSolicitados<T extends Prisma.Prestador$encaminhamentosSolicitadosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Prestador$encaminhamentosSolicitadosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EncaminhamentoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  encaminhamentosExecutados<T extends Prisma.Prestador$encaminhamentosExecutadosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Prestador$encaminhamentosExecutadosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EncaminhamentoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1276,6 +1840,8 @@ export interface PrestadorFieldRefs {
   readonly telefone: Prisma.FieldRef<"Prestador", 'String'>
   readonly email: Prisma.FieldRef<"Prestador", 'String'>
   readonly cor: Prisma.FieldRef<"Prestador", 'String'>
+  readonly tipoDeAtendimento: Prisma.FieldRef<"Prestador", 'TipoDeAtendimentoDoPrestador'>
+  readonly localId: Prisma.FieldRef<"Prestador", 'Int'>
   readonly ativo: Prisma.FieldRef<"Prestador", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Prestador", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Prestador", 'DateTime'>
@@ -1533,6 +2099,10 @@ export type PrestadorCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Exten
    */
   data: Prisma.PrestadorCreateManyInput | Prisma.PrestadorCreateManyInput[]
   skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PrestadorIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1603,6 +2173,10 @@ export type PrestadorUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Exten
    * Limit how many Prestadors to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PrestadorIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1720,6 +2294,25 @@ export type Prestador$procedimentosArgs<ExtArgs extends runtime.Types.Extensions
 }
 
 /**
+ * Prestador.local
+ */
+export type Prestador$localArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Local
+   */
+  select?: Prisma.LocalSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Local
+   */
+  omit?: Prisma.LocalOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LocalInclude<ExtArgs> | null
+  where?: Prisma.LocalWhereInput
+}
+
+/**
  * Prestador.agendamentos
  */
 export type Prestador$agendamentosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1741,6 +2334,54 @@ export type Prestador$agendamentosArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   distinct?: Prisma.AgendamentoDePrestadorScalarFieldEnum | Prisma.AgendamentoDePrestadorScalarFieldEnum[]
+}
+
+/**
+ * Prestador.encaminhamentosSolicitados
+ */
+export type Prestador$encaminhamentosSolicitadosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Encaminhamento
+   */
+  select?: Prisma.EncaminhamentoSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Encaminhamento
+   */
+  omit?: Prisma.EncaminhamentoOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EncaminhamentoInclude<ExtArgs> | null
+  where?: Prisma.EncaminhamentoWhereInput
+  orderBy?: Prisma.EncaminhamentoOrderByWithRelationInput | Prisma.EncaminhamentoOrderByWithRelationInput[]
+  cursor?: Prisma.EncaminhamentoWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EncaminhamentoScalarFieldEnum | Prisma.EncaminhamentoScalarFieldEnum[]
+}
+
+/**
+ * Prestador.encaminhamentosExecutados
+ */
+export type Prestador$encaminhamentosExecutadosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Encaminhamento
+   */
+  select?: Prisma.EncaminhamentoSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Encaminhamento
+   */
+  omit?: Prisma.EncaminhamentoOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EncaminhamentoInclude<ExtArgs> | null
+  where?: Prisma.EncaminhamentoWhereInput
+  orderBy?: Prisma.EncaminhamentoOrderByWithRelationInput | Prisma.EncaminhamentoOrderByWithRelationInput[]
+  cursor?: Prisma.EncaminhamentoWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EncaminhamentoScalarFieldEnum | Prisma.EncaminhamentoScalarFieldEnum[]
 }
 
 /**

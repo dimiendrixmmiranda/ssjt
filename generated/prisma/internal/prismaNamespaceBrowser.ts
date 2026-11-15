@@ -53,6 +53,7 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   Usuario: 'Usuario',
   Local: 'Local',
+  TipoDeCirurgia: 'TipoDeCirurgia',
   Especialidade: 'Especialidade',
   Procedimento: 'Procedimento',
   MembroProcedimento: 'MembroProcedimento',
@@ -60,7 +61,8 @@ export const ModelName = {
   PrestadorEspecialidade: 'PrestadorEspecialidade',
   PrestadorProcedimento: 'PrestadorProcedimento',
   AgendamentoDePrestador: 'AgendamentoDePrestador',
-  Paciente: 'Paciente'
+  Paciente: 'Paciente',
+  Encaminhamento: 'Encaminhamento'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -119,6 +121,16 @@ export const LocalScalarFieldEnum = {
 export type LocalScalarFieldEnum = (typeof LocalScalarFieldEnum)[keyof typeof LocalScalarFieldEnum]
 
 
+export const TipoDeCirurgiaScalarFieldEnum = {
+  id: 'id',
+  nome: 'nome',
+  especialidadeId: 'especialidadeId',
+  ativo: 'ativo'
+} as const
+
+export type TipoDeCirurgiaScalarFieldEnum = (typeof TipoDeCirurgiaScalarFieldEnum)[keyof typeof TipoDeCirurgiaScalarFieldEnum]
+
+
 export const EspecialidadeScalarFieldEnum = {
   id: 'id',
   nome: 'nome',
@@ -164,6 +176,8 @@ export const PrestadorScalarFieldEnum = {
   telefone: 'telefone',
   email: 'email',
   cor: 'cor',
+  tipoDeAtendimento: 'tipoDeAtendimento',
+  localId: 'localId',
   ativo: 'ativo',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -279,6 +293,36 @@ export const PacienteScalarFieldEnum = {
 } as const
 
 export type PacienteScalarFieldEnum = (typeof PacienteScalarFieldEnum)[keyof typeof PacienteScalarFieldEnum]
+
+
+export const EncaminhamentoScalarFieldEnum = {
+  id: 'id',
+  tipo: 'tipo',
+  pacienteId: 'pacienteId',
+  unidadeDeOrigemId: 'unidadeDeOrigemId',
+  dataDeEntrada: 'dataDeEntrada',
+  statusDeAgendamento: 'statusDeAgendamento',
+  medicoSolicitanteId: 'medicoSolicitanteId',
+  especialidadeDoPrestadorId: 'especialidadeDoPrestadorId',
+  categoria: 'categoria',
+  tipoDeConsulta: 'tipoDeConsulta',
+  especialidadeEncaminhadaId: 'especialidadeEncaminhadaId',
+  tipoDeCirurgia: 'tipoDeCirurgia',
+  procedimentoId: 'procedimentoId',
+  membroProcedimentoId: 'membroProcedimentoId',
+  lado: 'lado',
+  situacao: 'situacao',
+  encaminhamentoRemarcado: 'encaminhamentoRemarcado',
+  condicaoDeRetorno: 'condicaoDeRetorno',
+  dataDoRetorno: 'dataDoRetorno',
+  dataDeSaida: 'dataDeSaida',
+  dataDeAgendamentoLocal: 'dataDeAgendamentoLocal',
+  prestadorExecutanteId: 'prestadorExecutanteId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EncaminhamentoScalarFieldEnum = (typeof EncaminhamentoScalarFieldEnum)[keyof typeof EncaminhamentoScalarFieldEnum]
 
 
 export const SortOrder = {

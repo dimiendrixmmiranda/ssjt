@@ -8,6 +8,9 @@ export async function GET() {
             orderBy: {
                 nome: "asc",
             },
+            include:{
+                tiposDeCirurgia: true
+            }
         })
 
         return NextResponse.json(especialidades)
@@ -22,14 +25,19 @@ export async function GET() {
     }
 }
 
+
 export async function POST(request: NextRequest) {
     try {
         const dados = await request.json()
 
-        const { nome, codigo, categoria } = dados
+        const { nome, codigo, categoria, tiposDeCirurgia } = dados
 
-        // Validação dos campos
-        if (!nome?.trim() || !codigo?.trim() || !Array.isArray(categoria)) {
+        // Validação dos campos obrigatórios
+        if (
+            !nome?.trim() ||
+            !codigo?.trim() ||
+            !Array.isArray(categoria)
+        ) {
             return NextResponse.json(
                 { erro: "Preencha todos os campos obrigatórios." },
                 { status: 400 }
@@ -50,11 +58,58 @@ export async function POST(request: NextRequest) {
         if (
             categoria.length === 0 ||
             categoria.some(
-                (item: string) => !categoriasValidas.includes(item as CategoriaEspecialidade)
+                (item: string) =>
+                    !categoriasValidas.includes(item as CategoriaEspecialidade)
             )
         ) {
             return NextResponse.json(
                 { erro: "Selecione pelo menos uma categoria válida." },
+                { status: 400 }
+            )
+        }
+
+        // Validação dos tipos de cirurgia
+        if (
+            tiposDeCirurgia !== undefined &&
+            (
+                !Array.isArray(tiposDeCirurgia) ||
+                tiposDeCirurgia.some(
+                    (cirurgia: unknown) =>
+                        typeof cirurgia !== "string" || !cirurgia.trim()
+                )
+            )
+        ) {
+            return NextResponse.json(
+                { erro: "Informe uma lista válida de tipos de cirurgia." },
+                { status: 400 }
+            )
+        }
+
+        const cirurgiasRecebidas: unknown = tiposDeCirurgia ?? []
+
+        if (
+            !Array.isArray(cirurgiasRecebidas) ||
+            cirurgiasRecebidas.some(
+                (cirurgia: unknown) =>
+                    typeof cirurgia !== "string" || !cirurgia.trim()
+            )
+        ) {
+            return NextResponse.json(
+                { erro: "Informe uma lista válida de tipos de cirurgia." },
+                { status: 400 }
+            )
+        }
+
+        const cirurgias = cirurgiasRecebidas as string[]
+
+        // Verifica duplicidade de cirurgias
+        const cirurgiasNormalizadas = cirurgias.map(
+            cirurgia => cirurgia.toLowerCase()
+        )
+
+        if (new Set(cirurgiasNormalizadas).size !== cirurgias.length) {
+            return NextResponse.json(
+                { erro: "Existem tipos de cirurgia duplicados na lista." },
                 { status: 400 }
             )
         }
@@ -87,11 +142,21 @@ export async function POST(request: NextRequest) {
             )
         }
 
+        // Cria a especialidade e suas cirurgias
         const especialidade = await prisma.especialidade.create({
             data: {
                 nome: nome.trim(),
                 codigo: codigo.trim(),
                 categoria,
+
+                tiposDeCirurgia: {
+                    create: cirurgias.map(nome => ({
+                        nome,
+                    })),
+                },
+            },
+            include: {
+                tiposDeCirurgia: true,
             },
         })
 

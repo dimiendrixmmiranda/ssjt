@@ -5,6 +5,8 @@ interface InputCheckboxProps {
     valor: boolean
     setValor: (valor: boolean) => void
     descricao?: string
+    disabled?: boolean;
+
 }
 
 export default function InputCheckbox({
@@ -14,6 +16,7 @@ export default function InputCheckbox({
     valor,
     setValor,
     descricao,
+    disabled
 }: InputCheckboxProps) {
     return (
         <label
@@ -52,6 +55,7 @@ export default function InputCheckbox({
                     name={nome}
                     id={id}
                     checked={valor}
+                    disabled={disabled}
                     onChange={(e) => setValor(e.target.checked)}
                     className="
                         peer

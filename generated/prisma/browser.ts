@@ -28,6 +28,11 @@ export type Usuario = Prisma.UsuarioModel
  */
 export type Local = Prisma.LocalModel
 /**
+ * Model TipoDeCirurgia
+ * 
+ */
+export type TipoDeCirurgia = Prisma.TipoDeCirurgiaModel
+/**
  * Model Especialidade
  * 
  */
@@ -67,3 +72,8 @@ export type AgendamentoDePrestador = Prisma.AgendamentoDePrestadorModel
  * 
  */
 export type Paciente = Prisma.PacienteModel
+/**
+ * Model Encaminhamento
+ * 
+ */
+export type Encaminhamento = Prisma.EncaminhamentoModel

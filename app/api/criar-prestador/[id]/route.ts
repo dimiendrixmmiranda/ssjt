@@ -1,6 +1,6 @@
 
 import { NextResponse } from "next/server"
-import { TipoDoPrestador } from "@/generated/prisma/enums"
+import { TipoDeAtendimentoDoPrestador, TipoDoPrestador } from "@/generated/prisma/enums"
 import { prisma } from "@/lib/prisma"
 
 type Contexto = {
@@ -26,6 +26,8 @@ export async function PATCH(request: Request, { params }: Contexto) {
             cor,
             telefone,
             email,
+            tipoDeAtendimento,
+            localId,
             especialidadesIds = [],
             procedimentosIds = [],
         } = body
@@ -55,6 +57,51 @@ export async function PATCH(request: Request, { params }: Contexto) {
         ) {
             return NextResponse.json(
                 { erro: "Especialidades ou procedimentos inválidos." },
+                { status: 400 }
+            )
+        }
+
+        // Valida o tipo de atendimento
+        if (
+            !Object.values(TipoDeAtendimentoDoPrestador).includes(tipoDeAtendimento)
+        ) {
+            return NextResponse.json(
+                { erro: "Selecione um tipo de atendimento válido." },
+                { status: 400 }
+            )
+        }
+
+        // Converte o local para número ou null
+        const localIdNumerico =
+            localId === null || localId === undefined || localId === ""
+                ? null
+                : Number(localId)
+
+        // ITINERANTE não pode possuir local vinculado
+        if (
+            tipoDeAtendimento === TipoDeAtendimentoDoPrestador.ITINERANTE &&
+            localIdNumerico !== null
+        ) {
+            return NextResponse.json(
+                { erro: "Prestadores itinerantes não devem possuir local vinculado." },
+                { status: 400 }
+            )
+        }
+
+        // EXTERNO e AMBOS precisam possuir local
+        if (
+            (
+                tipoDeAtendimento === TipoDeAtendimentoDoPrestador.EXTERNO ||
+                tipoDeAtendimento === TipoDeAtendimentoDoPrestador.AMBOS
+            ) &&
+            (
+                localIdNumerico === null ||
+                !Number.isInteger(localIdNumerico) ||
+                localIdNumerico <= 0
+            )
+        ) {
+            return NextResponse.json(
+                { erro: "Selecione o local de atendimento do prestador." },
                 { status: 400 }
             )
         }
@@ -154,6 +201,8 @@ export async function PATCH(request: Request, { params }: Contexto) {
                 cor,
                 telefone,
                 email,
+                tipoDeAtendimento,
+                localId: localIdNumerico,
 
                 especialidades: {
                     deleteMany: {},
@@ -174,6 +223,7 @@ export async function PATCH(request: Request, { params }: Contexto) {
                 },
             },
             include: {
+                local: true,
                 especialidades: {
                     include: {
                         especialidade: true,

@@ -229,6 +229,9 @@ export type EspecialidadeWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Especialidade"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Especialidade"> | Date | string
   prestadores?: Prisma.PrestadorEspecialidadeListRelationFilter
+  tiposDeCirurgia?: Prisma.TipoDeCirurgiaListRelationFilter
+  encaminhamentosComoEspecialidadeDoMedico?: Prisma.EncaminhamentoListRelationFilter
+  encaminhamentosComoDestino?: Prisma.EncaminhamentoListRelationFilter
 }
 
 export type EspecialidadeOrderByWithRelationInput = {
@@ -240,6 +243,9 @@ export type EspecialidadeOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   prestadores?: Prisma.PrestadorEspecialidadeOrderByRelationAggregateInput
+  tiposDeCirurgia?: Prisma.TipoDeCirurgiaOrderByRelationAggregateInput
+  encaminhamentosComoEspecialidadeDoMedico?: Prisma.EncaminhamentoOrderByRelationAggregateInput
+  encaminhamentosComoDestino?: Prisma.EncaminhamentoOrderByRelationAggregateInput
 }
 
 export type EspecialidadeWhereUniqueInput = Prisma.AtLeast<{
@@ -254,6 +260,9 @@ export type EspecialidadeWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Especialidade"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Especialidade"> | Date | string
   prestadores?: Prisma.PrestadorEspecialidadeListRelationFilter
+  tiposDeCirurgia?: Prisma.TipoDeCirurgiaListRelationFilter
+  encaminhamentosComoEspecialidadeDoMedico?: Prisma.EncaminhamentoListRelationFilter
+  encaminhamentosComoDestino?: Prisma.EncaminhamentoListRelationFilter
 }, "id" | "nome" | "codigo">
 
 export type EspecialidadeOrderByWithAggregationInput = {
@@ -292,6 +301,9 @@ export type EspecialidadeCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   prestadores?: Prisma.PrestadorEspecialidadeCreateNestedManyWithoutEspecialidadeInput
+  tiposDeCirurgia?: Prisma.TipoDeCirurgiaCreateNestedManyWithoutEspecialidadeInput
+  encaminhamentosComoEspecialidadeDoMedico?: Prisma.EncaminhamentoCreateNestedManyWithoutEspecialidadeDoPrestadorInput
+  encaminhamentosComoDestino?: Prisma.EncaminhamentoCreateNestedManyWithoutEspecialidadeEncaminhadaInput
 }
 
 export type EspecialidadeUncheckedCreateInput = {
@@ -303,6 +315,9 @@ export type EspecialidadeUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   prestadores?: Prisma.PrestadorEspecialidadeUncheckedCreateNestedManyWithoutEspecialidadeInput
+  tiposDeCirurgia?: Prisma.TipoDeCirurgiaUncheckedCreateNestedManyWithoutEspecialidadeInput
+  encaminhamentosComoEspecialidadeDoMedico?: Prisma.EncaminhamentoUncheckedCreateNestedManyWithoutEspecialidadeDoPrestadorInput
+  encaminhamentosComoDestino?: Prisma.EncaminhamentoUncheckedCreateNestedManyWithoutEspecialidadeEncaminhadaInput
 }
 
 export type EspecialidadeUpdateInput = {
@@ -313,6 +328,9 @@ export type EspecialidadeUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   prestadores?: Prisma.PrestadorEspecialidadeUpdateManyWithoutEspecialidadeNestedInput
+  tiposDeCirurgia?: Prisma.TipoDeCirurgiaUpdateManyWithoutEspecialidadeNestedInput
+  encaminhamentosComoEspecialidadeDoMedico?: Prisma.EncaminhamentoUpdateManyWithoutEspecialidadeDoPrestadorNestedInput
+  encaminhamentosComoDestino?: Prisma.EncaminhamentoUpdateManyWithoutEspecialidadeEncaminhadaNestedInput
 }
 
 export type EspecialidadeUncheckedUpdateInput = {
@@ -324,6 +342,9 @@ export type EspecialidadeUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   prestadores?: Prisma.PrestadorEspecialidadeUncheckedUpdateManyWithoutEspecialidadeNestedInput
+  tiposDeCirurgia?: Prisma.TipoDeCirurgiaUncheckedUpdateManyWithoutEspecialidadeNestedInput
+  encaminhamentosComoEspecialidadeDoMedico?: Prisma.EncaminhamentoUncheckedUpdateManyWithoutEspecialidadeDoPrestadorNestedInput
+  encaminhamentosComoDestino?: Prisma.EncaminhamentoUncheckedUpdateManyWithoutEspecialidadeEncaminhadaNestedInput
 }
 
 export type EspecialidadeCreateManyInput = {
@@ -353,6 +374,11 @@ export type EspecialidadeUncheckedUpdateManyInput = {
   ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type EspecialidadeScalarRelationFilter = {
+  is?: Prisma.EspecialidadeWhereInput
+  isNot?: Prisma.EspecialidadeWhereInput
 }
 
 export type EnumCategoriaEspecialidadeNullableListFilter<$PrismaModel = never> = {
@@ -399,9 +425,23 @@ export type EspecialidadeSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
 }
 
-export type EspecialidadeScalarRelationFilter = {
-  is?: Prisma.EspecialidadeWhereInput
-  isNot?: Prisma.EspecialidadeWhereInput
+export type EspecialidadeNullableScalarRelationFilter = {
+  is?: Prisma.EspecialidadeWhereInput | null
+  isNot?: Prisma.EspecialidadeWhereInput | null
+}
+
+export type EspecialidadeCreateNestedOneWithoutTiposDeCirurgiaInput = {
+  create?: Prisma.XOR<Prisma.EspecialidadeCreateWithoutTiposDeCirurgiaInput, Prisma.EspecialidadeUncheckedCreateWithoutTiposDeCirurgiaInput>
+  connectOrCreate?: Prisma.EspecialidadeCreateOrConnectWithoutTiposDeCirurgiaInput
+  connect?: Prisma.EspecialidadeWhereUniqueInput
+}
+
+export type EspecialidadeUpdateOneRequiredWithoutTiposDeCirurgiaNestedInput = {
+  create?: Prisma.XOR<Prisma.EspecialidadeCreateWithoutTiposDeCirurgiaInput, Prisma.EspecialidadeUncheckedCreateWithoutTiposDeCirurgiaInput>
+  connectOrCreate?: Prisma.EspecialidadeCreateOrConnectWithoutTiposDeCirurgiaInput
+  upsert?: Prisma.EspecialidadeUpsertWithoutTiposDeCirurgiaInput
+  connect?: Prisma.EspecialidadeWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EspecialidadeUpdateToOneWithWhereWithoutTiposDeCirurgiaInput, Prisma.EspecialidadeUpdateWithoutTiposDeCirurgiaInput>, Prisma.EspecialidadeUncheckedUpdateWithoutTiposDeCirurgiaInput>
 }
 
 export type EspecialidadeCreatecategoriaInput = {
@@ -427,6 +467,104 @@ export type EspecialidadeUpdateOneRequiredWithoutPrestadoresNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.EspecialidadeUpdateToOneWithWhereWithoutPrestadoresInput, Prisma.EspecialidadeUpdateWithoutPrestadoresInput>, Prisma.EspecialidadeUncheckedUpdateWithoutPrestadoresInput>
 }
 
+export type EspecialidadeCreateNestedOneWithoutEncaminhamentosComoEspecialidadeDoMedicoInput = {
+  create?: Prisma.XOR<Prisma.EspecialidadeCreateWithoutEncaminhamentosComoEspecialidadeDoMedicoInput, Prisma.EspecialidadeUncheckedCreateWithoutEncaminhamentosComoEspecialidadeDoMedicoInput>
+  connectOrCreate?: Prisma.EspecialidadeCreateOrConnectWithoutEncaminhamentosComoEspecialidadeDoMedicoInput
+  connect?: Prisma.EspecialidadeWhereUniqueInput
+}
+
+export type EspecialidadeCreateNestedOneWithoutEncaminhamentosComoDestinoInput = {
+  create?: Prisma.XOR<Prisma.EspecialidadeCreateWithoutEncaminhamentosComoDestinoInput, Prisma.EspecialidadeUncheckedCreateWithoutEncaminhamentosComoDestinoInput>
+  connectOrCreate?: Prisma.EspecialidadeCreateOrConnectWithoutEncaminhamentosComoDestinoInput
+  connect?: Prisma.EspecialidadeWhereUniqueInput
+}
+
+export type EspecialidadeUpdateOneWithoutEncaminhamentosComoEspecialidadeDoMedicoNestedInput = {
+  create?: Prisma.XOR<Prisma.EspecialidadeCreateWithoutEncaminhamentosComoEspecialidadeDoMedicoInput, Prisma.EspecialidadeUncheckedCreateWithoutEncaminhamentosComoEspecialidadeDoMedicoInput>
+  connectOrCreate?: Prisma.EspecialidadeCreateOrConnectWithoutEncaminhamentosComoEspecialidadeDoMedicoInput
+  upsert?: Prisma.EspecialidadeUpsertWithoutEncaminhamentosComoEspecialidadeDoMedicoInput
+  disconnect?: Prisma.EspecialidadeWhereInput | boolean
+  delete?: Prisma.EspecialidadeWhereInput | boolean
+  connect?: Prisma.EspecialidadeWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EspecialidadeUpdateToOneWithWhereWithoutEncaminhamentosComoEspecialidadeDoMedicoInput, Prisma.EspecialidadeUpdateWithoutEncaminhamentosComoEspecialidadeDoMedicoInput>, Prisma.EspecialidadeUncheckedUpdateWithoutEncaminhamentosComoEspecialidadeDoMedicoInput>
+}
+
+export type EspecialidadeUpdateOneWithoutEncaminhamentosComoDestinoNestedInput = {
+  create?: Prisma.XOR<Prisma.EspecialidadeCreateWithoutEncaminhamentosComoDestinoInput, Prisma.EspecialidadeUncheckedCreateWithoutEncaminhamentosComoDestinoInput>
+  connectOrCreate?: Prisma.EspecialidadeCreateOrConnectWithoutEncaminhamentosComoDestinoInput
+  upsert?: Prisma.EspecialidadeUpsertWithoutEncaminhamentosComoDestinoInput
+  disconnect?: Prisma.EspecialidadeWhereInput | boolean
+  delete?: Prisma.EspecialidadeWhereInput | boolean
+  connect?: Prisma.EspecialidadeWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EspecialidadeUpdateToOneWithWhereWithoutEncaminhamentosComoDestinoInput, Prisma.EspecialidadeUpdateWithoutEncaminhamentosComoDestinoInput>, Prisma.EspecialidadeUncheckedUpdateWithoutEncaminhamentosComoDestinoInput>
+}
+
+export type EspecialidadeCreateWithoutTiposDeCirurgiaInput = {
+  nome: string
+  codigo: string
+  categoria?: Prisma.EspecialidadeCreatecategoriaInput | $Enums.CategoriaEspecialidade[]
+  ativo?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  prestadores?: Prisma.PrestadorEspecialidadeCreateNestedManyWithoutEspecialidadeInput
+  encaminhamentosComoEspecialidadeDoMedico?: Prisma.EncaminhamentoCreateNestedManyWithoutEspecialidadeDoPrestadorInput
+  encaminhamentosComoDestino?: Prisma.EncaminhamentoCreateNestedManyWithoutEspecialidadeEncaminhadaInput
+}
+
+export type EspecialidadeUncheckedCreateWithoutTiposDeCirurgiaInput = {
+  id?: number
+  nome: string
+  codigo: string
+  categoria?: Prisma.EspecialidadeCreatecategoriaInput | $Enums.CategoriaEspecialidade[]
+  ativo?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  prestadores?: Prisma.PrestadorEspecialidadeUncheckedCreateNestedManyWithoutEspecialidadeInput
+  encaminhamentosComoEspecialidadeDoMedico?: Prisma.EncaminhamentoUncheckedCreateNestedManyWithoutEspecialidadeDoPrestadorInput
+  encaminhamentosComoDestino?: Prisma.EncaminhamentoUncheckedCreateNestedManyWithoutEspecialidadeEncaminhadaInput
+}
+
+export type EspecialidadeCreateOrConnectWithoutTiposDeCirurgiaInput = {
+  where: Prisma.EspecialidadeWhereUniqueInput
+  create: Prisma.XOR<Prisma.EspecialidadeCreateWithoutTiposDeCirurgiaInput, Prisma.EspecialidadeUncheckedCreateWithoutTiposDeCirurgiaInput>
+}
+
+export type EspecialidadeUpsertWithoutTiposDeCirurgiaInput = {
+  update: Prisma.XOR<Prisma.EspecialidadeUpdateWithoutTiposDeCirurgiaInput, Prisma.EspecialidadeUncheckedUpdateWithoutTiposDeCirurgiaInput>
+  create: Prisma.XOR<Prisma.EspecialidadeCreateWithoutTiposDeCirurgiaInput, Prisma.EspecialidadeUncheckedCreateWithoutTiposDeCirurgiaInput>
+  where?: Prisma.EspecialidadeWhereInput
+}
+
+export type EspecialidadeUpdateToOneWithWhereWithoutTiposDeCirurgiaInput = {
+  where?: Prisma.EspecialidadeWhereInput
+  data: Prisma.XOR<Prisma.EspecialidadeUpdateWithoutTiposDeCirurgiaInput, Prisma.EspecialidadeUncheckedUpdateWithoutTiposDeCirurgiaInput>
+}
+
+export type EspecialidadeUpdateWithoutTiposDeCirurgiaInput = {
+  nome?: Prisma.StringFieldUpdateOperationsInput | string
+  codigo?: Prisma.StringFieldUpdateOperationsInput | string
+  categoria?: Prisma.EspecialidadeUpdatecategoriaInput | $Enums.CategoriaEspecialidade[]
+  ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  prestadores?: Prisma.PrestadorEspecialidadeUpdateManyWithoutEspecialidadeNestedInput
+  encaminhamentosComoEspecialidadeDoMedico?: Prisma.EncaminhamentoUpdateManyWithoutEspecialidadeDoPrestadorNestedInput
+  encaminhamentosComoDestino?: Prisma.EncaminhamentoUpdateManyWithoutEspecialidadeEncaminhadaNestedInput
+}
+
+export type EspecialidadeUncheckedUpdateWithoutTiposDeCirurgiaInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  nome?: Prisma.StringFieldUpdateOperationsInput | string
+  codigo?: Prisma.StringFieldUpdateOperationsInput | string
+  categoria?: Prisma.EspecialidadeUpdatecategoriaInput | $Enums.CategoriaEspecialidade[]
+  ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  prestadores?: Prisma.PrestadorEspecialidadeUncheckedUpdateManyWithoutEspecialidadeNestedInput
+  encaminhamentosComoEspecialidadeDoMedico?: Prisma.EncaminhamentoUncheckedUpdateManyWithoutEspecialidadeDoPrestadorNestedInput
+  encaminhamentosComoDestino?: Prisma.EncaminhamentoUncheckedUpdateManyWithoutEspecialidadeEncaminhadaNestedInput
+}
+
 export type EspecialidadeCreateWithoutPrestadoresInput = {
   nome: string
   codigo: string
@@ -434,6 +572,9 @@ export type EspecialidadeCreateWithoutPrestadoresInput = {
   ativo?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  tiposDeCirurgia?: Prisma.TipoDeCirurgiaCreateNestedManyWithoutEspecialidadeInput
+  encaminhamentosComoEspecialidadeDoMedico?: Prisma.EncaminhamentoCreateNestedManyWithoutEspecialidadeDoPrestadorInput
+  encaminhamentosComoDestino?: Prisma.EncaminhamentoCreateNestedManyWithoutEspecialidadeEncaminhadaInput
 }
 
 export type EspecialidadeUncheckedCreateWithoutPrestadoresInput = {
@@ -444,6 +585,9 @@ export type EspecialidadeUncheckedCreateWithoutPrestadoresInput = {
   ativo?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  tiposDeCirurgia?: Prisma.TipoDeCirurgiaUncheckedCreateNestedManyWithoutEspecialidadeInput
+  encaminhamentosComoEspecialidadeDoMedico?: Prisma.EncaminhamentoUncheckedCreateNestedManyWithoutEspecialidadeDoPrestadorInput
+  encaminhamentosComoDestino?: Prisma.EncaminhamentoUncheckedCreateNestedManyWithoutEspecialidadeEncaminhadaInput
 }
 
 export type EspecialidadeCreateOrConnectWithoutPrestadoresInput = {
@@ -469,6 +613,9 @@ export type EspecialidadeUpdateWithoutPrestadoresInput = {
   ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tiposDeCirurgia?: Prisma.TipoDeCirurgiaUpdateManyWithoutEspecialidadeNestedInput
+  encaminhamentosComoEspecialidadeDoMedico?: Prisma.EncaminhamentoUpdateManyWithoutEspecialidadeDoPrestadorNestedInput
+  encaminhamentosComoDestino?: Prisma.EncaminhamentoUpdateManyWithoutEspecialidadeEncaminhadaNestedInput
 }
 
 export type EspecialidadeUncheckedUpdateWithoutPrestadoresInput = {
@@ -479,6 +626,141 @@ export type EspecialidadeUncheckedUpdateWithoutPrestadoresInput = {
   ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tiposDeCirurgia?: Prisma.TipoDeCirurgiaUncheckedUpdateManyWithoutEspecialidadeNestedInput
+  encaminhamentosComoEspecialidadeDoMedico?: Prisma.EncaminhamentoUncheckedUpdateManyWithoutEspecialidadeDoPrestadorNestedInput
+  encaminhamentosComoDestino?: Prisma.EncaminhamentoUncheckedUpdateManyWithoutEspecialidadeEncaminhadaNestedInput
+}
+
+export type EspecialidadeCreateWithoutEncaminhamentosComoEspecialidadeDoMedicoInput = {
+  nome: string
+  codigo: string
+  categoria?: Prisma.EspecialidadeCreatecategoriaInput | $Enums.CategoriaEspecialidade[]
+  ativo?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  prestadores?: Prisma.PrestadorEspecialidadeCreateNestedManyWithoutEspecialidadeInput
+  tiposDeCirurgia?: Prisma.TipoDeCirurgiaCreateNestedManyWithoutEspecialidadeInput
+  encaminhamentosComoDestino?: Prisma.EncaminhamentoCreateNestedManyWithoutEspecialidadeEncaminhadaInput
+}
+
+export type EspecialidadeUncheckedCreateWithoutEncaminhamentosComoEspecialidadeDoMedicoInput = {
+  id?: number
+  nome: string
+  codigo: string
+  categoria?: Prisma.EspecialidadeCreatecategoriaInput | $Enums.CategoriaEspecialidade[]
+  ativo?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  prestadores?: Prisma.PrestadorEspecialidadeUncheckedCreateNestedManyWithoutEspecialidadeInput
+  tiposDeCirurgia?: Prisma.TipoDeCirurgiaUncheckedCreateNestedManyWithoutEspecialidadeInput
+  encaminhamentosComoDestino?: Prisma.EncaminhamentoUncheckedCreateNestedManyWithoutEspecialidadeEncaminhadaInput
+}
+
+export type EspecialidadeCreateOrConnectWithoutEncaminhamentosComoEspecialidadeDoMedicoInput = {
+  where: Prisma.EspecialidadeWhereUniqueInput
+  create: Prisma.XOR<Prisma.EspecialidadeCreateWithoutEncaminhamentosComoEspecialidadeDoMedicoInput, Prisma.EspecialidadeUncheckedCreateWithoutEncaminhamentosComoEspecialidadeDoMedicoInput>
+}
+
+export type EspecialidadeCreateWithoutEncaminhamentosComoDestinoInput = {
+  nome: string
+  codigo: string
+  categoria?: Prisma.EspecialidadeCreatecategoriaInput | $Enums.CategoriaEspecialidade[]
+  ativo?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  prestadores?: Prisma.PrestadorEspecialidadeCreateNestedManyWithoutEspecialidadeInput
+  tiposDeCirurgia?: Prisma.TipoDeCirurgiaCreateNestedManyWithoutEspecialidadeInput
+  encaminhamentosComoEspecialidadeDoMedico?: Prisma.EncaminhamentoCreateNestedManyWithoutEspecialidadeDoPrestadorInput
+}
+
+export type EspecialidadeUncheckedCreateWithoutEncaminhamentosComoDestinoInput = {
+  id?: number
+  nome: string
+  codigo: string
+  categoria?: Prisma.EspecialidadeCreatecategoriaInput | $Enums.CategoriaEspecialidade[]
+  ativo?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  prestadores?: Prisma.PrestadorEspecialidadeUncheckedCreateNestedManyWithoutEspecialidadeInput
+  tiposDeCirurgia?: Prisma.TipoDeCirurgiaUncheckedCreateNestedManyWithoutEspecialidadeInput
+  encaminhamentosComoEspecialidadeDoMedico?: Prisma.EncaminhamentoUncheckedCreateNestedManyWithoutEspecialidadeDoPrestadorInput
+}
+
+export type EspecialidadeCreateOrConnectWithoutEncaminhamentosComoDestinoInput = {
+  where: Prisma.EspecialidadeWhereUniqueInput
+  create: Prisma.XOR<Prisma.EspecialidadeCreateWithoutEncaminhamentosComoDestinoInput, Prisma.EspecialidadeUncheckedCreateWithoutEncaminhamentosComoDestinoInput>
+}
+
+export type EspecialidadeUpsertWithoutEncaminhamentosComoEspecialidadeDoMedicoInput = {
+  update: Prisma.XOR<Prisma.EspecialidadeUpdateWithoutEncaminhamentosComoEspecialidadeDoMedicoInput, Prisma.EspecialidadeUncheckedUpdateWithoutEncaminhamentosComoEspecialidadeDoMedicoInput>
+  create: Prisma.XOR<Prisma.EspecialidadeCreateWithoutEncaminhamentosComoEspecialidadeDoMedicoInput, Prisma.EspecialidadeUncheckedCreateWithoutEncaminhamentosComoEspecialidadeDoMedicoInput>
+  where?: Prisma.EspecialidadeWhereInput
+}
+
+export type EspecialidadeUpdateToOneWithWhereWithoutEncaminhamentosComoEspecialidadeDoMedicoInput = {
+  where?: Prisma.EspecialidadeWhereInput
+  data: Prisma.XOR<Prisma.EspecialidadeUpdateWithoutEncaminhamentosComoEspecialidadeDoMedicoInput, Prisma.EspecialidadeUncheckedUpdateWithoutEncaminhamentosComoEspecialidadeDoMedicoInput>
+}
+
+export type EspecialidadeUpdateWithoutEncaminhamentosComoEspecialidadeDoMedicoInput = {
+  nome?: Prisma.StringFieldUpdateOperationsInput | string
+  codigo?: Prisma.StringFieldUpdateOperationsInput | string
+  categoria?: Prisma.EspecialidadeUpdatecategoriaInput | $Enums.CategoriaEspecialidade[]
+  ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  prestadores?: Prisma.PrestadorEspecialidadeUpdateManyWithoutEspecialidadeNestedInput
+  tiposDeCirurgia?: Prisma.TipoDeCirurgiaUpdateManyWithoutEspecialidadeNestedInput
+  encaminhamentosComoDestino?: Prisma.EncaminhamentoUpdateManyWithoutEspecialidadeEncaminhadaNestedInput
+}
+
+export type EspecialidadeUncheckedUpdateWithoutEncaminhamentosComoEspecialidadeDoMedicoInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  nome?: Prisma.StringFieldUpdateOperationsInput | string
+  codigo?: Prisma.StringFieldUpdateOperationsInput | string
+  categoria?: Prisma.EspecialidadeUpdatecategoriaInput | $Enums.CategoriaEspecialidade[]
+  ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  prestadores?: Prisma.PrestadorEspecialidadeUncheckedUpdateManyWithoutEspecialidadeNestedInput
+  tiposDeCirurgia?: Prisma.TipoDeCirurgiaUncheckedUpdateManyWithoutEspecialidadeNestedInput
+  encaminhamentosComoDestino?: Prisma.EncaminhamentoUncheckedUpdateManyWithoutEspecialidadeEncaminhadaNestedInput
+}
+
+export type EspecialidadeUpsertWithoutEncaminhamentosComoDestinoInput = {
+  update: Prisma.XOR<Prisma.EspecialidadeUpdateWithoutEncaminhamentosComoDestinoInput, Prisma.EspecialidadeUncheckedUpdateWithoutEncaminhamentosComoDestinoInput>
+  create: Prisma.XOR<Prisma.EspecialidadeCreateWithoutEncaminhamentosComoDestinoInput, Prisma.EspecialidadeUncheckedCreateWithoutEncaminhamentosComoDestinoInput>
+  where?: Prisma.EspecialidadeWhereInput
+}
+
+export type EspecialidadeUpdateToOneWithWhereWithoutEncaminhamentosComoDestinoInput = {
+  where?: Prisma.EspecialidadeWhereInput
+  data: Prisma.XOR<Prisma.EspecialidadeUpdateWithoutEncaminhamentosComoDestinoInput, Prisma.EspecialidadeUncheckedUpdateWithoutEncaminhamentosComoDestinoInput>
+}
+
+export type EspecialidadeUpdateWithoutEncaminhamentosComoDestinoInput = {
+  nome?: Prisma.StringFieldUpdateOperationsInput | string
+  codigo?: Prisma.StringFieldUpdateOperationsInput | string
+  categoria?: Prisma.EspecialidadeUpdatecategoriaInput | $Enums.CategoriaEspecialidade[]
+  ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  prestadores?: Prisma.PrestadorEspecialidadeUpdateManyWithoutEspecialidadeNestedInput
+  tiposDeCirurgia?: Prisma.TipoDeCirurgiaUpdateManyWithoutEspecialidadeNestedInput
+  encaminhamentosComoEspecialidadeDoMedico?: Prisma.EncaminhamentoUpdateManyWithoutEspecialidadeDoPrestadorNestedInput
+}
+
+export type EspecialidadeUncheckedUpdateWithoutEncaminhamentosComoDestinoInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  nome?: Prisma.StringFieldUpdateOperationsInput | string
+  codigo?: Prisma.StringFieldUpdateOperationsInput | string
+  categoria?: Prisma.EspecialidadeUpdatecategoriaInput | $Enums.CategoriaEspecialidade[]
+  ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  prestadores?: Prisma.PrestadorEspecialidadeUncheckedUpdateManyWithoutEspecialidadeNestedInput
+  tiposDeCirurgia?: Prisma.TipoDeCirurgiaUncheckedUpdateManyWithoutEspecialidadeNestedInput
+  encaminhamentosComoEspecialidadeDoMedico?: Prisma.EncaminhamentoUncheckedUpdateManyWithoutEspecialidadeDoPrestadorNestedInput
 }
 
 
@@ -488,10 +770,16 @@ export type EspecialidadeUncheckedUpdateWithoutPrestadoresInput = {
 
 export type EspecialidadeCountOutputType = {
   prestadores: number
+  tiposDeCirurgia: number
+  encaminhamentosComoEspecialidadeDoMedico: number
+  encaminhamentosComoDestino: number
 }
 
 export type EspecialidadeCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   prestadores?: boolean | EspecialidadeCountOutputTypeCountPrestadoresArgs
+  tiposDeCirurgia?: boolean | EspecialidadeCountOutputTypeCountTiposDeCirurgiaArgs
+  encaminhamentosComoEspecialidadeDoMedico?: boolean | EspecialidadeCountOutputTypeCountEncaminhamentosComoEspecialidadeDoMedicoArgs
+  encaminhamentosComoDestino?: boolean | EspecialidadeCountOutputTypeCountEncaminhamentosComoDestinoArgs
 }
 
 /**
@@ -511,6 +799,27 @@ export type EspecialidadeCountOutputTypeCountPrestadoresArgs<ExtArgs extends run
   where?: Prisma.PrestadorEspecialidadeWhereInput
 }
 
+/**
+ * EspecialidadeCountOutputType without action
+ */
+export type EspecialidadeCountOutputTypeCountTiposDeCirurgiaArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TipoDeCirurgiaWhereInput
+}
+
+/**
+ * EspecialidadeCountOutputType without action
+ */
+export type EspecialidadeCountOutputTypeCountEncaminhamentosComoEspecialidadeDoMedicoArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EncaminhamentoWhereInput
+}
+
+/**
+ * EspecialidadeCountOutputType without action
+ */
+export type EspecialidadeCountOutputTypeCountEncaminhamentosComoDestinoArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EncaminhamentoWhereInput
+}
+
 
 export type EspecialidadeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -521,6 +830,9 @@ export type EspecialidadeSelect<ExtArgs extends runtime.Types.Extensions.Interna
   createdAt?: boolean
   updatedAt?: boolean
   prestadores?: boolean | Prisma.Especialidade$prestadoresArgs<ExtArgs>
+  tiposDeCirurgia?: boolean | Prisma.Especialidade$tiposDeCirurgiaArgs<ExtArgs>
+  encaminhamentosComoEspecialidadeDoMedico?: boolean | Prisma.Especialidade$encaminhamentosComoEspecialidadeDoMedicoArgs<ExtArgs>
+  encaminhamentosComoDestino?: boolean | Prisma.Especialidade$encaminhamentosComoDestinoArgs<ExtArgs>
   _count?: boolean | Prisma.EspecialidadeCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["especialidade"]>
 
@@ -557,6 +869,9 @@ export type EspecialidadeSelectScalar = {
 export type EspecialidadeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nome" | "codigo" | "categoria" | "ativo" | "createdAt" | "updatedAt", ExtArgs["result"]["especialidade"]>
 export type EspecialidadeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   prestadores?: boolean | Prisma.Especialidade$prestadoresArgs<ExtArgs>
+  tiposDeCirurgia?: boolean | Prisma.Especialidade$tiposDeCirurgiaArgs<ExtArgs>
+  encaminhamentosComoEspecialidadeDoMedico?: boolean | Prisma.Especialidade$encaminhamentosComoEspecialidadeDoMedicoArgs<ExtArgs>
+  encaminhamentosComoDestino?: boolean | Prisma.Especialidade$encaminhamentosComoDestinoArgs<ExtArgs>
   _count?: boolean | Prisma.EspecialidadeCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type EspecialidadeIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -566,6 +881,9 @@ export type $EspecialidadePayload<ExtArgs extends runtime.Types.Extensions.Inter
   name: "Especialidade"
   objects: {
     prestadores: Prisma.$PrestadorEspecialidadePayload<ExtArgs>[]
+    tiposDeCirurgia: Prisma.$TipoDeCirurgiaPayload<ExtArgs>[]
+    encaminhamentosComoEspecialidadeDoMedico: Prisma.$EncaminhamentoPayload<ExtArgs>[]
+    encaminhamentosComoDestino: Prisma.$EncaminhamentoPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -970,6 +1288,9 @@ readonly fields: EspecialidadeFieldRefs;
 export interface Prisma__EspecialidadeClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   prestadores<T extends Prisma.Especialidade$prestadoresArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Especialidade$prestadoresArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PrestadorEspecialidadePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  tiposDeCirurgia<T extends Prisma.Especialidade$tiposDeCirurgiaArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Especialidade$tiposDeCirurgiaArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TipoDeCirurgiaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  encaminhamentosComoEspecialidadeDoMedico<T extends Prisma.Especialidade$encaminhamentosComoEspecialidadeDoMedicoArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Especialidade$encaminhamentosComoEspecialidadeDoMedicoArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EncaminhamentoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  encaminhamentosComoDestino<T extends Prisma.Especialidade$encaminhamentosComoDestinoArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Especialidade$encaminhamentosComoDestinoArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EncaminhamentoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1420,6 +1741,78 @@ export type Especialidade$prestadoresArgs<ExtArgs extends runtime.Types.Extensio
   take?: number
   skip?: number
   distinct?: Prisma.PrestadorEspecialidadeScalarFieldEnum | Prisma.PrestadorEspecialidadeScalarFieldEnum[]
+}
+
+/**
+ * Especialidade.tiposDeCirurgia
+ */
+export type Especialidade$tiposDeCirurgiaArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TipoDeCirurgia
+   */
+  select?: Prisma.TipoDeCirurgiaSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TipoDeCirurgia
+   */
+  omit?: Prisma.TipoDeCirurgiaOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TipoDeCirurgiaInclude<ExtArgs> | null
+  where?: Prisma.TipoDeCirurgiaWhereInput
+  orderBy?: Prisma.TipoDeCirurgiaOrderByWithRelationInput | Prisma.TipoDeCirurgiaOrderByWithRelationInput[]
+  cursor?: Prisma.TipoDeCirurgiaWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TipoDeCirurgiaScalarFieldEnum | Prisma.TipoDeCirurgiaScalarFieldEnum[]
+}
+
+/**
+ * Especialidade.encaminhamentosComoEspecialidadeDoMedico
+ */
+export type Especialidade$encaminhamentosComoEspecialidadeDoMedicoArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Encaminhamento
+   */
+  select?: Prisma.EncaminhamentoSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Encaminhamento
+   */
+  omit?: Prisma.EncaminhamentoOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EncaminhamentoInclude<ExtArgs> | null
+  where?: Prisma.EncaminhamentoWhereInput
+  orderBy?: Prisma.EncaminhamentoOrderByWithRelationInput | Prisma.EncaminhamentoOrderByWithRelationInput[]
+  cursor?: Prisma.EncaminhamentoWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EncaminhamentoScalarFieldEnum | Prisma.EncaminhamentoScalarFieldEnum[]
+}
+
+/**
+ * Especialidade.encaminhamentosComoDestino
+ */
+export type Especialidade$encaminhamentosComoDestinoArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Encaminhamento
+   */
+  select?: Prisma.EncaminhamentoSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Encaminhamento
+   */
+  omit?: Prisma.EncaminhamentoOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EncaminhamentoInclude<ExtArgs> | null
+  where?: Prisma.EncaminhamentoWhereInput
+  orderBy?: Prisma.EncaminhamentoOrderByWithRelationInput | Prisma.EncaminhamentoOrderByWithRelationInput[]
+  cursor?: Prisma.EncaminhamentoWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EncaminhamentoScalarFieldEnum | Prisma.EncaminhamentoScalarFieldEnum[]
 }
 
 /**

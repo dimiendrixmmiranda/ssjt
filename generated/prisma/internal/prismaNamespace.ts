@@ -399,6 +399,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   Usuario: 'Usuario',
   Local: 'Local',
+  TipoDeCirurgia: 'TipoDeCirurgia',
   Especialidade: 'Especialidade',
   Procedimento: 'Procedimento',
   MembroProcedimento: 'MembroProcedimento',
@@ -406,7 +407,8 @@ export const ModelName = {
   PrestadorEspecialidade: 'PrestadorEspecialidade',
   PrestadorProcedimento: 'PrestadorProcedimento',
   AgendamentoDePrestador: 'AgendamentoDePrestador',
-  Paciente: 'Paciente'
+  Paciente: 'Paciente',
+  Encaminhamento: 'Encaminhamento'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -422,7 +424,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "usuario" | "local" | "especialidade" | "procedimento" | "membroProcedimento" | "prestador" | "prestadorEspecialidade" | "prestadorProcedimento" | "agendamentoDePrestador" | "paciente"
+    modelProps: "usuario" | "local" | "tipoDeCirurgia" | "especialidade" | "procedimento" | "membroProcedimento" | "prestador" | "prestadorEspecialidade" | "prestadorProcedimento" | "agendamentoDePrestador" | "paciente" | "encaminhamento"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -571,6 +573,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.LocalCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.LocalCountAggregateOutputType> | number
+        }
+      }
+    }
+    TipoDeCirurgia: {
+      payload: Prisma.$TipoDeCirurgiaPayload<ExtArgs>
+      fields: Prisma.TipoDeCirurgiaFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TipoDeCirurgiaFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TipoDeCirurgiaPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TipoDeCirurgiaFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TipoDeCirurgiaPayload>
+        }
+        findFirst: {
+          args: Prisma.TipoDeCirurgiaFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TipoDeCirurgiaPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TipoDeCirurgiaFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TipoDeCirurgiaPayload>
+        }
+        findMany: {
+          args: Prisma.TipoDeCirurgiaFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TipoDeCirurgiaPayload>[]
+        }
+        create: {
+          args: Prisma.TipoDeCirurgiaCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TipoDeCirurgiaPayload>
+        }
+        createMany: {
+          args: Prisma.TipoDeCirurgiaCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TipoDeCirurgiaCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TipoDeCirurgiaPayload>[]
+        }
+        delete: {
+          args: Prisma.TipoDeCirurgiaDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TipoDeCirurgiaPayload>
+        }
+        update: {
+          args: Prisma.TipoDeCirurgiaUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TipoDeCirurgiaPayload>
+        }
+        deleteMany: {
+          args: Prisma.TipoDeCirurgiaDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TipoDeCirurgiaUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TipoDeCirurgiaUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TipoDeCirurgiaPayload>[]
+        }
+        upsert: {
+          args: Prisma.TipoDeCirurgiaUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TipoDeCirurgiaPayload>
+        }
+        aggregate: {
+          args: Prisma.TipoDeCirurgiaAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTipoDeCirurgia>
+        }
+        groupBy: {
+          args: Prisma.TipoDeCirurgiaGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TipoDeCirurgiaGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TipoDeCirurgiaCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TipoDeCirurgiaCountAggregateOutputType> | number
         }
       }
     }
@@ -1166,6 +1242,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Encaminhamento: {
+      payload: Prisma.$EncaminhamentoPayload<ExtArgs>
+      fields: Prisma.EncaminhamentoFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EncaminhamentoFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EncaminhamentoPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EncaminhamentoFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EncaminhamentoPayload>
+        }
+        findFirst: {
+          args: Prisma.EncaminhamentoFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EncaminhamentoPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EncaminhamentoFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EncaminhamentoPayload>
+        }
+        findMany: {
+          args: Prisma.EncaminhamentoFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EncaminhamentoPayload>[]
+        }
+        create: {
+          args: Prisma.EncaminhamentoCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EncaminhamentoPayload>
+        }
+        createMany: {
+          args: Prisma.EncaminhamentoCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.EncaminhamentoCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EncaminhamentoPayload>[]
+        }
+        delete: {
+          args: Prisma.EncaminhamentoDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EncaminhamentoPayload>
+        }
+        update: {
+          args: Prisma.EncaminhamentoUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EncaminhamentoPayload>
+        }
+        deleteMany: {
+          args: Prisma.EncaminhamentoDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EncaminhamentoUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.EncaminhamentoUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EncaminhamentoPayload>[]
+        }
+        upsert: {
+          args: Prisma.EncaminhamentoUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EncaminhamentoPayload>
+        }
+        aggregate: {
+          args: Prisma.EncaminhamentoAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEncaminhamento>
+        }
+        groupBy: {
+          args: Prisma.EncaminhamentoGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EncaminhamentoGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EncaminhamentoCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EncaminhamentoCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1245,6 +1395,16 @@ export const LocalScalarFieldEnum = {
 export type LocalScalarFieldEnum = (typeof LocalScalarFieldEnum)[keyof typeof LocalScalarFieldEnum]
 
 
+export const TipoDeCirurgiaScalarFieldEnum = {
+  id: 'id',
+  nome: 'nome',
+  especialidadeId: 'especialidadeId',
+  ativo: 'ativo'
+} as const
+
+export type TipoDeCirurgiaScalarFieldEnum = (typeof TipoDeCirurgiaScalarFieldEnum)[keyof typeof TipoDeCirurgiaScalarFieldEnum]
+
+
 export const EspecialidadeScalarFieldEnum = {
   id: 'id',
   nome: 'nome',
@@ -1290,6 +1450,8 @@ export const PrestadorScalarFieldEnum = {
   telefone: 'telefone',
   email: 'email',
   cor: 'cor',
+  tipoDeAtendimento: 'tipoDeAtendimento',
+  localId: 'localId',
   ativo: 'ativo',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -1405,6 +1567,36 @@ export const PacienteScalarFieldEnum = {
 } as const
 
 export type PacienteScalarFieldEnum = (typeof PacienteScalarFieldEnum)[keyof typeof PacienteScalarFieldEnum]
+
+
+export const EncaminhamentoScalarFieldEnum = {
+  id: 'id',
+  tipo: 'tipo',
+  pacienteId: 'pacienteId',
+  unidadeDeOrigemId: 'unidadeDeOrigemId',
+  dataDeEntrada: 'dataDeEntrada',
+  statusDeAgendamento: 'statusDeAgendamento',
+  medicoSolicitanteId: 'medicoSolicitanteId',
+  especialidadeDoPrestadorId: 'especialidadeDoPrestadorId',
+  categoria: 'categoria',
+  tipoDeConsulta: 'tipoDeConsulta',
+  especialidadeEncaminhadaId: 'especialidadeEncaminhadaId',
+  tipoDeCirurgia: 'tipoDeCirurgia',
+  procedimentoId: 'procedimentoId',
+  membroProcedimentoId: 'membroProcedimentoId',
+  lado: 'lado',
+  situacao: 'situacao',
+  encaminhamentoRemarcado: 'encaminhamentoRemarcado',
+  condicaoDeRetorno: 'condicaoDeRetorno',
+  dataDoRetorno: 'dataDoRetorno',
+  dataDeSaida: 'dataDeSaida',
+  dataDeAgendamentoLocal: 'dataDeAgendamentoLocal',
+  prestadorExecutanteId: 'prestadorExecutanteId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EncaminhamentoScalarFieldEnum = (typeof EncaminhamentoScalarFieldEnum)[keyof typeof EncaminhamentoScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1581,6 +1773,20 @@ export type EnumTipoDoPrestadorFieldRefInput<$PrismaModel> = FieldRefInputType<$
  * Reference to a field of type 'TipoDoPrestador[]'
  */
 export type ListEnumTipoDoPrestadorFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TipoDoPrestador[]'>
+    
+
+
+/**
+ * Reference to a field of type 'TipoDeAtendimentoDoPrestador'
+ */
+export type EnumTipoDeAtendimentoDoPrestadorFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TipoDeAtendimentoDoPrestador'>
+    
+
+
+/**
+ * Reference to a field of type 'TipoDeAtendimentoDoPrestador[]'
+ */
+export type ListEnumTipoDeAtendimentoDoPrestadorFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TipoDeAtendimentoDoPrestador[]'>
     
 
 
@@ -1765,6 +1971,62 @@ export type ListEnumDeficienciaFieldRefInput<$PrismaModel> = FieldRefInputType<$
 export type EnumDeficienciaFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Deficiencia'>
     
 
+
+/**
+ * Reference to a field of type 'TipoDeEncaminhamento'
+ */
+export type EnumTipoDeEncaminhamentoFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TipoDeEncaminhamento'>
+    
+
+
+/**
+ * Reference to a field of type 'TipoDeEncaminhamento[]'
+ */
+export type ListEnumTipoDeEncaminhamentoFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TipoDeEncaminhamento[]'>
+    
+
+
+/**
+ * Reference to a field of type 'StatusDeAgendamento'
+ */
+export type EnumStatusDeAgendamentoFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StatusDeAgendamento'>
+    
+
+
+/**
+ * Reference to a field of type 'StatusDeAgendamento[]'
+ */
+export type ListEnumStatusDeAgendamentoFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StatusDeAgendamento[]'>
+    
+
+
+/**
+ * Reference to a field of type 'TipoDeConsulta'
+ */
+export type EnumTipoDeConsultaFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TipoDeConsulta'>
+    
+
+
+/**
+ * Reference to a field of type 'TipoDeConsulta[]'
+ */
+export type ListEnumTipoDeConsultaFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TipoDeConsulta[]'>
+    
+
+
+/**
+ * Reference to a field of type 'LadoDoCorpo'
+ */
+export type EnumLadoDoCorpoFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LadoDoCorpo'>
+    
+
+
+/**
+ * Reference to a field of type 'LadoDoCorpo[]'
+ */
+export type ListEnumLadoDoCorpoFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LadoDoCorpo[]'>
+    
+
 /**
  * Batch Payload for updateMany & deleteMany & createMany
  */
@@ -1918,6 +2180,7 @@ export type PrismaClientOptions = PrismaClientOptionsWithAccelerateUrl | PrismaC
 export type GlobalOmitConfig = {
   usuario?: Prisma.UsuarioOmit
   local?: Prisma.LocalOmit
+  tipoDeCirurgia?: Prisma.TipoDeCirurgiaOmit
   especialidade?: Prisma.EspecialidadeOmit
   procedimento?: Prisma.ProcedimentoOmit
   membroProcedimento?: Prisma.MembroProcedimentoOmit
@@ -1926,6 +2189,7 @@ export type GlobalOmitConfig = {
   prestadorProcedimento?: Prisma.PrestadorProcedimentoOmit
   agendamentoDePrestador?: Prisma.AgendamentoDePrestadorOmit
   paciente?: Prisma.PacienteOmit
+  encaminhamento?: Prisma.EncaminhamentoOmit
 }
 
 /* Types for Logging */

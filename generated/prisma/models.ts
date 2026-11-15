@@ -10,6 +10,7 @@
  */
 export type * from './models/Usuario'
 export type * from './models/Local'
+export type * from './models/TipoDeCirurgia'
 export type * from './models/Especialidade'
 export type * from './models/Procedimento'
 export type * from './models/MembroProcedimento'
@@ -18,4 +19,5 @@ export type * from './models/PrestadorEspecialidade'
 export type * from './models/PrestadorProcedimento'
 export type * from './models/AgendamentoDePrestador'
 export type * from './models/Paciente'
+export type * from './models/Encaminhamento'
 export type * from './commonInputTypes'

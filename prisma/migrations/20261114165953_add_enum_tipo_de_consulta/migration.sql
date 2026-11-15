@@ -1,0 +1,2 @@
+-- CreateEnum
+CREATE TYPE "TipoDeConsulta" AS ENUM ('PRIMEIRA_CONSULTA', 'RETORNO');

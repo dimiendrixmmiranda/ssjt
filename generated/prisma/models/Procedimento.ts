@@ -234,6 +234,7 @@ export type ProcedimentoWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Procedimento"> | Date | string
   membros?: Prisma.MembroProcedimentoListRelationFilter
   prestadores?: Prisma.PrestadorProcedimentoListRelationFilter
+  encaminhamentos?: Prisma.EncaminhamentoListRelationFilter
 }
 
 export type ProcedimentoOrderByWithRelationInput = {
@@ -246,6 +247,7 @@ export type ProcedimentoOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   membros?: Prisma.MembroProcedimentoOrderByRelationAggregateInput
   prestadores?: Prisma.PrestadorProcedimentoOrderByRelationAggregateInput
+  encaminhamentos?: Prisma.EncaminhamentoOrderByRelationAggregateInput
 }
 
 export type ProcedimentoWhereUniqueInput = Prisma.AtLeast<{
@@ -261,6 +263,7 @@ export type ProcedimentoWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Procedimento"> | Date | string
   membros?: Prisma.MembroProcedimentoListRelationFilter
   prestadores?: Prisma.PrestadorProcedimentoListRelationFilter
+  encaminhamentos?: Prisma.EncaminhamentoListRelationFilter
 }, "id" | "nome" | "codigo">
 
 export type ProcedimentoOrderByWithAggregationInput = {
@@ -300,6 +303,7 @@ export type ProcedimentoCreateInput = {
   updatedAt?: Date | string
   membros?: Prisma.MembroProcedimentoCreateNestedManyWithoutProcedimentoInput
   prestadores?: Prisma.PrestadorProcedimentoCreateNestedManyWithoutProcedimentoInput
+  encaminhamentos?: Prisma.EncaminhamentoCreateNestedManyWithoutProcedimentoInput
 }
 
 export type ProcedimentoUncheckedCreateInput = {
@@ -312,6 +316,7 @@ export type ProcedimentoUncheckedCreateInput = {
   updatedAt?: Date | string
   membros?: Prisma.MembroProcedimentoUncheckedCreateNestedManyWithoutProcedimentoInput
   prestadores?: Prisma.PrestadorProcedimentoUncheckedCreateNestedManyWithoutProcedimentoInput
+  encaminhamentos?: Prisma.EncaminhamentoUncheckedCreateNestedManyWithoutProcedimentoInput
 }
 
 export type ProcedimentoUpdateInput = {
@@ -323,6 +328,7 @@ export type ProcedimentoUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   membros?: Prisma.MembroProcedimentoUpdateManyWithoutProcedimentoNestedInput
   prestadores?: Prisma.PrestadorProcedimentoUpdateManyWithoutProcedimentoNestedInput
+  encaminhamentos?: Prisma.EncaminhamentoUpdateManyWithoutProcedimentoNestedInput
 }
 
 export type ProcedimentoUncheckedUpdateInput = {
@@ -335,6 +341,7 @@ export type ProcedimentoUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   membros?: Prisma.MembroProcedimentoUncheckedUpdateManyWithoutProcedimentoNestedInput
   prestadores?: Prisma.PrestadorProcedimentoUncheckedUpdateManyWithoutProcedimentoNestedInput
+  encaminhamentos?: Prisma.EncaminhamentoUncheckedUpdateManyWithoutProcedimentoNestedInput
 }
 
 export type ProcedimentoCreateManyInput = {
@@ -409,6 +416,11 @@ export type ProcedimentoScalarRelationFilter = {
   isNot?: Prisma.ProcedimentoWhereInput
 }
 
+export type ProcedimentoNullableScalarRelationFilter = {
+  is?: Prisma.ProcedimentoWhereInput | null
+  isNot?: Prisma.ProcedimentoWhereInput | null
+}
+
 export type EnumTipoProcedimentoFieldUpdateOperationsInput = {
   set?: $Enums.TipoProcedimento
 }
@@ -441,6 +453,22 @@ export type ProcedimentoUpdateOneRequiredWithoutPrestadoresNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProcedimentoUpdateToOneWithWhereWithoutPrestadoresInput, Prisma.ProcedimentoUpdateWithoutPrestadoresInput>, Prisma.ProcedimentoUncheckedUpdateWithoutPrestadoresInput>
 }
 
+export type ProcedimentoCreateNestedOneWithoutEncaminhamentosInput = {
+  create?: Prisma.XOR<Prisma.ProcedimentoCreateWithoutEncaminhamentosInput, Prisma.ProcedimentoUncheckedCreateWithoutEncaminhamentosInput>
+  connectOrCreate?: Prisma.ProcedimentoCreateOrConnectWithoutEncaminhamentosInput
+  connect?: Prisma.ProcedimentoWhereUniqueInput
+}
+
+export type ProcedimentoUpdateOneWithoutEncaminhamentosNestedInput = {
+  create?: Prisma.XOR<Prisma.ProcedimentoCreateWithoutEncaminhamentosInput, Prisma.ProcedimentoUncheckedCreateWithoutEncaminhamentosInput>
+  connectOrCreate?: Prisma.ProcedimentoCreateOrConnectWithoutEncaminhamentosInput
+  upsert?: Prisma.ProcedimentoUpsertWithoutEncaminhamentosInput
+  disconnect?: Prisma.ProcedimentoWhereInput | boolean
+  delete?: Prisma.ProcedimentoWhereInput | boolean
+  connect?: Prisma.ProcedimentoWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProcedimentoUpdateToOneWithWhereWithoutEncaminhamentosInput, Prisma.ProcedimentoUpdateWithoutEncaminhamentosInput>, Prisma.ProcedimentoUncheckedUpdateWithoutEncaminhamentosInput>
+}
+
 export type ProcedimentoCreateWithoutMembrosInput = {
   nome: string
   codigo: string
@@ -449,6 +477,7 @@ export type ProcedimentoCreateWithoutMembrosInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   prestadores?: Prisma.PrestadorProcedimentoCreateNestedManyWithoutProcedimentoInput
+  encaminhamentos?: Prisma.EncaminhamentoCreateNestedManyWithoutProcedimentoInput
 }
 
 export type ProcedimentoUncheckedCreateWithoutMembrosInput = {
@@ -460,6 +489,7 @@ export type ProcedimentoUncheckedCreateWithoutMembrosInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   prestadores?: Prisma.PrestadorProcedimentoUncheckedCreateNestedManyWithoutProcedimentoInput
+  encaminhamentos?: Prisma.EncaminhamentoUncheckedCreateNestedManyWithoutProcedimentoInput
 }
 
 export type ProcedimentoCreateOrConnectWithoutMembrosInput = {
@@ -486,6 +516,7 @@ export type ProcedimentoUpdateWithoutMembrosInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   prestadores?: Prisma.PrestadorProcedimentoUpdateManyWithoutProcedimentoNestedInput
+  encaminhamentos?: Prisma.EncaminhamentoUpdateManyWithoutProcedimentoNestedInput
 }
 
 export type ProcedimentoUncheckedUpdateWithoutMembrosInput = {
@@ -497,6 +528,7 @@ export type ProcedimentoUncheckedUpdateWithoutMembrosInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   prestadores?: Prisma.PrestadorProcedimentoUncheckedUpdateManyWithoutProcedimentoNestedInput
+  encaminhamentos?: Prisma.EncaminhamentoUncheckedUpdateManyWithoutProcedimentoNestedInput
 }
 
 export type ProcedimentoCreateWithoutPrestadoresInput = {
@@ -507,6 +539,7 @@ export type ProcedimentoCreateWithoutPrestadoresInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   membros?: Prisma.MembroProcedimentoCreateNestedManyWithoutProcedimentoInput
+  encaminhamentos?: Prisma.EncaminhamentoCreateNestedManyWithoutProcedimentoInput
 }
 
 export type ProcedimentoUncheckedCreateWithoutPrestadoresInput = {
@@ -518,6 +551,7 @@ export type ProcedimentoUncheckedCreateWithoutPrestadoresInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   membros?: Prisma.MembroProcedimentoUncheckedCreateNestedManyWithoutProcedimentoInput
+  encaminhamentos?: Prisma.EncaminhamentoUncheckedCreateNestedManyWithoutProcedimentoInput
 }
 
 export type ProcedimentoCreateOrConnectWithoutPrestadoresInput = {
@@ -544,6 +578,7 @@ export type ProcedimentoUpdateWithoutPrestadoresInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   membros?: Prisma.MembroProcedimentoUpdateManyWithoutProcedimentoNestedInput
+  encaminhamentos?: Prisma.EncaminhamentoUpdateManyWithoutProcedimentoNestedInput
 }
 
 export type ProcedimentoUncheckedUpdateWithoutPrestadoresInput = {
@@ -555,6 +590,69 @@ export type ProcedimentoUncheckedUpdateWithoutPrestadoresInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   membros?: Prisma.MembroProcedimentoUncheckedUpdateManyWithoutProcedimentoNestedInput
+  encaminhamentos?: Prisma.EncaminhamentoUncheckedUpdateManyWithoutProcedimentoNestedInput
+}
+
+export type ProcedimentoCreateWithoutEncaminhamentosInput = {
+  nome: string
+  codigo: string
+  tipo?: $Enums.TipoProcedimento
+  ativo?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  membros?: Prisma.MembroProcedimentoCreateNestedManyWithoutProcedimentoInput
+  prestadores?: Prisma.PrestadorProcedimentoCreateNestedManyWithoutProcedimentoInput
+}
+
+export type ProcedimentoUncheckedCreateWithoutEncaminhamentosInput = {
+  id?: number
+  nome: string
+  codigo: string
+  tipo?: $Enums.TipoProcedimento
+  ativo?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  membros?: Prisma.MembroProcedimentoUncheckedCreateNestedManyWithoutProcedimentoInput
+  prestadores?: Prisma.PrestadorProcedimentoUncheckedCreateNestedManyWithoutProcedimentoInput
+}
+
+export type ProcedimentoCreateOrConnectWithoutEncaminhamentosInput = {
+  where: Prisma.ProcedimentoWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProcedimentoCreateWithoutEncaminhamentosInput, Prisma.ProcedimentoUncheckedCreateWithoutEncaminhamentosInput>
+}
+
+export type ProcedimentoUpsertWithoutEncaminhamentosInput = {
+  update: Prisma.XOR<Prisma.ProcedimentoUpdateWithoutEncaminhamentosInput, Prisma.ProcedimentoUncheckedUpdateWithoutEncaminhamentosInput>
+  create: Prisma.XOR<Prisma.ProcedimentoCreateWithoutEncaminhamentosInput, Prisma.ProcedimentoUncheckedCreateWithoutEncaminhamentosInput>
+  where?: Prisma.ProcedimentoWhereInput
+}
+
+export type ProcedimentoUpdateToOneWithWhereWithoutEncaminhamentosInput = {
+  where?: Prisma.ProcedimentoWhereInput
+  data: Prisma.XOR<Prisma.ProcedimentoUpdateWithoutEncaminhamentosInput, Prisma.ProcedimentoUncheckedUpdateWithoutEncaminhamentosInput>
+}
+
+export type ProcedimentoUpdateWithoutEncaminhamentosInput = {
+  nome?: Prisma.StringFieldUpdateOperationsInput | string
+  codigo?: Prisma.StringFieldUpdateOperationsInput | string
+  tipo?: Prisma.EnumTipoProcedimentoFieldUpdateOperationsInput | $Enums.TipoProcedimento
+  ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  membros?: Prisma.MembroProcedimentoUpdateManyWithoutProcedimentoNestedInput
+  prestadores?: Prisma.PrestadorProcedimentoUpdateManyWithoutProcedimentoNestedInput
+}
+
+export type ProcedimentoUncheckedUpdateWithoutEncaminhamentosInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  nome?: Prisma.StringFieldUpdateOperationsInput | string
+  codigo?: Prisma.StringFieldUpdateOperationsInput | string
+  tipo?: Prisma.EnumTipoProcedimentoFieldUpdateOperationsInput | $Enums.TipoProcedimento
+  ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  membros?: Prisma.MembroProcedimentoUncheckedUpdateManyWithoutProcedimentoNestedInput
+  prestadores?: Prisma.PrestadorProcedimentoUncheckedUpdateManyWithoutProcedimentoNestedInput
 }
 
 
@@ -565,11 +663,13 @@ export type ProcedimentoUncheckedUpdateWithoutPrestadoresInput = {
 export type ProcedimentoCountOutputType = {
   membros: number
   prestadores: number
+  encaminhamentos: number
 }
 
 export type ProcedimentoCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   membros?: boolean | ProcedimentoCountOutputTypeCountMembrosArgs
   prestadores?: boolean | ProcedimentoCountOutputTypeCountPrestadoresArgs
+  encaminhamentos?: boolean | ProcedimentoCountOutputTypeCountEncaminhamentosArgs
 }
 
 /**
@@ -596,6 +696,13 @@ export type ProcedimentoCountOutputTypeCountPrestadoresArgs<ExtArgs extends runt
   where?: Prisma.PrestadorProcedimentoWhereInput
 }
 
+/**
+ * ProcedimentoCountOutputType without action
+ */
+export type ProcedimentoCountOutputTypeCountEncaminhamentosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EncaminhamentoWhereInput
+}
+
 
 export type ProcedimentoSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -607,6 +714,7 @@ export type ProcedimentoSelect<ExtArgs extends runtime.Types.Extensions.Internal
   updatedAt?: boolean
   membros?: boolean | Prisma.Procedimento$membrosArgs<ExtArgs>
   prestadores?: boolean | Prisma.Procedimento$prestadoresArgs<ExtArgs>
+  encaminhamentos?: boolean | Prisma.Procedimento$encaminhamentosArgs<ExtArgs>
   _count?: boolean | Prisma.ProcedimentoCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["procedimento"]>
 
@@ -644,6 +752,7 @@ export type ProcedimentoOmit<ExtArgs extends runtime.Types.Extensions.InternalAr
 export type ProcedimentoInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   membros?: boolean | Prisma.Procedimento$membrosArgs<ExtArgs>
   prestadores?: boolean | Prisma.Procedimento$prestadoresArgs<ExtArgs>
+  encaminhamentos?: boolean | Prisma.Procedimento$encaminhamentosArgs<ExtArgs>
   _count?: boolean | Prisma.ProcedimentoCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProcedimentoIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -654,6 +763,7 @@ export type $ProcedimentoPayload<ExtArgs extends runtime.Types.Extensions.Intern
   objects: {
     membros: Prisma.$MembroProcedimentoPayload<ExtArgs>[]
     prestadores: Prisma.$PrestadorProcedimentoPayload<ExtArgs>[]
+    encaminhamentos: Prisma.$EncaminhamentoPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1059,6 +1169,7 @@ export interface Prisma__ProcedimentoClient<T, Null = never, ExtArgs extends run
   readonly [Symbol.toStringTag]: "PrismaPromise"
   membros<T extends Prisma.Procedimento$membrosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Procedimento$membrosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MembroProcedimentoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   prestadores<T extends Prisma.Procedimento$prestadoresArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Procedimento$prestadoresArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PrestadorProcedimentoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  encaminhamentos<T extends Prisma.Procedimento$encaminhamentosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Procedimento$encaminhamentosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EncaminhamentoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1533,6 +1644,30 @@ export type Procedimento$prestadoresArgs<ExtArgs extends runtime.Types.Extension
   take?: number
   skip?: number
   distinct?: Prisma.PrestadorProcedimentoScalarFieldEnum | Prisma.PrestadorProcedimentoScalarFieldEnum[]
+}
+
+/**
+ * Procedimento.encaminhamentos
+ */
+export type Procedimento$encaminhamentosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Encaminhamento
+   */
+  select?: Prisma.EncaminhamentoSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Encaminhamento
+   */
+  omit?: Prisma.EncaminhamentoOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EncaminhamentoInclude<ExtArgs> | null
+  where?: Prisma.EncaminhamentoWhereInput
+  orderBy?: Prisma.EncaminhamentoOrderByWithRelationInput | Prisma.EncaminhamentoOrderByWithRelationInput[]
+  cursor?: Prisma.EncaminhamentoWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EncaminhamentoScalarFieldEnum | Prisma.EncaminhamentoScalarFieldEnum[]
 }
 
 /**

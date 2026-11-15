@@ -21,6 +21,10 @@ export default function Page() {
     const [nomeDaEspecialidade, setNomeDaEspecialidade] = useState('')
     const [codigo, setCodigo] = useState('')
     const [categoria, setCategoria] = useState<string[]>([CategoriaEspecialidade.NORMAL, CategoriaEspecialidade.TFD])
+
+    const [tiposDeCirurgia, setTiposDeCirurgia] = useState<string[]>([])
+    const [novaCirurgia, setNovaCirurgia] = useState('')
+
     const [carregando, setCarregando] = useState(false)
 
     const [tituloResultado, setTituloResultado] = useState("");
@@ -46,6 +50,32 @@ export default function Page() {
         setRows(event.rows)
     }
 
+    function adicionarTipoDeCirurgia() {
+        const nome = novaCirurgia.trim()
+
+        if (!nome) return
+
+        const jaExiste = tiposDeCirurgia.some(
+            cirurgia => cirurgia.toLowerCase() === nome.toLowerCase()
+        )
+
+        if (jaExiste) {
+            setTituloResultado("Cirurgia já cadastrada")
+            setMensagemResultado("Essa cirurgia já foi adicionada à lista.")
+            setDialogResultado(true)
+            return
+        }
+
+        setTiposDeCirurgia(prev => [...prev, nome])
+        setNovaCirurgia('')
+    }
+
+    function removerTipoDeCirurgia(nome: string) {
+        setTiposDeCirurgia(prev =>
+            prev.filter(cirurgia => cirurgia !== nome)
+        )
+    }
+
     async function cadastrarEspecialidade() {
         setDialogConfirmacao(false)
 
@@ -61,6 +91,7 @@ export default function Page() {
                     nome: nomeDaEspecialidade.trim(),
                     codigo: codigo.trim(),
                     categoria,
+                    tiposDeCirurgia
                 }),
             })
 
@@ -113,6 +144,8 @@ export default function Page() {
             CategoriaEspecialidade.NORMAL,
             CategoriaEspecialidade.TFD
         ])
+        setTiposDeCirurgia([])
+        setNovaCirurgia('')
     }
 
     function cancelarCadastro() {
@@ -133,6 +166,9 @@ export default function Page() {
         setCodigo(especialidade.codigo)
         setCategoria(especialidade.categoria)
 
+        setTiposDeCirurgia(
+            especialidade.tiposDeCirurgia.map(cirurgia => cirurgia.nome)
+        )
         setDialogAtualizar(true)
     }
 
@@ -163,6 +199,7 @@ export default function Page() {
                     nome: nomeDaEspecialidade.trim(),
                     codigo: codigo.trim(),
                     categoria,
+                    tiposDeCirurgia
                 }),
             })
 
@@ -252,6 +289,57 @@ export default function Page() {
                                     <p>Gerar Cógigo</p>
                                 </button>
                             </div>
+                            <div className="flex flex-col gap-3">
+                                <label className="font-semibold">
+                                    Tipos de cirurgia <span className="font-normal text-gray-500">(opcional)</span>
+                                </label>
+
+                                <div className="flex gap-2">
+                                    <input
+                                        type="text"
+                                        value={novaCirurgia}
+                                        onChange={(e) => setNovaCirurgia(e.target.value)}
+                                        onKeyDown={(e) => {
+                                            if (e.key === "Enter") {
+                                                e.preventDefault()
+                                                adicionarTipoDeCirurgia()
+                                            }
+                                        }}
+                                        placeholder="Ex.: Meniscectomia"
+                                        className="w-full rounded-lg border border-gray-300 p-2 focus:outline-verde"
+                                    />
+
+                                    <button
+                                        type="button"
+                                        onClick={adicionarTipoDeCirurgia}
+                                        className="rounded-lg bg-verde px-4 font-bold text-white hover:opacity-80"
+                                    >
+                                        Adicionar
+                                    </button>
+                                </div>
+
+                                {tiposDeCirurgia.length > 0 && (
+                                    <div className="flex flex-wrap gap-2">
+                                        {tiposDeCirurgia.map((cirurgia) => (
+                                            <div
+                                                key={cirurgia}
+                                                className="flex items-center gap-2 rounded-lg border border-verde bg-green-50 px-3 py-2"
+                                            >
+                                                <span>{cirurgia}</span>
+
+                                                <button
+                                                    type="button"
+                                                    onClick={() => removerTipoDeCirurgia(cirurgia)}
+                                                    className="text-red-600 hover:text-red-800"
+                                                    title="Remover cirurgia"
+                                                >
+                                                    <FaRegTrashAlt />
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
                         </div>
 
                         <div className="flex items-center gap-3 ml-auto">
@@ -299,6 +387,7 @@ export default function Page() {
                                         <th className="w-[250px] p-2 lg:w-full">Nome da Especialidade</th>
                                         <th className="w-[200px] p-2">Código</th>
                                         <th className="w-[200px] p-2">Categoria</th>
+                                        <th className="w-[200px] p-2">Tipos</th>
                                         <th className="w-[110px] p-2">Ações</th>
                                     </tr>
                                 </thead>
@@ -310,6 +399,13 @@ export default function Page() {
                                                 <td className="p-2">{especialidade.nome}</td>
                                                 <td className="p-2">{especialidade.codigo}</td>
                                                 <td className="p-2">{especialidade.categoria.map(cat => `${cat}, `)}</td>
+                                                <td className="p-2">
+                                                    <p>
+                                                        {
+                                                            especialidade.tiposDeCirurgia.map(tipo => tipo.nome + ",")
+                                                        }
+                                                    </p>
+                                                </td>
 
                                                 <td className="p-2 break-words grid grid-cols-2 gap-3 gap-y-1 mt-1">
                                                     <button
@@ -354,19 +450,19 @@ export default function Page() {
                                     )}
                                 </tbody>
                             </table>
-                                <div className="w-full flex justify-center items-center">
-                                    {especialidades.length > 0 && (
-                                        <Paginator
-                                            first={first}
-                                            rows={rows}
-                                            totalRecords={especialidades.length}
-                                            rowsPerPageOptions={[5, 10, 15, 20]}
-                                            onPageChange={aoMudarPagina}
-                                            template="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
-                                            className="mt-4"
-                                        />
-                                    )}
-                                </div>
+                            <div className="w-full flex justify-center items-center">
+                                {especialidades.length > 0 && (
+                                    <Paginator
+                                        first={first}
+                                        rows={rows}
+                                        totalRecords={especialidades.length}
+                                        rowsPerPageOptions={[5, 10, 15, 20]}
+                                        onPageChange={aoMudarPagina}
+                                        template="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
+                                        className="mt-4"
+                                    />
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -431,6 +527,58 @@ export default function Page() {
                             setValor={setCodigo}
                             valor={codigo}
                         />
+
+                        <div className="flex flex-col gap-3">
+                            <label className="font-semibold">
+                                Tipos de cirurgia <span className="font-normal text-gray-500">(opcional)</span>
+                            </label>
+
+                            <div className="flex gap-2">
+                                <input
+                                    type="text"
+                                    value={novaCirurgia}
+                                    onChange={(e) => setNovaCirurgia(e.target.value)}
+                                    onKeyDown={(e) => {
+                                        if (e.key === "Enter") {
+                                            e.preventDefault()
+                                            adicionarTipoDeCirurgia()
+                                        }
+                                    }}
+                                    placeholder="Ex.: Meniscectomia"
+                                    className="w-full rounded-lg border border-gray-300 p-2 focus:outline-verde"
+                                />
+
+                                <button
+                                    type="button"
+                                    onClick={adicionarTipoDeCirurgia}
+                                    className="rounded-lg bg-verde px-4 font-bold text-white hover:opacity-80"
+                                >
+                                    Adicionar
+                                </button>
+                            </div>
+
+                            {tiposDeCirurgia.length > 0 && (
+                                <div className="flex flex-wrap gap-2">
+                                    {tiposDeCirurgia.map((cirurgia) => (
+                                        <div
+                                            key={cirurgia}
+                                            className="flex items-center gap-2 rounded-lg border border-verde bg-green-50 px-3 py-2"
+                                        >
+                                            <span>{cirurgia}</span>
+
+                                            <button
+                                                type="button"
+                                                onClick={() => removerTipoDeCirurgia(cirurgia)}
+                                                className="text-red-600 hover:text-red-800"
+                                                title="Remover cirurgia"
+                                            >
+                                                <FaRegTrashAlt />
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
 
                         <div className="flex justify-end gap-3 mt-4">
                             <button

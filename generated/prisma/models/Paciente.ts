@@ -753,6 +753,7 @@ export type PacienteWhereInput = {
   criadoEm?: Prisma.DateTimeFilter<"Paciente"> | Date | string
   atualizadoEm?: Prisma.DateTimeFilter<"Paciente"> | Date | string
   unidadeDeSaude?: Prisma.XOR<Prisma.LocalScalarRelationFilter, Prisma.LocalWhereInput>
+  encaminhamentos?: Prisma.EncaminhamentoListRelationFilter
 }
 
 export type PacienteOrderByWithRelationInput = {
@@ -828,6 +829,7 @@ export type PacienteOrderByWithRelationInput = {
   criadoEm?: Prisma.SortOrder
   atualizadoEm?: Prisma.SortOrder
   unidadeDeSaude?: Prisma.LocalOrderByWithRelationInput
+  encaminhamentos?: Prisma.EncaminhamentoOrderByRelationAggregateInput
 }
 
 export type PacienteWhereUniqueInput = Prisma.AtLeast<{
@@ -906,6 +908,7 @@ export type PacienteWhereUniqueInput = Prisma.AtLeast<{
   criadoEm?: Prisma.DateTimeFilter<"Paciente"> | Date | string
   atualizadoEm?: Prisma.DateTimeFilter<"Paciente"> | Date | string
   unidadeDeSaude?: Prisma.XOR<Prisma.LocalScalarRelationFilter, Prisma.LocalWhereInput>
+  encaminhamentos?: Prisma.EncaminhamentoListRelationFilter
 }, "id" | "CPF" | "cartaoDoSus">
 
 export type PacienteOrderByWithAggregationInput = {
@@ -1135,6 +1138,7 @@ export type PacienteCreateInput = {
   criadoEm?: Date | string
   atualizadoEm?: Date | string
   unidadeDeSaude: Prisma.LocalCreateNestedOneWithoutPacientesInput
+  encaminhamentos?: Prisma.EncaminhamentoCreateNestedManyWithoutPacienteInput
 }
 
 export type PacienteUncheckedCreateInput = {
@@ -1209,6 +1213,7 @@ export type PacienteUncheckedCreateInput = {
   ativo?: boolean
   criadoEm?: Date | string
   atualizadoEm?: Date | string
+  encaminhamentos?: Prisma.EncaminhamentoUncheckedCreateNestedManyWithoutPacienteInput
 }
 
 export type PacienteUpdateInput = {
@@ -1282,6 +1287,7 @@ export type PacienteUpdateInput = {
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   atualizadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   unidadeDeSaude?: Prisma.LocalUpdateOneRequiredWithoutPacientesNestedInput
+  encaminhamentos?: Prisma.EncaminhamentoUpdateManyWithoutPacienteNestedInput
 }
 
 export type PacienteUncheckedUpdateInput = {
@@ -1356,6 +1362,7 @@ export type PacienteUncheckedUpdateInput = {
   ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   atualizadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  encaminhamentos?: Prisma.EncaminhamentoUncheckedUpdateManyWithoutPacienteNestedInput
 }
 
 export type PacienteCreateManyInput = {
@@ -1830,6 +1837,11 @@ export type PacienteSumOrderByAggregateInput = {
   longitude?: Prisma.SortOrder
 }
 
+export type PacienteScalarRelationFilter = {
+  is?: Prisma.PacienteWhereInput
+  isNot?: Prisma.PacienteWhereInput
+}
+
 export type PacienteCreateNestedManyWithoutUnidadeDeSaudeInput = {
   create?: Prisma.XOR<Prisma.PacienteCreateWithoutUnidadeDeSaudeInput, Prisma.PacienteUncheckedCreateWithoutUnidadeDeSaudeInput> | Prisma.PacienteCreateWithoutUnidadeDeSaudeInput[] | Prisma.PacienteUncheckedCreateWithoutUnidadeDeSaudeInput[]
   connectOrCreate?: Prisma.PacienteCreateOrConnectWithoutUnidadeDeSaudeInput | Prisma.PacienteCreateOrConnectWithoutUnidadeDeSaudeInput[]
@@ -1929,6 +1941,20 @@ export type PacienteUpdatetipoDeDeficienciaInput = {
   push?: $Enums.Deficiencia | $Enums.Deficiencia[]
 }
 
+export type PacienteCreateNestedOneWithoutEncaminhamentosInput = {
+  create?: Prisma.XOR<Prisma.PacienteCreateWithoutEncaminhamentosInput, Prisma.PacienteUncheckedCreateWithoutEncaminhamentosInput>
+  connectOrCreate?: Prisma.PacienteCreateOrConnectWithoutEncaminhamentosInput
+  connect?: Prisma.PacienteWhereUniqueInput
+}
+
+export type PacienteUpdateOneRequiredWithoutEncaminhamentosNestedInput = {
+  create?: Prisma.XOR<Prisma.PacienteCreateWithoutEncaminhamentosInput, Prisma.PacienteUncheckedCreateWithoutEncaminhamentosInput>
+  connectOrCreate?: Prisma.PacienteCreateOrConnectWithoutEncaminhamentosInput
+  upsert?: Prisma.PacienteUpsertWithoutEncaminhamentosInput
+  connect?: Prisma.PacienteWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PacienteUpdateToOneWithWhereWithoutEncaminhamentosInput, Prisma.PacienteUpdateWithoutEncaminhamentosInput>, Prisma.PacienteUncheckedUpdateWithoutEncaminhamentosInput>
+}
+
 export type PacienteCreateWithoutUnidadeDeSaudeInput = {
   tipoDeCadastro?: $Enums.TipoDeCadastroPaciente
   nomeDoPaciente: string
@@ -1999,6 +2025,7 @@ export type PacienteCreateWithoutUnidadeDeSaudeInput = {
   ativo?: boolean
   criadoEm?: Date | string
   atualizadoEm?: Date | string
+  encaminhamentos?: Prisma.EncaminhamentoCreateNestedManyWithoutPacienteInput
 }
 
 export type PacienteUncheckedCreateWithoutUnidadeDeSaudeInput = {
@@ -2072,6 +2099,7 @@ export type PacienteUncheckedCreateWithoutUnidadeDeSaudeInput = {
   ativo?: boolean
   criadoEm?: Date | string
   atualizadoEm?: Date | string
+  encaminhamentos?: Prisma.EncaminhamentoUncheckedCreateNestedManyWithoutPacienteInput
 }
 
 export type PacienteCreateOrConnectWithoutUnidadeDeSaudeInput = {
@@ -2175,6 +2203,316 @@ export type PacienteScalarWhereInput = {
   ativo?: Prisma.BoolFilter<"Paciente"> | boolean
   criadoEm?: Prisma.DateTimeFilter<"Paciente"> | Date | string
   atualizadoEm?: Prisma.DateTimeFilter<"Paciente"> | Date | string
+}
+
+export type PacienteCreateWithoutEncaminhamentosInput = {
+  tipoDeCadastro?: $Enums.TipoDeCadastroPaciente
+  nomeDoPaciente: string
+  nomeSocial?: string | null
+  nomeDaMae?: string | null
+  nomeDoPai?: string | null
+  dataDeNascimento: Date | string
+  sexo: $Enums.Sexo
+  estadoCivil?: $Enums.EstadoCivil | null
+  corERaca?: $Enums.Raca | null
+  codigoGSUS?: string | null
+  codigoIDS?: string | null
+  tipoSanguineo?: $Enums.TipoSanguineo | null
+  fatorRH?: $Enums.FatorRH | null
+  nacionalidade?: string | null
+  municipioDeNascimento?: string | null
+  ufDeNascimento?: $Enums.UF | null
+  CPF?: string | null
+  cartaoDoSus?: string | null
+  NIS?: string | null
+  RG?: string | null
+  orgaoEmissorDoRG?: string | null
+  ufDoRG?: $Enums.UF | null
+  dataDaEmissaoDoRG?: Date | string | null
+  cnsMae?: string | null
+  orientacaoRegCpf?: string | null
+  tituloDeEleitor?: string | null
+  zonaEleitoral?: string | null
+  secaoEleitoral?: string | null
+  CTPSNumero?: string | null
+  CTPSSerie?: string | null
+  cTPSUf?: $Enums.UF | null
+  CTPSDataEmissao?: Date | string | null
+  PISPASEP?: string | null
+  frequentaEscola?: string | null
+  escola?: string | null
+  serieEscolar?: string | null
+  grauEscolaridade?: $Enums.GrauDeEscolaridade | null
+  cursoProfissionalizante?: string | null
+  paisDeOrigem?: string | null
+  entradaNoBrasil?: Date | string | null
+  email?: string | null
+  telefone?: string | null
+  telefoneWhatsApp?: string | null
+  nomeContatoEmergencia?: string | null
+  parentescoContatoEmergencia?: string | null
+  telefoneDeEmergencia?: string | null
+  nomeDoResponsavel?: string | null
+  CPFDoResponsavel?: string | null
+  parentescoDoResponsavel?: string | null
+  telefoneDoResponsavel?: string | null
+  pais?: string | null
+  UF?: $Enums.UF | null
+  municipio?: string | null
+  bairro?: string | null
+  rua?: string | null
+  numero?: string | null
+  complemento?: string | null
+  CEP?: string | null
+  tipoLogradouro?: $Enums.TipoDeLogradouro | null
+  pontoDeReferencia?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  zona?: $Enums.Zona | null
+  possuiDeficiencia?: boolean
+  tipoDeDeficiencia?: Prisma.PacienteCreatetipoDeDeficienciaInput | $Enums.Deficiencia[]
+  observacoes?: string | null
+  ativo?: boolean
+  criadoEm?: Date | string
+  atualizadoEm?: Date | string
+  unidadeDeSaude: Prisma.LocalCreateNestedOneWithoutPacientesInput
+}
+
+export type PacienteUncheckedCreateWithoutEncaminhamentosInput = {
+  id?: number
+  tipoDeCadastro?: $Enums.TipoDeCadastroPaciente
+  nomeDoPaciente: string
+  nomeSocial?: string | null
+  nomeDaMae?: string | null
+  nomeDoPai?: string | null
+  dataDeNascimento: Date | string
+  sexo: $Enums.Sexo
+  estadoCivil?: $Enums.EstadoCivil | null
+  corERaca?: $Enums.Raca | null
+  unidadeDeSaudeId: number
+  codigoGSUS?: string | null
+  codigoIDS?: string | null
+  tipoSanguineo?: $Enums.TipoSanguineo | null
+  fatorRH?: $Enums.FatorRH | null
+  nacionalidade?: string | null
+  municipioDeNascimento?: string | null
+  ufDeNascimento?: $Enums.UF | null
+  CPF?: string | null
+  cartaoDoSus?: string | null
+  NIS?: string | null
+  RG?: string | null
+  orgaoEmissorDoRG?: string | null
+  ufDoRG?: $Enums.UF | null
+  dataDaEmissaoDoRG?: Date | string | null
+  cnsMae?: string | null
+  orientacaoRegCpf?: string | null
+  tituloDeEleitor?: string | null
+  zonaEleitoral?: string | null
+  secaoEleitoral?: string | null
+  CTPSNumero?: string | null
+  CTPSSerie?: string | null
+  cTPSUf?: $Enums.UF | null
+  CTPSDataEmissao?: Date | string | null
+  PISPASEP?: string | null
+  frequentaEscola?: string | null
+  escola?: string | null
+  serieEscolar?: string | null
+  grauEscolaridade?: $Enums.GrauDeEscolaridade | null
+  cursoProfissionalizante?: string | null
+  paisDeOrigem?: string | null
+  entradaNoBrasil?: Date | string | null
+  email?: string | null
+  telefone?: string | null
+  telefoneWhatsApp?: string | null
+  nomeContatoEmergencia?: string | null
+  parentescoContatoEmergencia?: string | null
+  telefoneDeEmergencia?: string | null
+  nomeDoResponsavel?: string | null
+  CPFDoResponsavel?: string | null
+  parentescoDoResponsavel?: string | null
+  telefoneDoResponsavel?: string | null
+  pais?: string | null
+  UF?: $Enums.UF | null
+  municipio?: string | null
+  bairro?: string | null
+  rua?: string | null
+  numero?: string | null
+  complemento?: string | null
+  CEP?: string | null
+  tipoLogradouro?: $Enums.TipoDeLogradouro | null
+  pontoDeReferencia?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  zona?: $Enums.Zona | null
+  possuiDeficiencia?: boolean
+  tipoDeDeficiencia?: Prisma.PacienteCreatetipoDeDeficienciaInput | $Enums.Deficiencia[]
+  observacoes?: string | null
+  ativo?: boolean
+  criadoEm?: Date | string
+  atualizadoEm?: Date | string
+}
+
+export type PacienteCreateOrConnectWithoutEncaminhamentosInput = {
+  where: Prisma.PacienteWhereUniqueInput
+  create: Prisma.XOR<Prisma.PacienteCreateWithoutEncaminhamentosInput, Prisma.PacienteUncheckedCreateWithoutEncaminhamentosInput>
+}
+
+export type PacienteUpsertWithoutEncaminhamentosInput = {
+  update: Prisma.XOR<Prisma.PacienteUpdateWithoutEncaminhamentosInput, Prisma.PacienteUncheckedUpdateWithoutEncaminhamentosInput>
+  create: Prisma.XOR<Prisma.PacienteCreateWithoutEncaminhamentosInput, Prisma.PacienteUncheckedCreateWithoutEncaminhamentosInput>
+  where?: Prisma.PacienteWhereInput
+}
+
+export type PacienteUpdateToOneWithWhereWithoutEncaminhamentosInput = {
+  where?: Prisma.PacienteWhereInput
+  data: Prisma.XOR<Prisma.PacienteUpdateWithoutEncaminhamentosInput, Prisma.PacienteUncheckedUpdateWithoutEncaminhamentosInput>
+}
+
+export type PacienteUpdateWithoutEncaminhamentosInput = {
+  tipoDeCadastro?: Prisma.EnumTipoDeCadastroPacienteFieldUpdateOperationsInput | $Enums.TipoDeCadastroPaciente
+  nomeDoPaciente?: Prisma.StringFieldUpdateOperationsInput | string
+  nomeSocial?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nomeDaMae?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nomeDoPai?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dataDeNascimento?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sexo?: Prisma.EnumSexoFieldUpdateOperationsInput | $Enums.Sexo
+  estadoCivil?: Prisma.NullableEnumEstadoCivilFieldUpdateOperationsInput | $Enums.EstadoCivil | null
+  corERaca?: Prisma.NullableEnumRacaFieldUpdateOperationsInput | $Enums.Raca | null
+  codigoGSUS?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  codigoIDS?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tipoSanguineo?: Prisma.NullableEnumTipoSanguineoFieldUpdateOperationsInput | $Enums.TipoSanguineo | null
+  fatorRH?: Prisma.NullableEnumFatorRHFieldUpdateOperationsInput | $Enums.FatorRH | null
+  nacionalidade?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  municipioDeNascimento?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ufDeNascimento?: Prisma.NullableEnumUFFieldUpdateOperationsInput | $Enums.UF | null
+  CPF?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cartaoDoSus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  NIS?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  RG?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orgaoEmissorDoRG?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ufDoRG?: Prisma.NullableEnumUFFieldUpdateOperationsInput | $Enums.UF | null
+  dataDaEmissaoDoRG?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cnsMae?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orientacaoRegCpf?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tituloDeEleitor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  zonaEleitoral?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  secaoEleitoral?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  CTPSNumero?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  CTPSSerie?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cTPSUf?: Prisma.NullableEnumUFFieldUpdateOperationsInput | $Enums.UF | null
+  CTPSDataEmissao?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  PISPASEP?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  frequentaEscola?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  escola?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serieEscolar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  grauEscolaridade?: Prisma.NullableEnumGrauDeEscolaridadeFieldUpdateOperationsInput | $Enums.GrauDeEscolaridade | null
+  cursoProfissionalizante?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paisDeOrigem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  entradaNoBrasil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telefone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telefoneWhatsApp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nomeContatoEmergencia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentescoContatoEmergencia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telefoneDeEmergencia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nomeDoResponsavel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  CPFDoResponsavel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentescoDoResponsavel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telefoneDoResponsavel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pais?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  UF?: Prisma.NullableEnumUFFieldUpdateOperationsInput | $Enums.UF | null
+  municipio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bairro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rua?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  numero?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  complemento?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  CEP?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tipoLogradouro?: Prisma.NullableEnumTipoDeLogradouroFieldUpdateOperationsInput | $Enums.TipoDeLogradouro | null
+  pontoDeReferencia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  zona?: Prisma.NullableEnumZonaFieldUpdateOperationsInput | $Enums.Zona | null
+  possuiDeficiencia?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tipoDeDeficiencia?: Prisma.PacienteUpdatetipoDeDeficienciaInput | $Enums.Deficiencia[]
+  observacoes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  atualizadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  unidadeDeSaude?: Prisma.LocalUpdateOneRequiredWithoutPacientesNestedInput
+}
+
+export type PacienteUncheckedUpdateWithoutEncaminhamentosInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  tipoDeCadastro?: Prisma.EnumTipoDeCadastroPacienteFieldUpdateOperationsInput | $Enums.TipoDeCadastroPaciente
+  nomeDoPaciente?: Prisma.StringFieldUpdateOperationsInput | string
+  nomeSocial?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nomeDaMae?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nomeDoPai?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dataDeNascimento?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sexo?: Prisma.EnumSexoFieldUpdateOperationsInput | $Enums.Sexo
+  estadoCivil?: Prisma.NullableEnumEstadoCivilFieldUpdateOperationsInput | $Enums.EstadoCivil | null
+  corERaca?: Prisma.NullableEnumRacaFieldUpdateOperationsInput | $Enums.Raca | null
+  unidadeDeSaudeId?: Prisma.IntFieldUpdateOperationsInput | number
+  codigoGSUS?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  codigoIDS?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tipoSanguineo?: Prisma.NullableEnumTipoSanguineoFieldUpdateOperationsInput | $Enums.TipoSanguineo | null
+  fatorRH?: Prisma.NullableEnumFatorRHFieldUpdateOperationsInput | $Enums.FatorRH | null
+  nacionalidade?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  municipioDeNascimento?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ufDeNascimento?: Prisma.NullableEnumUFFieldUpdateOperationsInput | $Enums.UF | null
+  CPF?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cartaoDoSus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  NIS?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  RG?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orgaoEmissorDoRG?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ufDoRG?: Prisma.NullableEnumUFFieldUpdateOperationsInput | $Enums.UF | null
+  dataDaEmissaoDoRG?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cnsMae?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orientacaoRegCpf?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tituloDeEleitor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  zonaEleitoral?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  secaoEleitoral?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  CTPSNumero?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  CTPSSerie?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cTPSUf?: Prisma.NullableEnumUFFieldUpdateOperationsInput | $Enums.UF | null
+  CTPSDataEmissao?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  PISPASEP?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  frequentaEscola?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  escola?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serieEscolar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  grauEscolaridade?: Prisma.NullableEnumGrauDeEscolaridadeFieldUpdateOperationsInput | $Enums.GrauDeEscolaridade | null
+  cursoProfissionalizante?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paisDeOrigem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  entradaNoBrasil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telefone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telefoneWhatsApp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nomeContatoEmergencia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentescoContatoEmergencia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telefoneDeEmergencia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nomeDoResponsavel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  CPFDoResponsavel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentescoDoResponsavel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telefoneDoResponsavel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pais?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  UF?: Prisma.NullableEnumUFFieldUpdateOperationsInput | $Enums.UF | null
+  municipio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bairro?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rua?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  numero?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  complemento?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  CEP?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tipoLogradouro?: Prisma.NullableEnumTipoDeLogradouroFieldUpdateOperationsInput | $Enums.TipoDeLogradouro | null
+  pontoDeReferencia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  zona?: Prisma.NullableEnumZonaFieldUpdateOperationsInput | $Enums.Zona | null
+  possuiDeficiencia?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tipoDeDeficiencia?: Prisma.PacienteUpdatetipoDeDeficienciaInput | $Enums.Deficiencia[]
+  observacoes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  atualizadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PacienteCreateManyUnidadeDeSaudeInput = {
@@ -2320,6 +2658,7 @@ export type PacienteUpdateWithoutUnidadeDeSaudeInput = {
   ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   atualizadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  encaminhamentos?: Prisma.EncaminhamentoUpdateManyWithoutPacienteNestedInput
 }
 
 export type PacienteUncheckedUpdateWithoutUnidadeDeSaudeInput = {
@@ -2393,6 +2732,7 @@ export type PacienteUncheckedUpdateWithoutUnidadeDeSaudeInput = {
   ativo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   criadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   atualizadoEm?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  encaminhamentos?: Prisma.EncaminhamentoUncheckedUpdateManyWithoutPacienteNestedInput
 }
 
 export type PacienteUncheckedUpdateManyWithoutUnidadeDeSaudeInput = {
@@ -2469,6 +2809,35 @@ export type PacienteUncheckedUpdateManyWithoutUnidadeDeSaudeInput = {
 }
 
 
+/**
+ * Count Type PacienteCountOutputType
+ */
+
+export type PacienteCountOutputType = {
+  encaminhamentos: number
+}
+
+export type PacienteCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  encaminhamentos?: boolean | PacienteCountOutputTypeCountEncaminhamentosArgs
+}
+
+/**
+ * PacienteCountOutputType without action
+ */
+export type PacienteCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PacienteCountOutputType
+   */
+  select?: Prisma.PacienteCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * PacienteCountOutputType without action
+ */
+export type PacienteCountOutputTypeCountEncaminhamentosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EncaminhamentoWhereInput
+}
+
 
 export type PacienteSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2543,6 +2912,8 @@ export type PacienteSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   criadoEm?: boolean
   atualizadoEm?: boolean
   unidadeDeSaude?: boolean | Prisma.LocalDefaultArgs<ExtArgs>
+  encaminhamentos?: boolean | Prisma.Paciente$encaminhamentosArgs<ExtArgs>
+  _count?: boolean | Prisma.PacienteCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["paciente"]>
 
 export type PacienteSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -2772,6 +3143,8 @@ export type PacienteSelectScalar = {
 export type PacienteOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tipoDeCadastro" | "nomeDoPaciente" | "nomeSocial" | "nomeDaMae" | "nomeDoPai" | "dataDeNascimento" | "sexo" | "estadoCivil" | "corERaca" | "unidadeDeSaudeId" | "codigoGSUS" | "codigoIDS" | "tipoSanguineo" | "fatorRH" | "nacionalidade" | "municipioDeNascimento" | "ufDeNascimento" | "CPF" | "cartaoDoSus" | "NIS" | "RG" | "orgaoEmissorDoRG" | "ufDoRG" | "dataDaEmissaoDoRG" | "cnsMae" | "orientacaoRegCpf" | "tituloDeEleitor" | "zonaEleitoral" | "secaoEleitoral" | "CTPSNumero" | "CTPSSerie" | "cTPSUf" | "CTPSDataEmissao" | "PISPASEP" | "frequentaEscola" | "escola" | "serieEscolar" | "grauEscolaridade" | "cursoProfissionalizante" | "paisDeOrigem" | "entradaNoBrasil" | "email" | "telefone" | "telefoneWhatsApp" | "nomeContatoEmergencia" | "parentescoContatoEmergencia" | "telefoneDeEmergencia" | "nomeDoResponsavel" | "CPFDoResponsavel" | "parentescoDoResponsavel" | "telefoneDoResponsavel" | "pais" | "UF" | "municipio" | "bairro" | "rua" | "numero" | "complemento" | "CEP" | "tipoLogradouro" | "pontoDeReferencia" | "latitude" | "longitude" | "zona" | "possuiDeficiencia" | "tipoDeDeficiencia" | "observacoes" | "ativo" | "criadoEm" | "atualizadoEm", ExtArgs["result"]["paciente"]>
 export type PacienteInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   unidadeDeSaude?: boolean | Prisma.LocalDefaultArgs<ExtArgs>
+  encaminhamentos?: boolean | Prisma.Paciente$encaminhamentosArgs<ExtArgs>
+  _count?: boolean | Prisma.PacienteCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type PacienteIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   unidadeDeSaude?: boolean | Prisma.LocalDefaultArgs<ExtArgs>
@@ -2784,6 +3157,7 @@ export type $PacientePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   name: "Paciente"
   objects: {
     unidadeDeSaude: Prisma.$LocalPayload<ExtArgs>
+    encaminhamentos: Prisma.$EncaminhamentoPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -3252,6 +3626,7 @@ readonly fields: PacienteFieldRefs;
 export interface Prisma__PacienteClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   unidadeDeSaude<T extends Prisma.LocalDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LocalDefaultArgs<ExtArgs>>): Prisma.Prisma__LocalClient<runtime.Types.Result.GetResult<Prisma.$LocalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  encaminhamentos<T extends Prisma.Paciente$encaminhamentosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Paciente$encaminhamentosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EncaminhamentoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3750,6 +4125,30 @@ export type PacienteDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Limit how many Pacientes to delete.
    */
   limit?: number
+}
+
+/**
+ * Paciente.encaminhamentos
+ */
+export type Paciente$encaminhamentosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Encaminhamento
+   */
+  select?: Prisma.EncaminhamentoSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Encaminhamento
+   */
+  omit?: Prisma.EncaminhamentoOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EncaminhamentoInclude<ExtArgs> | null
+  where?: Prisma.EncaminhamentoWhereInput
+  orderBy?: Prisma.EncaminhamentoOrderByWithRelationInput | Prisma.EncaminhamentoOrderByWithRelationInput[]
+  cursor?: Prisma.EncaminhamentoWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EncaminhamentoScalarFieldEnum | Prisma.EncaminhamentoScalarFieldEnum[]
 }
 
 /**

@@ -1,12 +1,13 @@
 import { NextResponse } from "next/server"
 
-import { TipoDoPrestador } from "@/generated/prisma/enums"
+import { TipoDeAtendimentoDoPrestador, TipoDoPrestador } from "@/generated/prisma/enums"
 import { prisma } from "@/lib/prisma"
 
 export async function GET() {
     try {
         const prestadores = await prisma.prestador.findMany({
             include: {
+                local: true,
                 especialidades: {
                     include: {
                         especialidade: true
@@ -41,6 +42,8 @@ export async function POST(request: Request) {
             cor,
             telefone,
             email,
+            tipoDeAtendimento,
+            localId,
             especialidadesIds = [],
             procedimentosIds = [],
         } = body
@@ -80,6 +83,61 @@ export async function POST(request: Request) {
                 { erro: "Especialidades ou procedimentos inválidos." },
                 { status: 400 }
             )
+        }
+
+        if (
+            !Object.values(TipoDeAtendimentoDoPrestador).includes(tipoDeAtendimento)
+        ) {
+            return NextResponse.json(
+                { erro: "Selecione um tipo de atendimento válido." },
+                { status: 400 }
+            )
+        }
+
+        const localIdNumerico = localId ? Number(localId) : null
+
+        if (
+            (tipoDeAtendimento === TipoDeAtendimentoDoPrestador.EXTERNO ||
+                tipoDeAtendimento === TipoDeAtendimentoDoPrestador.AMBOS) &&
+            !localIdNumerico
+        ) {
+            return NextResponse.json(
+                { erro: "Selecione o local de atendimento do prestador." },
+                { status: 400 }
+            )
+        }
+
+        if (
+            localIdNumerico !== null &&
+            (!Number.isInteger(localIdNumerico) || localIdNumerico <= 0)
+        ) {
+            return NextResponse.json(
+                { erro: "Local de atendimento inválido." },
+                { status: 400 }
+            )
+        }
+
+        if (tipoDeAtendimento === TipoDeAtendimentoDoPrestador.ITINERANTE && localIdNumerico !== null) {
+            return NextResponse.json(
+                { erro: "Prestadores itinerantes não devem possuir local de atendimento cadastrado." },
+                { status: 400 }
+            )
+        }
+
+        if (localIdNumerico !== null) {
+            const local = await prisma.local.findFirst({
+                where: {
+                    id: localIdNumerico,
+                    ativo: true
+                }
+            })
+
+            if (!local) {
+                return NextResponse.json(
+                    { erro: "Local de atendimento não encontrado ou inativo." },
+                    { status: 400 }
+                )
+            }
         }
 
         // Remove IDs repetidos
@@ -168,6 +226,8 @@ export async function POST(request: Request) {
                 cor,
                 telefone,
                 email,
+                tipoDeAtendimento,
+                localId: localIdNumerico,
                 especialidades: {
                     create: idsEspecialidades.map((especialidadeId: number) => ({
                         especialidade: {

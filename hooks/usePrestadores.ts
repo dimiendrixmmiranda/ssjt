@@ -5,6 +5,7 @@ import { useEffect, useState } from "react"
 
 export type PrestadorComRelacoes = Prisma.PrestadorGetPayload<{
     include: {
+        local: true
         especialidades: {
             include: {
                 especialidade: true
