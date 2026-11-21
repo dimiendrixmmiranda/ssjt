@@ -30,6 +30,25 @@ import Image from "next/image";
 import { Paginator, PaginatorPageChangeEvent } from "primereact/paginator";
 import { RxRows } from "react-icons/rx";
 import { LuMinus } from "react-icons/lu";
+import MenuContextoPaciente from "@/components/contextoDeAtendimento/ContextoDeAtendimento";
+import FormIncluirAgendamento from "@/components/formularios/FormularioIncluirAgendamento";
+import DocumentoRequisicaoProcedimentos from "@/components/pdf/requisicoes/procedimentos/DocumentoRequisicaoDeProcedimentos";
+import { pdf } from "@react-pdf/renderer"
+import { gerarCodigoDeBarras } from "@/utils/gerarCodigoDeBarras";
+
+type AcaoPaciente =
+    | "agendamento"
+    | "alterar"
+    | "bloquear"
+    | "desbloquear"
+    | "contato"
+    | "historico"
+    | "comprovanteEntrada"
+    | "comprovanteAgendamento"
+    | "requisicaoExames"
+    | "cadsus"
+    | "prioridade"
+    | "visualizar"
 
 export type PrestadorComRelacoes = Prisma.PrestadorGetPayload<{
     include: {
@@ -46,13 +65,14 @@ export type PrestadorComRelacoes = Prisma.PrestadorGetPayload<{
     }
 }>
 
+
 export default function Page() {
     const { pacientes } = usePacientes()
     const { locais } = useLocais()
     const { prestadores } = usePrestadores()
     const { especialidades } = useEspecialidades()
     const { procedimentos } = useProcedimentos()
-    const { encaminhamentos, buscarEncaminhamentos } = useEncaminhamentos()
+    const { encaminhamentos, carregandoEncaminhamentos, buscarEncaminhamentos } = useEncaminhamentos()
 
     const tabelaRef = useRef<HTMLDivElement>(null);
     const arrastando = useRef(false)
@@ -105,7 +125,9 @@ export default function Page() {
 
     // FILTROS
     const [campoDeBusca, setCampoDeBusca] = useState("NOME")
+    const [campoDeBuscaAplicado, setCampoDeBuscaAplicado] = useState("NOME")
     const [valorDaBusca, setValorDaBusca] = useState("")
+    const [valorDaBuscaAplicada, setValorDaBuscaAplicada] = useState("")
 
     const [visibleDialogAdicionarConsultaProcedimentoCirurgia, setVisibleDialogAdicionarConsultaProcedimentoCirurgia] = useState(false)
     const [buscarPaciente, setBuscarPaciente] = useState('')
@@ -148,8 +170,6 @@ export default function Page() {
     )
     const possuiLateralidade = membroAtual?.lateralidade === "COM_LADO"
 
-    console.log(possuiMembros)
-
     const [tituloResultado, setTituloResultado] = useState("");
     const [mensagemResultado, setMensagemResultado] = useState("");
     const [dialogConfirmacao, setDialogConfirmacao] = useState(false);
@@ -157,15 +177,13 @@ export default function Page() {
     const [carregando, setCarregando] = useState(false)
 
     const [first, setFirst] = useState(0)
-    const [rows] = useState(7)
+    const [rows] = useState(8)
 
     const membrosFiltrados = membrosDisponiveis.filter(membro =>
         normalizarTexto(membro.nome).includes(
             normalizarTexto(buscarMembro)
         )
     )
-
-    console.log(tipoDeConsulta)
 
     const procedimentosFiltrados = procedimentos.filter((procedimento) =>
         normalizarTexto(procedimento.nome).includes(
@@ -447,32 +465,26 @@ export default function Page() {
         setDialogConfirmacao(true)
     }
 
-    const handleBuscar = () => {
-        const filtros = {
-            campo: campoDeBusca,
-            valor: valorDaBusca.trim(),
-            status: statusDeAgendamento,
-            unidade: unidadeDoClienteBusca,
-            tipo: tipoDeAtendimento
-        }
+    const handleBuscar = async () => {
+        const valor = valorDaBusca.trim()
 
-        console.log("Filtros da pesquisa:", filtros)
+        setCampoDeBuscaAplicado(campoDeBusca)
+        setValorDaBuscaAplicada(valor)
+        setFirst(0)
+
+        await buscarEncaminhamentos({
+            campoDeBusca,
+            valorDaBusca: valor
+        })
     }
-
-    const handleAlterarTipoDeAtendimento = (
-        tipo: "TODOS" | "CONSULTA" | "PROCEDIMENTO" | "CIRURGIA-TFD"
-    ) => {
+    const handleAlterarTipoDeAtendimento = (tipo: "TODOS" | "CONSULTA" | "PROCEDIMENTO" | "CIRURGIA-TFD") => {
         setTipoDeAtendimento(tipo)
-
-        console.log("Tipo de atendimento selecionado:", tipo)
     }
-
 
     const encaminhamentosFiltrados = encaminhamentos.filter((encaminhamento) => {
-
         // FILTRO POR TIPO DE ATENDIMENTO
         if (tipoDeAtendimento === "CONSULTA") {
-            if (encaminhamento.tipo !== "CONSULTA") return false
+            return (encaminhamento.tipo === "CONSULTA" && encaminhamento.categoria === "NORMAL")
         }
 
         if (tipoDeAtendimento === "PROCEDIMENTO") {
@@ -489,10 +501,10 @@ export default function Page() {
             }
         }
 
-        // FILTRO POR SITUAÇÃO
+        // FILTRO POR STATUS DE AGENDAMENTO
         if (
             statusDeAgendamento !== StatusDeAgendamento.TODOS &&
-            encaminhamento.situacao !== statusDeAgendamento
+            encaminhamento.statusDeAgendamento !== statusDeAgendamento
         ) {
             return false
         }
@@ -506,18 +518,18 @@ export default function Page() {
         }
 
         // FILTRO POR NOME, CPF OU CARTÃO SUS
-        if (valorDaBusca.trim() !== "") {
-            const valor = normalizarTexto(valorDaBusca)
+        if (valorDaBuscaAplicada.trim() !== "") {
+            const valor = normalizarTexto(valorDaBuscaAplicada)
             const paciente = encaminhamento.paciente
 
-            if (campoDeBusca === CampoDeBusca.NOME) {
+            if (campoDeBuscaAplicado === CampoDeBusca.NOME) {
                 if (!normalizarTexto(paciente.nomeDoPaciente).includes(valor)) {
                     return false
                 }
             }
 
-            if (campoDeBusca === CampoDeBusca.CPF) {
-                const cpfBusca = valorDaBusca.replace(/\D/g, "")
+            if (campoDeBuscaAplicado === CampoDeBusca.CPF) {
+                const cpfBusca = valorDaBuscaAplicada.replace(/\D/g, "")
                 const cpfPaciente = (paciente.CPF ?? "").replace(/\D/g, "")
 
                 if (!cpfPaciente.includes(cpfBusca)) {
@@ -525,8 +537,8 @@ export default function Page() {
                 }
             }
 
-            if (campoDeBusca === CampoDeBusca.CARTAO_SUS) {
-                const susBusca = valorDaBusca.replace(/\D/g, "")
+            if (campoDeBuscaAplicado === CampoDeBusca.CARTAO_SUS) {
+                const susBusca = valorDaBuscaAplicada.replace(/\D/g, "")
                 const susPaciente = (paciente.cartaoDoSus ?? "").replace(/\D/g, "")
 
                 if (!susPaciente.includes(susBusca)) {
@@ -549,11 +561,85 @@ export default function Page() {
         atendimento: typeof encaminhamentos[number]
     } | null>(null)
 
+    const [dialog, setDialog] = useState<{ tipo: AcaoPaciente, agendamento: typeof encaminhamentos[number] } | null>(null)
 
-    console.log("Encaminhamentos filtrados:", encaminhamentosFiltrados)
+    const verificarSeJaEstaAgendado = (
+        encaminhamento: typeof encaminhamentos[number]
+    ) => {
+        if (encaminhamento.statusDeAgendamento === StatusDeAgendamento.AGENDADO) {
+            setTituloResultado("Encaminhamento já agendado")
+            setMensagemResultado(
+                "Este encaminhamento já possui um agendamento. Não é possível realizar um novo agendamento."
+            )
+            setDialogResultado(true)
+
+            return true
+        }
+
+        return false
+    }
+
+    const handleAction = (
+        acao: AcaoPaciente,
+        agendamento: any
+    ) => {
+        setMenuContexto(null)
+
+        if (acao === "requisicaoExames") {
+            setDialog({
+                tipo: acao,
+                agendamento
+            })
+            return
+        }
+
+        if (
+            acao === "agendamento" &&
+            agendamento.statusDeAgendamento === StatusDeAgendamento.AGENDADO
+        ) {
+            setTituloResultado("Encaminhamento já agendado")
+            setMensagemResultado(
+                "Este encaminhamento já possui um agendamento. Não é possível realizar um novo agendamento."
+            )
+            setDialogResultado(true)
+            return
+        }
+
+        setDialog({
+            tipo: acao,
+            agendamento
+        })
+    }
+
+    const [urlRequisicao, setUrlRequisicao] = useState<string | null>(null)
+    const [gerandoRequisicao, setGerandoRequisicao] = useState(false)
+
+    const abrirRequisicaoExames = async () => {
+        try {
+            const codigoDeBarras = gerarCodigoDeBarras(
+                String(dialog?.agendamento.id)
+            )
+
+            console.log(codigoDeBarras)
+
+            setGerandoRequisicao(true)
+
+            const documento = (
+                <DocumentoRequisicaoProcedimentos encaminhamento={dialog?.agendamento} codigoDeBarras={codigoDeBarras} />
+            )
+
+            const blob = await pdf(documento).toBlob()
+            const url = URL.createObjectURL(blob)
+
+            setUrlRequisicao(url)
+        } catch (error) {
+            console.error("Erro ao gerar requisição de exames:", error)
+        } finally {
+            setGerandoRequisicao(false)
+        }
+    }
 
 
-    console.log(procedimentoSelecionado)
 
     return (
         <Template>
@@ -628,10 +714,10 @@ export default function Page() {
                                         valor={valorDaBusca} />
                                     <button
                                         type="button"
-                                        onClick={() => console.log(encaminhamentosFiltrados)}
+                                        onClick={handleBuscar}
                                         className="font-bold bg-verde text-white h-fit mt-auto py-2 px-5 rounded-lg hover:bg-verde-escuro transition-all"
                                     >
-                                        Buscar
+                                        {carregandoEncaminhamentos ? "Buscando..." : "Buscar"}
                                     </button>
                                 </div>
                             </div>
@@ -689,13 +775,13 @@ export default function Page() {
 
                         {
                             encaminhamentosFiltrados.length <= 0 ? (
-                                <div className="shadow-[0px_0px_2px_1px_var(--verde-escuro)] rounded-lg py-2 px-4 gap-3 relative flex justify-between">
+                                <div className="shadow-[0px_0px_2px_1px_var(--verde-escuro)] rounded-lg py-2 px-4 gap-3 relative flex justify-between h-full">
                                     <div className="relative mx-auto 2xl:w-[1000px] 2xl:h-[410px]">
                                         <Image alt="nenhum encaminhamento encontrado" src={'/nenhum-encaminhamento-encontrado.png'} fill className="object-contain" />
                                     </div>
                                 </div>
                             ) : (
-                                <div className="shadow-[0px_0px_2px_1px_var(--verde-escuro)] rounded-lg py-2 px-4 gap-3 relative flex flex-col justify-between w-full overflow-hidden">
+                                <div className="shadow-[0px_0px_2px_1px_var(--verde-escuro)] rounded-lg py-2 px-4 gap-3 relative flex flex-col justify-between w-full h-full overflow-hidden">
                                     <div
                                         ref={tabelaRef}
                                         onMouseDown={(e) => {
@@ -761,7 +847,9 @@ export default function Page() {
                                                         <ul className="flex flex-col">
                                                             {
                                                                 buscaAgendamentosPaginados.map((encaminhamento, i) => {
-                                                                    console.log(encaminhamento.prestadorExecutante) // verificar depois
+                                                                    const prestadorExecutante = prestadores.find(prestador => prestador.id == encaminhamento.prestadorExecutanteId)
+                                                                    const localDeAtendimento = locais.find(local => local.id === encaminhamento.localDeAtendimentoId)
+
                                                                     return (
                                                                         <li key={i}
                                                                             onContextMenu={(e) => {
@@ -898,10 +986,10 @@ export default function Page() {
                                                                                 <p className="capitalize">{encaminhamento.dataDeAgendamentoLocal ? new Date(encaminhamento.dataDeAgendamentoLocal).toISOString().split("T")[0].split("-").reverse().join("/") : '—'}</p>
                                                                             </div>
                                                                             <div className="flex justify-center items-center">
-                                                                                <p className="capitalize">{encaminhamento.prestadorExecutante?.nome || '—'}</p>
+                                                                                <p className="capitalize">{localDeAtendimento?.nome || '—'}</p>
                                                                             </div>
                                                                             <div className="flex justify-center items-center">
-                                                                                <p className="capitalize">{encaminhamento.prestadorExecutante?.nome || '—'}</p>
+                                                                                <p className="capitalize">{prestadorExecutante?.nome || '—'}</p>
                                                                             </div>
                                                                         </li>
                                                                     )
@@ -919,7 +1007,7 @@ export default function Page() {
                                     </div>
 
                                     <div className="grid grid-cols-[300px_1fr] mt-auto -mb-2">
-                                        <p className="my-auto">Mostrando 1 a 6 de 6 registros</p>
+                                        <p className="my-auto">Mostrando 1 a {rows >= encaminhamentosFiltrados.length ? encaminhamentosFiltrados.length : rows} de {encaminhamentosFiltrados.length} registros</p>
                                         <Paginator
                                             first={first}
                                             rows={rows}
@@ -1108,6 +1196,7 @@ export default function Page() {
                             )
                         }
                     </div>
+
                     {/* Selecionar Consulta ou procedimento */}
                     <div className="border border-zinc-200 grid grid-cols-2 gap-4 mt-4 p-4 rounded-lg w-full">
                         <button onClick={() => setBotaoAdicionarConsultaProcedimento("CONSULTA")} className={`flex items-center justify-center gap-2 text-xl font-bold border py-1 rounded-lg ${botaoAdicionarConsultaProcedimento === 'CONSULTA' ? 'border-verde text-verde' : 'border-zinc-200'}`}>
@@ -1119,6 +1208,7 @@ export default function Page() {
                             <p>Procedimentos</p>
                         </button>
                     </div>
+
                     {/* Origem */}
                     <div className="border border-zinc-200 flex flex-col gap-4 mt-4 p-4 rounded-lg w-full">
                         <div className="flex items-center gap-2 text-xl font-bold">
@@ -1223,6 +1313,7 @@ export default function Page() {
                             </div>
                         </div>
                     </div>
+
                     {/* Destino */}
                     {
                         botaoAdicionarConsultaProcedimento === 'CONSULTA' ? (
@@ -1570,6 +1661,7 @@ export default function Page() {
                             </div>
                         )
                     }
+
                     {/* Botões de ação */}
                     <div className="grid grid-cols-2 gap-4 w-fit ml-auto mt-4">
                         <button
@@ -1596,6 +1688,81 @@ export default function Page() {
                 </div>
             </Dialog>
 
+            {menuContexto && (
+                <MenuContextoPaciente
+                    x={menuContexto.x}
+                    y={menuContexto.y}
+                    agendamento={menuContexto.atendimento}
+                    onClose={() => setMenuContexto(null)}
+                    onAction={handleAction}
+                />
+            )}
+
+            <Dialog
+                header={
+                    dialog?.tipo === "agendamento"
+                        ? "Incluir Agendamento"
+                        : dialog?.tipo === "alterar"
+                            ? "Alterar Agendamento"
+                            : dialog?.tipo === "historico"
+                                ? "Histórico do Cliente"
+                                : dialog?.tipo === "requisicaoExames"
+                                    ? "Requisição de Encaminhamento"
+                                    : "Ação"
+                }
+                visible={dialog !== null}
+                onHide={() => setDialog(null)}
+                className="w-full max-w-[1000px]"
+            >
+                {dialog?.tipo === "agendamento" && (
+                    <FormIncluirAgendamento
+                        encaminhamento={dialog.agendamento}
+                        onClose={() => setDialog(null)}
+                        onAgendamentoSalvo={() => {
+                            buscarEncaminhamentos()
+                        }}
+                    />
+                )}
+
+                {dialog?.tipo === "requisicaoExames" && (
+                    <div className="flex flex-col gap-4">
+
+                        {!urlRequisicao ? (
+                            <>
+                                <p className="text-sm text-zinc-600">
+                                    Deseja gerar uma segunda via da requisição de exames/procedimentos?
+                                </p>
+
+                                <div className="flex justify-end gap-3">
+                                    <button
+                                        type="button"
+                                        onClick={() => setDialog(null)}
+                                        className="px-4 py-2 rounded-lg border"
+                                    >
+                                        Cancelar
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        onClick={abrirRequisicaoExames}
+                                        disabled={gerandoRequisicao}
+                                        className="px-4 py-2 rounded-lg bg-green-700 text-white disabled:opacity-50"
+                                    >
+                                        {gerandoRequisicao ? "Gerando..." : "Gerar PDF"}
+                                    </button>
+                                </div>
+                            </>
+                        ) : (
+                            <iframe
+                                src={urlRequisicao}
+                                className="w-full h-[75vh] border rounded"
+                                title="Requisição de Exames"
+                            />
+                        )}
+                    </div>
+                )}
+            </Dialog>
+
             <DialogPersonalizado
                 visivel={dialogConfirmacao}
                 titulo="Confirmar cadastro"
@@ -1603,6 +1770,15 @@ export default function Page() {
                 textoConfirmar="Cadastrar"
                 aoConfirmar={criarEncaminhamento}
                 aoCancelar={() => setDialogConfirmacao(false)}
+            />
+
+            <DialogPersonalizado
+                visivel={dialogResultado}
+                titulo={tituloResultado}
+                mensagem={mensagemResultado}
+                textoConfirmar="Entendi"
+                aoConfirmar={() => setDialogResultado(false)}
+                aoCancelar={() => setDialogResultado(false)}
             />
         </Template >
     )

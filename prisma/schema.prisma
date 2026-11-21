@@ -200,6 +200,11 @@ enum TipoDeAtendimentoDoPrestador {
   AMBOS
 }
 
+enum Convenio{
+  REDE_MUNICIPAL
+  REDE_REFERENCIADA
+}
+
 model Usuario {
   id                String   @id @default(cuid())
   nome              String
@@ -223,7 +228,7 @@ model Local {
 
   nome         String
   tipoDeLocal  TipoDeLocal
-  atendimentoDentroOuForaDoMunicipio         AtendimentoDentroOuForaDoMunicipio
+  atendimentoDentroOuForaDoMunicipio AtendimentoDentroOuForaDoMunicipio
   quantidadeDeSalas Int
   ativo        Boolean   @default(true)
 
@@ -234,7 +239,7 @@ model Local {
   rua          String
   numero       String
   bairro       String
-  complemento  String?
+  complemento   String?
 
   telefone1    String
   email        String?
@@ -242,11 +247,14 @@ model Local {
   usuarios     Usuario[]
   agendamentos AgendamentoDePrestador[]
   pacientes    Paciente[]
-  encaminhamentosDeOrigem Encaminhamento[]
+
+  encaminhamentosDeOrigem Encaminhamento[] @relation("EncaminhamentoOrigem")
+  encaminhamentosDeAtendimento Encaminhamento[] @relation("LocalDeAtendimentoEncaminhamento")
+
   prestadores Prestador[]
 
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
 model TipoDeCirurgia {
@@ -337,9 +345,9 @@ model Prestador {
   localId Int?
   local   Local? @relation(fields: [localId], references: [id])
 
-  agendamentos AgendamentoDePrestador[]
   encaminhamentosSolicitados Encaminhamento[]
   encaminhamentosExecutados Encaminhamento[] @relation("PrestadorExecutante")
+  agendamentosDePrestadores AgendamentoDePrestador[]
 
   ativo     Boolean   @default(true)
   createdAt DateTime  @default(now())
@@ -496,45 +504,57 @@ model Encaminhamento {
   pacienteId Int
   paciente Paciente @relation(fields: [pacienteId], references: [id])
 
+  // Unidade de origem
   unidadeDeOrigemId Int
-  unidadeDeOrigem Local @relation(fields: [unidadeDeOrigemId], references: [id])
+  unidadeDeOrigem Local @relation("EncaminhamentoOrigem", fields: [unidadeDeOrigemId], references: [id])
 
   dataDeEntrada DateTime @db.Date
 
   statusDeAgendamento StatusDeAgendamento @default(EM_ESPERA)
 
+  // Médico solicitante
   medicoSolicitanteId Int?
   medicoSolicitante Prestador? @relation(fields: [medicoSolicitanteId], references: [id])
 
   especialidadeDoPrestadorId Int?
-  especialidadeDoPrestador Especialidade? @relation("EspecialidadeDoMedico",fields: [especialidadeDoPrestadorId],references: [id])
+  especialidadeDoPrestador Especialidade? @relation("EspecialidadeDoMedico", fields: [especialidadeDoPrestadorId], references: [id])
 
   categoria CategoriaEspecialidade?
   tipoDeConsulta TipoDeConsulta?
 
+  // Especialidade encaminhada
   especialidadeEncaminhadaId Int?
-  especialidadeEncaminhada Especialidade? @relation("EspecialidadeEncaminhada",fields: [especialidadeEncaminhadaId],references: [id])
+  especialidadeEncaminhada Especialidade? @relation("EspecialidadeEncaminhada", fields: [especialidadeEncaminhadaId], references: [id])
 
+  // Cirurgia / procedimento
   tipoDeCirurgia String?
 
   procedimentoId Int?
-  procedimento Procedimento? @relation(fields: [procedimentoId],references: [id])
+  procedimento Procedimento? @relation(fields: [procedimentoId], references: [id])
 
   membroProcedimentoId Int?
-  membroProcedimento MembroProcedimento? @relation(fields: [membroProcedimentoId],references: [id])
+  membroProcedimento MembroProcedimento? @relation(fields: [membroProcedimentoId], references: [id])
 
   lado LadoDoCorpo?
 
   situacao String
   encaminhamentoRemarcado Boolean @default(false)
 
+  // Retorno
   condicaoDeRetorno String?
   dataDoRetorno DateTime? @db.Date
 
-  dataDeSaida             DateTime? @db.Date
-  dataDeAgendamentoLocal  DateTime? @db.Date
-  prestadorExecutanteId   Int?
-  prestadorExecutante     Prestador? @relation("PrestadorExecutante",fields: [prestadorExecutanteId],references: [id])
+  // Agendamento do encaminhamento
+  dataDeSaida DateTime? @db.Date
+  dataDeAgendamentoLocal DateTime? @db.Date
+  horarioDeAgendamento String? @db.VarChar(5)
+
+  prestadorExecutanteId Int?
+  prestadorExecutante Prestador? @relation("PrestadorExecutante", fields: [prestadorExecutanteId], references: [id])
+
+  // Local onde será realizado o atendimento
+  localDeAtendimentoId Int?
+  localDeAtendimento Local? @relation("LocalDeAtendimentoEncaminhamento", fields: [localDeAtendimentoId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

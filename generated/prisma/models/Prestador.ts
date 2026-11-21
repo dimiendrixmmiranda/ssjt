@@ -271,9 +271,9 @@ export type PrestadorWhereInput = {
   especialidades?: Prisma.PrestadorEspecialidadeListRelationFilter
   procedimentos?: Prisma.PrestadorProcedimentoListRelationFilter
   local?: Prisma.XOR<Prisma.LocalNullableScalarRelationFilter, Prisma.LocalWhereInput> | null
-  agendamentos?: Prisma.AgendamentoDePrestadorListRelationFilter
   encaminhamentosSolicitados?: Prisma.EncaminhamentoListRelationFilter
   encaminhamentosExecutados?: Prisma.EncaminhamentoListRelationFilter
+  agendamentosDePrestadores?: Prisma.AgendamentoDePrestadorListRelationFilter
 }
 
 export type PrestadorOrderByWithRelationInput = {
@@ -291,9 +291,9 @@ export type PrestadorOrderByWithRelationInput = {
   especialidades?: Prisma.PrestadorEspecialidadeOrderByRelationAggregateInput
   procedimentos?: Prisma.PrestadorProcedimentoOrderByRelationAggregateInput
   local?: Prisma.LocalOrderByWithRelationInput
-  agendamentos?: Prisma.AgendamentoDePrestadorOrderByRelationAggregateInput
   encaminhamentosSolicitados?: Prisma.EncaminhamentoOrderByRelationAggregateInput
   encaminhamentosExecutados?: Prisma.EncaminhamentoOrderByRelationAggregateInput
+  agendamentosDePrestadores?: Prisma.AgendamentoDePrestadorOrderByRelationAggregateInput
 }
 
 export type PrestadorWhereUniqueInput = Prisma.AtLeast<{
@@ -314,9 +314,9 @@ export type PrestadorWhereUniqueInput = Prisma.AtLeast<{
   especialidades?: Prisma.PrestadorEspecialidadeListRelationFilter
   procedimentos?: Prisma.PrestadorProcedimentoListRelationFilter
   local?: Prisma.XOR<Prisma.LocalNullableScalarRelationFilter, Prisma.LocalWhereInput> | null
-  agendamentos?: Prisma.AgendamentoDePrestadorListRelationFilter
   encaminhamentosSolicitados?: Prisma.EncaminhamentoListRelationFilter
   encaminhamentosExecutados?: Prisma.EncaminhamentoListRelationFilter
+  agendamentosDePrestadores?: Prisma.AgendamentoDePrestadorListRelationFilter
 }, "id" | "cor">
 
 export type PrestadorOrderByWithAggregationInput = {
@@ -368,9 +368,9 @@ export type PrestadorCreateInput = {
   especialidades?: Prisma.PrestadorEspecialidadeCreateNestedManyWithoutPrestadorInput
   procedimentos?: Prisma.PrestadorProcedimentoCreateNestedManyWithoutPrestadorInput
   local?: Prisma.LocalCreateNestedOneWithoutPrestadoresInput
-  agendamentos?: Prisma.AgendamentoDePrestadorCreateNestedManyWithoutPrestadorInput
   encaminhamentosSolicitados?: Prisma.EncaminhamentoCreateNestedManyWithoutMedicoSolicitanteInput
   encaminhamentosExecutados?: Prisma.EncaminhamentoCreateNestedManyWithoutPrestadorExecutanteInput
+  agendamentosDePrestadores?: Prisma.AgendamentoDePrestadorCreateNestedManyWithoutPrestadorInput
 }
 
 export type PrestadorUncheckedCreateInput = {
@@ -387,9 +387,9 @@ export type PrestadorUncheckedCreateInput = {
   updatedAt?: Date | string
   especialidades?: Prisma.PrestadorEspecialidadeUncheckedCreateNestedManyWithoutPrestadorInput
   procedimentos?: Prisma.PrestadorProcedimentoUncheckedCreateNestedManyWithoutPrestadorInput
-  agendamentos?: Prisma.AgendamentoDePrestadorUncheckedCreateNestedManyWithoutPrestadorInput
   encaminhamentosSolicitados?: Prisma.EncaminhamentoUncheckedCreateNestedManyWithoutMedicoSolicitanteInput
   encaminhamentosExecutados?: Prisma.EncaminhamentoUncheckedCreateNestedManyWithoutPrestadorExecutanteInput
+  agendamentosDePrestadores?: Prisma.AgendamentoDePrestadorUncheckedCreateNestedManyWithoutPrestadorInput
 }
 
 export type PrestadorUpdateInput = {
@@ -405,9 +405,9 @@ export type PrestadorUpdateInput = {
   especialidades?: Prisma.PrestadorEspecialidadeUpdateManyWithoutPrestadorNestedInput
   procedimentos?: Prisma.PrestadorProcedimentoUpdateManyWithoutPrestadorNestedInput
   local?: Prisma.LocalUpdateOneWithoutPrestadoresNestedInput
-  agendamentos?: Prisma.AgendamentoDePrestadorUpdateManyWithoutPrestadorNestedInput
   encaminhamentosSolicitados?: Prisma.EncaminhamentoUpdateManyWithoutMedicoSolicitanteNestedInput
   encaminhamentosExecutados?: Prisma.EncaminhamentoUpdateManyWithoutPrestadorExecutanteNestedInput
+  agendamentosDePrestadores?: Prisma.AgendamentoDePrestadorUpdateManyWithoutPrestadorNestedInput
 }
 
 export type PrestadorUncheckedUpdateInput = {
@@ -424,9 +424,9 @@ export type PrestadorUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   especialidades?: Prisma.PrestadorEspecialidadeUncheckedUpdateManyWithoutPrestadorNestedInput
   procedimentos?: Prisma.PrestadorProcedimentoUncheckedUpdateManyWithoutPrestadorNestedInput
-  agendamentos?: Prisma.AgendamentoDePrestadorUncheckedUpdateManyWithoutPrestadorNestedInput
   encaminhamentosSolicitados?: Prisma.EncaminhamentoUncheckedUpdateManyWithoutMedicoSolicitanteNestedInput
   encaminhamentosExecutados?: Prisma.EncaminhamentoUncheckedUpdateManyWithoutPrestadorExecutanteNestedInput
+  agendamentosDePrestadores?: Prisma.AgendamentoDePrestadorUncheckedUpdateManyWithoutPrestadorNestedInput
 }
 
 export type PrestadorCreateManyInput = {
@@ -619,18 +619,18 @@ export type PrestadorUpdateOneRequiredWithoutProcedimentosNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.PrestadorUpdateToOneWithWhereWithoutProcedimentosInput, Prisma.PrestadorUpdateWithoutProcedimentosInput>, Prisma.PrestadorUncheckedUpdateWithoutProcedimentosInput>
 }
 
-export type PrestadorCreateNestedOneWithoutAgendamentosInput = {
-  create?: Prisma.XOR<Prisma.PrestadorCreateWithoutAgendamentosInput, Prisma.PrestadorUncheckedCreateWithoutAgendamentosInput>
-  connectOrCreate?: Prisma.PrestadorCreateOrConnectWithoutAgendamentosInput
+export type PrestadorCreateNestedOneWithoutAgendamentosDePrestadoresInput = {
+  create?: Prisma.XOR<Prisma.PrestadorCreateWithoutAgendamentosDePrestadoresInput, Prisma.PrestadorUncheckedCreateWithoutAgendamentosDePrestadoresInput>
+  connectOrCreate?: Prisma.PrestadorCreateOrConnectWithoutAgendamentosDePrestadoresInput
   connect?: Prisma.PrestadorWhereUniqueInput
 }
 
-export type PrestadorUpdateOneRequiredWithoutAgendamentosNestedInput = {
-  create?: Prisma.XOR<Prisma.PrestadorCreateWithoutAgendamentosInput, Prisma.PrestadorUncheckedCreateWithoutAgendamentosInput>
-  connectOrCreate?: Prisma.PrestadorCreateOrConnectWithoutAgendamentosInput
-  upsert?: Prisma.PrestadorUpsertWithoutAgendamentosInput
+export type PrestadorUpdateOneRequiredWithoutAgendamentosDePrestadoresNestedInput = {
+  create?: Prisma.XOR<Prisma.PrestadorCreateWithoutAgendamentosDePrestadoresInput, Prisma.PrestadorUncheckedCreateWithoutAgendamentosDePrestadoresInput>
+  connectOrCreate?: Prisma.PrestadorCreateOrConnectWithoutAgendamentosDePrestadoresInput
+  upsert?: Prisma.PrestadorUpsertWithoutAgendamentosDePrestadoresInput
   connect?: Prisma.PrestadorWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.PrestadorUpdateToOneWithWhereWithoutAgendamentosInput, Prisma.PrestadorUpdateWithoutAgendamentosInput>, Prisma.PrestadorUncheckedUpdateWithoutAgendamentosInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PrestadorUpdateToOneWithWhereWithoutAgendamentosDePrestadoresInput, Prisma.PrestadorUpdateWithoutAgendamentosDePrestadoresInput>, Prisma.PrestadorUncheckedUpdateWithoutAgendamentosDePrestadoresInput>
 }
 
 export type PrestadorCreateNestedOneWithoutEncaminhamentosSolicitadosInput = {
@@ -677,9 +677,9 @@ export type PrestadorCreateWithoutLocalInput = {
   updatedAt?: Date | string
   especialidades?: Prisma.PrestadorEspecialidadeCreateNestedManyWithoutPrestadorInput
   procedimentos?: Prisma.PrestadorProcedimentoCreateNestedManyWithoutPrestadorInput
-  agendamentos?: Prisma.AgendamentoDePrestadorCreateNestedManyWithoutPrestadorInput
   encaminhamentosSolicitados?: Prisma.EncaminhamentoCreateNestedManyWithoutMedicoSolicitanteInput
   encaminhamentosExecutados?: Prisma.EncaminhamentoCreateNestedManyWithoutPrestadorExecutanteInput
+  agendamentosDePrestadores?: Prisma.AgendamentoDePrestadorCreateNestedManyWithoutPrestadorInput
 }
 
 export type PrestadorUncheckedCreateWithoutLocalInput = {
@@ -695,9 +695,9 @@ export type PrestadorUncheckedCreateWithoutLocalInput = {
   updatedAt?: Date | string
   especialidades?: Prisma.PrestadorEspecialidadeUncheckedCreateNestedManyWithoutPrestadorInput
   procedimentos?: Prisma.PrestadorProcedimentoUncheckedCreateNestedManyWithoutPrestadorInput
-  agendamentos?: Prisma.AgendamentoDePrestadorUncheckedCreateNestedManyWithoutPrestadorInput
   encaminhamentosSolicitados?: Prisma.EncaminhamentoUncheckedCreateNestedManyWithoutMedicoSolicitanteInput
   encaminhamentosExecutados?: Prisma.EncaminhamentoUncheckedCreateNestedManyWithoutPrestadorExecutanteInput
+  agendamentosDePrestadores?: Prisma.AgendamentoDePrestadorUncheckedCreateNestedManyWithoutPrestadorInput
 }
 
 export type PrestadorCreateOrConnectWithoutLocalInput = {
@@ -755,9 +755,9 @@ export type PrestadorCreateWithoutEspecialidadesInput = {
   updatedAt?: Date | string
   procedimentos?: Prisma.PrestadorProcedimentoCreateNestedManyWithoutPrestadorInput
   local?: Prisma.LocalCreateNestedOneWithoutPrestadoresInput
-  agendamentos?: Prisma.AgendamentoDePrestadorCreateNestedManyWithoutPrestadorInput
   encaminhamentosSolicitados?: Prisma.EncaminhamentoCreateNestedManyWithoutMedicoSolicitanteInput
   encaminhamentosExecutados?: Prisma.EncaminhamentoCreateNestedManyWithoutPrestadorExecutanteInput
+  agendamentosDePrestadores?: Prisma.AgendamentoDePrestadorCreateNestedManyWithoutPrestadorInput
 }
 
 export type PrestadorUncheckedCreateWithoutEspecialidadesInput = {
@@ -773,9 +773,9 @@ export type PrestadorUncheckedCreateWithoutEspecialidadesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   procedimentos?: Prisma.PrestadorProcedimentoUncheckedCreateNestedManyWithoutPrestadorInput
-  agendamentos?: Prisma.AgendamentoDePrestadorUncheckedCreateNestedManyWithoutPrestadorInput
   encaminhamentosSolicitados?: Prisma.EncaminhamentoUncheckedCreateNestedManyWithoutMedicoSolicitanteInput
   encaminhamentosExecutados?: Prisma.EncaminhamentoUncheckedCreateNestedManyWithoutPrestadorExecutanteInput
+  agendamentosDePrestadores?: Prisma.AgendamentoDePrestadorUncheckedCreateNestedManyWithoutPrestadorInput
 }
 
 export type PrestadorCreateOrConnectWithoutEspecialidadesInput = {
@@ -806,9 +806,9 @@ export type PrestadorUpdateWithoutEspecialidadesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   procedimentos?: Prisma.PrestadorProcedimentoUpdateManyWithoutPrestadorNestedInput
   local?: Prisma.LocalUpdateOneWithoutPrestadoresNestedInput
-  agendamentos?: Prisma.AgendamentoDePrestadorUpdateManyWithoutPrestadorNestedInput
   encaminhamentosSolicitados?: Prisma.EncaminhamentoUpdateManyWithoutMedicoSolicitanteNestedInput
   encaminhamentosExecutados?: Prisma.EncaminhamentoUpdateManyWithoutPrestadorExecutanteNestedInput
+  agendamentosDePrestadores?: Prisma.AgendamentoDePrestadorUpdateManyWithoutPrestadorNestedInput
 }
 
 export type PrestadorUncheckedUpdateWithoutEspecialidadesInput = {
@@ -824,9 +824,9 @@ export type PrestadorUncheckedUpdateWithoutEspecialidadesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   procedimentos?: Prisma.PrestadorProcedimentoUncheckedUpdateManyWithoutPrestadorNestedInput
-  agendamentos?: Prisma.AgendamentoDePrestadorUncheckedUpdateManyWithoutPrestadorNestedInput
   encaminhamentosSolicitados?: Prisma.EncaminhamentoUncheckedUpdateManyWithoutMedicoSolicitanteNestedInput
   encaminhamentosExecutados?: Prisma.EncaminhamentoUncheckedUpdateManyWithoutPrestadorExecutanteNestedInput
+  agendamentosDePrestadores?: Prisma.AgendamentoDePrestadorUncheckedUpdateManyWithoutPrestadorNestedInput
 }
 
 export type PrestadorCreateWithoutProcedimentosInput = {
@@ -841,9 +841,9 @@ export type PrestadorCreateWithoutProcedimentosInput = {
   updatedAt?: Date | string
   especialidades?: Prisma.PrestadorEspecialidadeCreateNestedManyWithoutPrestadorInput
   local?: Prisma.LocalCreateNestedOneWithoutPrestadoresInput
-  agendamentos?: Prisma.AgendamentoDePrestadorCreateNestedManyWithoutPrestadorInput
   encaminhamentosSolicitados?: Prisma.EncaminhamentoCreateNestedManyWithoutMedicoSolicitanteInput
   encaminhamentosExecutados?: Prisma.EncaminhamentoCreateNestedManyWithoutPrestadorExecutanteInput
+  agendamentosDePrestadores?: Prisma.AgendamentoDePrestadorCreateNestedManyWithoutPrestadorInput
 }
 
 export type PrestadorUncheckedCreateWithoutProcedimentosInput = {
@@ -859,9 +859,9 @@ export type PrestadorUncheckedCreateWithoutProcedimentosInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   especialidades?: Prisma.PrestadorEspecialidadeUncheckedCreateNestedManyWithoutPrestadorInput
-  agendamentos?: Prisma.AgendamentoDePrestadorUncheckedCreateNestedManyWithoutPrestadorInput
   encaminhamentosSolicitados?: Prisma.EncaminhamentoUncheckedCreateNestedManyWithoutMedicoSolicitanteInput
   encaminhamentosExecutados?: Prisma.EncaminhamentoUncheckedCreateNestedManyWithoutPrestadorExecutanteInput
+  agendamentosDePrestadores?: Prisma.AgendamentoDePrestadorUncheckedCreateNestedManyWithoutPrestadorInput
 }
 
 export type PrestadorCreateOrConnectWithoutProcedimentosInput = {
@@ -892,9 +892,9 @@ export type PrestadorUpdateWithoutProcedimentosInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   especialidades?: Prisma.PrestadorEspecialidadeUpdateManyWithoutPrestadorNestedInput
   local?: Prisma.LocalUpdateOneWithoutPrestadoresNestedInput
-  agendamentos?: Prisma.AgendamentoDePrestadorUpdateManyWithoutPrestadorNestedInput
   encaminhamentosSolicitados?: Prisma.EncaminhamentoUpdateManyWithoutMedicoSolicitanteNestedInput
   encaminhamentosExecutados?: Prisma.EncaminhamentoUpdateManyWithoutPrestadorExecutanteNestedInput
+  agendamentosDePrestadores?: Prisma.AgendamentoDePrestadorUpdateManyWithoutPrestadorNestedInput
 }
 
 export type PrestadorUncheckedUpdateWithoutProcedimentosInput = {
@@ -910,12 +910,12 @@ export type PrestadorUncheckedUpdateWithoutProcedimentosInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   especialidades?: Prisma.PrestadorEspecialidadeUncheckedUpdateManyWithoutPrestadorNestedInput
-  agendamentos?: Prisma.AgendamentoDePrestadorUncheckedUpdateManyWithoutPrestadorNestedInput
   encaminhamentosSolicitados?: Prisma.EncaminhamentoUncheckedUpdateManyWithoutMedicoSolicitanteNestedInput
   encaminhamentosExecutados?: Prisma.EncaminhamentoUncheckedUpdateManyWithoutPrestadorExecutanteNestedInput
+  agendamentosDePrestadores?: Prisma.AgendamentoDePrestadorUncheckedUpdateManyWithoutPrestadorNestedInput
 }
 
-export type PrestadorCreateWithoutAgendamentosInput = {
+export type PrestadorCreateWithoutAgendamentosDePrestadoresInput = {
   nome: string
   tipo: $Enums.TipoDoPrestador
   telefone: string
@@ -932,7 +932,7 @@ export type PrestadorCreateWithoutAgendamentosInput = {
   encaminhamentosExecutados?: Prisma.EncaminhamentoCreateNestedManyWithoutPrestadorExecutanteInput
 }
 
-export type PrestadorUncheckedCreateWithoutAgendamentosInput = {
+export type PrestadorUncheckedCreateWithoutAgendamentosDePrestadoresInput = {
   id?: number
   nome: string
   tipo: $Enums.TipoDoPrestador
@@ -950,23 +950,23 @@ export type PrestadorUncheckedCreateWithoutAgendamentosInput = {
   encaminhamentosExecutados?: Prisma.EncaminhamentoUncheckedCreateNestedManyWithoutPrestadorExecutanteInput
 }
 
-export type PrestadorCreateOrConnectWithoutAgendamentosInput = {
+export type PrestadorCreateOrConnectWithoutAgendamentosDePrestadoresInput = {
   where: Prisma.PrestadorWhereUniqueInput
-  create: Prisma.XOR<Prisma.PrestadorCreateWithoutAgendamentosInput, Prisma.PrestadorUncheckedCreateWithoutAgendamentosInput>
+  create: Prisma.XOR<Prisma.PrestadorCreateWithoutAgendamentosDePrestadoresInput, Prisma.PrestadorUncheckedCreateWithoutAgendamentosDePrestadoresInput>
 }
 
-export type PrestadorUpsertWithoutAgendamentosInput = {
-  update: Prisma.XOR<Prisma.PrestadorUpdateWithoutAgendamentosInput, Prisma.PrestadorUncheckedUpdateWithoutAgendamentosInput>
-  create: Prisma.XOR<Prisma.PrestadorCreateWithoutAgendamentosInput, Prisma.PrestadorUncheckedCreateWithoutAgendamentosInput>
+export type PrestadorUpsertWithoutAgendamentosDePrestadoresInput = {
+  update: Prisma.XOR<Prisma.PrestadorUpdateWithoutAgendamentosDePrestadoresInput, Prisma.PrestadorUncheckedUpdateWithoutAgendamentosDePrestadoresInput>
+  create: Prisma.XOR<Prisma.PrestadorCreateWithoutAgendamentosDePrestadoresInput, Prisma.PrestadorUncheckedCreateWithoutAgendamentosDePrestadoresInput>
   where?: Prisma.PrestadorWhereInput
 }
 
-export type PrestadorUpdateToOneWithWhereWithoutAgendamentosInput = {
+export type PrestadorUpdateToOneWithWhereWithoutAgendamentosDePrestadoresInput = {
   where?: Prisma.PrestadorWhereInput
-  data: Prisma.XOR<Prisma.PrestadorUpdateWithoutAgendamentosInput, Prisma.PrestadorUncheckedUpdateWithoutAgendamentosInput>
+  data: Prisma.XOR<Prisma.PrestadorUpdateWithoutAgendamentosDePrestadoresInput, Prisma.PrestadorUncheckedUpdateWithoutAgendamentosDePrestadoresInput>
 }
 
-export type PrestadorUpdateWithoutAgendamentosInput = {
+export type PrestadorUpdateWithoutAgendamentosDePrestadoresInput = {
   nome?: Prisma.StringFieldUpdateOperationsInput | string
   tipo?: Prisma.EnumTipoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDoPrestador
   telefone?: Prisma.StringFieldUpdateOperationsInput | string
@@ -983,7 +983,7 @@ export type PrestadorUpdateWithoutAgendamentosInput = {
   encaminhamentosExecutados?: Prisma.EncaminhamentoUpdateManyWithoutPrestadorExecutanteNestedInput
 }
 
-export type PrestadorUncheckedUpdateWithoutAgendamentosInput = {
+export type PrestadorUncheckedUpdateWithoutAgendamentosDePrestadoresInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   nome?: Prisma.StringFieldUpdateOperationsInput | string
   tipo?: Prisma.EnumTipoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDoPrestador
@@ -1014,8 +1014,8 @@ export type PrestadorCreateWithoutEncaminhamentosSolicitadosInput = {
   especialidades?: Prisma.PrestadorEspecialidadeCreateNestedManyWithoutPrestadorInput
   procedimentos?: Prisma.PrestadorProcedimentoCreateNestedManyWithoutPrestadorInput
   local?: Prisma.LocalCreateNestedOneWithoutPrestadoresInput
-  agendamentos?: Prisma.AgendamentoDePrestadorCreateNestedManyWithoutPrestadorInput
   encaminhamentosExecutados?: Prisma.EncaminhamentoCreateNestedManyWithoutPrestadorExecutanteInput
+  agendamentosDePrestadores?: Prisma.AgendamentoDePrestadorCreateNestedManyWithoutPrestadorInput
 }
 
 export type PrestadorUncheckedCreateWithoutEncaminhamentosSolicitadosInput = {
@@ -1032,8 +1032,8 @@ export type PrestadorUncheckedCreateWithoutEncaminhamentosSolicitadosInput = {
   updatedAt?: Date | string
   especialidades?: Prisma.PrestadorEspecialidadeUncheckedCreateNestedManyWithoutPrestadorInput
   procedimentos?: Prisma.PrestadorProcedimentoUncheckedCreateNestedManyWithoutPrestadorInput
-  agendamentos?: Prisma.AgendamentoDePrestadorUncheckedCreateNestedManyWithoutPrestadorInput
   encaminhamentosExecutados?: Prisma.EncaminhamentoUncheckedCreateNestedManyWithoutPrestadorExecutanteInput
+  agendamentosDePrestadores?: Prisma.AgendamentoDePrestadorUncheckedCreateNestedManyWithoutPrestadorInput
 }
 
 export type PrestadorCreateOrConnectWithoutEncaminhamentosSolicitadosInput = {
@@ -1054,8 +1054,8 @@ export type PrestadorCreateWithoutEncaminhamentosExecutadosInput = {
   especialidades?: Prisma.PrestadorEspecialidadeCreateNestedManyWithoutPrestadorInput
   procedimentos?: Prisma.PrestadorProcedimentoCreateNestedManyWithoutPrestadorInput
   local?: Prisma.LocalCreateNestedOneWithoutPrestadoresInput
-  agendamentos?: Prisma.AgendamentoDePrestadorCreateNestedManyWithoutPrestadorInput
   encaminhamentosSolicitados?: Prisma.EncaminhamentoCreateNestedManyWithoutMedicoSolicitanteInput
+  agendamentosDePrestadores?: Prisma.AgendamentoDePrestadorCreateNestedManyWithoutPrestadorInput
 }
 
 export type PrestadorUncheckedCreateWithoutEncaminhamentosExecutadosInput = {
@@ -1072,8 +1072,8 @@ export type PrestadorUncheckedCreateWithoutEncaminhamentosExecutadosInput = {
   updatedAt?: Date | string
   especialidades?: Prisma.PrestadorEspecialidadeUncheckedCreateNestedManyWithoutPrestadorInput
   procedimentos?: Prisma.PrestadorProcedimentoUncheckedCreateNestedManyWithoutPrestadorInput
-  agendamentos?: Prisma.AgendamentoDePrestadorUncheckedCreateNestedManyWithoutPrestadorInput
   encaminhamentosSolicitados?: Prisma.EncaminhamentoUncheckedCreateNestedManyWithoutMedicoSolicitanteInput
+  agendamentosDePrestadores?: Prisma.AgendamentoDePrestadorUncheckedCreateNestedManyWithoutPrestadorInput
 }
 
 export type PrestadorCreateOrConnectWithoutEncaminhamentosExecutadosInput = {
@@ -1105,8 +1105,8 @@ export type PrestadorUpdateWithoutEncaminhamentosSolicitadosInput = {
   especialidades?: Prisma.PrestadorEspecialidadeUpdateManyWithoutPrestadorNestedInput
   procedimentos?: Prisma.PrestadorProcedimentoUpdateManyWithoutPrestadorNestedInput
   local?: Prisma.LocalUpdateOneWithoutPrestadoresNestedInput
-  agendamentos?: Prisma.AgendamentoDePrestadorUpdateManyWithoutPrestadorNestedInput
   encaminhamentosExecutados?: Prisma.EncaminhamentoUpdateManyWithoutPrestadorExecutanteNestedInput
+  agendamentosDePrestadores?: Prisma.AgendamentoDePrestadorUpdateManyWithoutPrestadorNestedInput
 }
 
 export type PrestadorUncheckedUpdateWithoutEncaminhamentosSolicitadosInput = {
@@ -1123,8 +1123,8 @@ export type PrestadorUncheckedUpdateWithoutEncaminhamentosSolicitadosInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   especialidades?: Prisma.PrestadorEspecialidadeUncheckedUpdateManyWithoutPrestadorNestedInput
   procedimentos?: Prisma.PrestadorProcedimentoUncheckedUpdateManyWithoutPrestadorNestedInput
-  agendamentos?: Prisma.AgendamentoDePrestadorUncheckedUpdateManyWithoutPrestadorNestedInput
   encaminhamentosExecutados?: Prisma.EncaminhamentoUncheckedUpdateManyWithoutPrestadorExecutanteNestedInput
+  agendamentosDePrestadores?: Prisma.AgendamentoDePrestadorUncheckedUpdateManyWithoutPrestadorNestedInput
 }
 
 export type PrestadorUpsertWithoutEncaminhamentosExecutadosInput = {
@@ -1151,8 +1151,8 @@ export type PrestadorUpdateWithoutEncaminhamentosExecutadosInput = {
   especialidades?: Prisma.PrestadorEspecialidadeUpdateManyWithoutPrestadorNestedInput
   procedimentos?: Prisma.PrestadorProcedimentoUpdateManyWithoutPrestadorNestedInput
   local?: Prisma.LocalUpdateOneWithoutPrestadoresNestedInput
-  agendamentos?: Prisma.AgendamentoDePrestadorUpdateManyWithoutPrestadorNestedInput
   encaminhamentosSolicitados?: Prisma.EncaminhamentoUpdateManyWithoutMedicoSolicitanteNestedInput
+  agendamentosDePrestadores?: Prisma.AgendamentoDePrestadorUpdateManyWithoutPrestadorNestedInput
 }
 
 export type PrestadorUncheckedUpdateWithoutEncaminhamentosExecutadosInput = {
@@ -1169,8 +1169,8 @@ export type PrestadorUncheckedUpdateWithoutEncaminhamentosExecutadosInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   especialidades?: Prisma.PrestadorEspecialidadeUncheckedUpdateManyWithoutPrestadorNestedInput
   procedimentos?: Prisma.PrestadorProcedimentoUncheckedUpdateManyWithoutPrestadorNestedInput
-  agendamentos?: Prisma.AgendamentoDePrestadorUncheckedUpdateManyWithoutPrestadorNestedInput
   encaminhamentosSolicitados?: Prisma.EncaminhamentoUncheckedUpdateManyWithoutMedicoSolicitanteNestedInput
+  agendamentosDePrestadores?: Prisma.AgendamentoDePrestadorUncheckedUpdateManyWithoutPrestadorNestedInput
 }
 
 export type PrestadorCreateManyLocalInput = {
@@ -1198,9 +1198,9 @@ export type PrestadorUpdateWithoutLocalInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   especialidades?: Prisma.PrestadorEspecialidadeUpdateManyWithoutPrestadorNestedInput
   procedimentos?: Prisma.PrestadorProcedimentoUpdateManyWithoutPrestadorNestedInput
-  agendamentos?: Prisma.AgendamentoDePrestadorUpdateManyWithoutPrestadorNestedInput
   encaminhamentosSolicitados?: Prisma.EncaminhamentoUpdateManyWithoutMedicoSolicitanteNestedInput
   encaminhamentosExecutados?: Prisma.EncaminhamentoUpdateManyWithoutPrestadorExecutanteNestedInput
+  agendamentosDePrestadores?: Prisma.AgendamentoDePrestadorUpdateManyWithoutPrestadorNestedInput
 }
 
 export type PrestadorUncheckedUpdateWithoutLocalInput = {
@@ -1216,9 +1216,9 @@ export type PrestadorUncheckedUpdateWithoutLocalInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   especialidades?: Prisma.PrestadorEspecialidadeUncheckedUpdateManyWithoutPrestadorNestedInput
   procedimentos?: Prisma.PrestadorProcedimentoUncheckedUpdateManyWithoutPrestadorNestedInput
-  agendamentos?: Prisma.AgendamentoDePrestadorUncheckedUpdateManyWithoutPrestadorNestedInput
   encaminhamentosSolicitados?: Prisma.EncaminhamentoUncheckedUpdateManyWithoutMedicoSolicitanteNestedInput
   encaminhamentosExecutados?: Prisma.EncaminhamentoUncheckedUpdateManyWithoutPrestadorExecutanteNestedInput
+  agendamentosDePrestadores?: Prisma.AgendamentoDePrestadorUncheckedUpdateManyWithoutPrestadorNestedInput
 }
 
 export type PrestadorUncheckedUpdateManyWithoutLocalInput = {
@@ -1242,17 +1242,17 @@ export type PrestadorUncheckedUpdateManyWithoutLocalInput = {
 export type PrestadorCountOutputType = {
   especialidades: number
   procedimentos: number
-  agendamentos: number
   encaminhamentosSolicitados: number
   encaminhamentosExecutados: number
+  agendamentosDePrestadores: number
 }
 
 export type PrestadorCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   especialidades?: boolean | PrestadorCountOutputTypeCountEspecialidadesArgs
   procedimentos?: boolean | PrestadorCountOutputTypeCountProcedimentosArgs
-  agendamentos?: boolean | PrestadorCountOutputTypeCountAgendamentosArgs
   encaminhamentosSolicitados?: boolean | PrestadorCountOutputTypeCountEncaminhamentosSolicitadosArgs
   encaminhamentosExecutados?: boolean | PrestadorCountOutputTypeCountEncaminhamentosExecutadosArgs
+  agendamentosDePrestadores?: boolean | PrestadorCountOutputTypeCountAgendamentosDePrestadoresArgs
 }
 
 /**
@@ -1282,13 +1282,6 @@ export type PrestadorCountOutputTypeCountProcedimentosArgs<ExtArgs extends runti
 /**
  * PrestadorCountOutputType without action
  */
-export type PrestadorCountOutputTypeCountAgendamentosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.AgendamentoDePrestadorWhereInput
-}
-
-/**
- * PrestadorCountOutputType without action
- */
 export type PrestadorCountOutputTypeCountEncaminhamentosSolicitadosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.EncaminhamentoWhereInput
 }
@@ -1298,6 +1291,13 @@ export type PrestadorCountOutputTypeCountEncaminhamentosSolicitadosArgs<ExtArgs 
  */
 export type PrestadorCountOutputTypeCountEncaminhamentosExecutadosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.EncaminhamentoWhereInput
+}
+
+/**
+ * PrestadorCountOutputType without action
+ */
+export type PrestadorCountOutputTypeCountAgendamentosDePrestadoresArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AgendamentoDePrestadorWhereInput
 }
 
 
@@ -1316,9 +1316,9 @@ export type PrestadorSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   especialidades?: boolean | Prisma.Prestador$especialidadesArgs<ExtArgs>
   procedimentos?: boolean | Prisma.Prestador$procedimentosArgs<ExtArgs>
   local?: boolean | Prisma.Prestador$localArgs<ExtArgs>
-  agendamentos?: boolean | Prisma.Prestador$agendamentosArgs<ExtArgs>
   encaminhamentosSolicitados?: boolean | Prisma.Prestador$encaminhamentosSolicitadosArgs<ExtArgs>
   encaminhamentosExecutados?: boolean | Prisma.Prestador$encaminhamentosExecutadosArgs<ExtArgs>
+  agendamentosDePrestadores?: boolean | Prisma.Prestador$agendamentosDePrestadoresArgs<ExtArgs>
   _count?: boolean | Prisma.PrestadorCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["prestador"]>
 
@@ -1371,9 +1371,9 @@ export type PrestadorInclude<ExtArgs extends runtime.Types.Extensions.InternalAr
   especialidades?: boolean | Prisma.Prestador$especialidadesArgs<ExtArgs>
   procedimentos?: boolean | Prisma.Prestador$procedimentosArgs<ExtArgs>
   local?: boolean | Prisma.Prestador$localArgs<ExtArgs>
-  agendamentos?: boolean | Prisma.Prestador$agendamentosArgs<ExtArgs>
   encaminhamentosSolicitados?: boolean | Prisma.Prestador$encaminhamentosSolicitadosArgs<ExtArgs>
   encaminhamentosExecutados?: boolean | Prisma.Prestador$encaminhamentosExecutadosArgs<ExtArgs>
+  agendamentosDePrestadores?: boolean | Prisma.Prestador$agendamentosDePrestadoresArgs<ExtArgs>
   _count?: boolean | Prisma.PrestadorCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type PrestadorIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1389,9 +1389,9 @@ export type $PrestadorPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     especialidades: Prisma.$PrestadorEspecialidadePayload<ExtArgs>[]
     procedimentos: Prisma.$PrestadorProcedimentoPayload<ExtArgs>[]
     local: Prisma.$LocalPayload<ExtArgs> | null
-    agendamentos: Prisma.$AgendamentoDePrestadorPayload<ExtArgs>[]
     encaminhamentosSolicitados: Prisma.$EncaminhamentoPayload<ExtArgs>[]
     encaminhamentosExecutados: Prisma.$EncaminhamentoPayload<ExtArgs>[]
+    agendamentosDePrestadores: Prisma.$AgendamentoDePrestadorPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1802,9 +1802,9 @@ export interface Prisma__PrestadorClient<T, Null = never, ExtArgs extends runtim
   especialidades<T extends Prisma.Prestador$especialidadesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Prestador$especialidadesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PrestadorEspecialidadePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   procedimentos<T extends Prisma.Prestador$procedimentosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Prestador$procedimentosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PrestadorProcedimentoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   local<T extends Prisma.Prestador$localArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Prestador$localArgs<ExtArgs>>): Prisma.Prisma__LocalClient<runtime.Types.Result.GetResult<Prisma.$LocalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  agendamentos<T extends Prisma.Prestador$agendamentosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Prestador$agendamentosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AgendamentoDePrestadorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   encaminhamentosSolicitados<T extends Prisma.Prestador$encaminhamentosSolicitadosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Prestador$encaminhamentosSolicitadosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EncaminhamentoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   encaminhamentosExecutados<T extends Prisma.Prestador$encaminhamentosExecutadosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Prestador$encaminhamentosExecutadosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EncaminhamentoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  agendamentosDePrestadores<T extends Prisma.Prestador$agendamentosDePrestadoresArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Prestador$agendamentosDePrestadoresArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AgendamentoDePrestadorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2313,30 +2313,6 @@ export type Prestador$localArgs<ExtArgs extends runtime.Types.Extensions.Interna
 }
 
 /**
- * Prestador.agendamentos
- */
-export type Prestador$agendamentosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the AgendamentoDePrestador
-   */
-  select?: Prisma.AgendamentoDePrestadorSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the AgendamentoDePrestador
-   */
-  omit?: Prisma.AgendamentoDePrestadorOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.AgendamentoDePrestadorInclude<ExtArgs> | null
-  where?: Prisma.AgendamentoDePrestadorWhereInput
-  orderBy?: Prisma.AgendamentoDePrestadorOrderByWithRelationInput | Prisma.AgendamentoDePrestadorOrderByWithRelationInput[]
-  cursor?: Prisma.AgendamentoDePrestadorWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.AgendamentoDePrestadorScalarFieldEnum | Prisma.AgendamentoDePrestadorScalarFieldEnum[]
-}
-
-/**
  * Prestador.encaminhamentosSolicitados
  */
 export type Prestador$encaminhamentosSolicitadosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2382,6 +2358,30 @@ export type Prestador$encaminhamentosExecutadosArgs<ExtArgs extends runtime.Type
   take?: number
   skip?: number
   distinct?: Prisma.EncaminhamentoScalarFieldEnum | Prisma.EncaminhamentoScalarFieldEnum[]
+}
+
+/**
+ * Prestador.agendamentosDePrestadores
+ */
+export type Prestador$agendamentosDePrestadoresArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AgendamentoDePrestador
+   */
+  select?: Prisma.AgendamentoDePrestadorSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AgendamentoDePrestador
+   */
+  omit?: Prisma.AgendamentoDePrestadorOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AgendamentoDePrestadorInclude<ExtArgs> | null
+  where?: Prisma.AgendamentoDePrestadorWhereInput
+  orderBy?: Prisma.AgendamentoDePrestadorOrderByWithRelationInput | Prisma.AgendamentoDePrestadorOrderByWithRelationInput[]
+  cursor?: Prisma.AgendamentoDePrestadorWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AgendamentoDePrestadorScalarFieldEnum | Prisma.AgendamentoDePrestadorScalarFieldEnum[]
 }
 
 /**

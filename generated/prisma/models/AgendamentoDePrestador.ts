@@ -350,7 +350,7 @@ export type AgendamentoDePrestadorCreateInput = {
   observacoes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  prestador: Prisma.PrestadorCreateNestedOneWithoutAgendamentosInput
+  prestador: Prisma.PrestadorCreateNestedOneWithoutAgendamentosDePrestadoresInput
   unidadeDeAtendimento: Prisma.LocalCreateNestedOneWithoutAgendamentosInput
   criadoPor?: Prisma.UsuarioCreateNestedOneWithoutAgendamentosCriadosInput
 }
@@ -375,7 +375,7 @@ export type AgendamentoDePrestadorUpdateInput = {
   observacoes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  prestador?: Prisma.PrestadorUpdateOneRequiredWithoutAgendamentosNestedInput
+  prestador?: Prisma.PrestadorUpdateOneRequiredWithoutAgendamentosDePrestadoresNestedInput
   unidadeDeAtendimento?: Prisma.LocalUpdateOneRequiredWithoutAgendamentosNestedInput
   criadoPor?: Prisma.UsuarioUpdateOneWithoutAgendamentosCriadosNestedInput
 }
@@ -635,7 +635,7 @@ export type AgendamentoDePrestadorCreateWithoutCriadoPorInput = {
   observacoes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  prestador: Prisma.PrestadorCreateNestedOneWithoutAgendamentosInput
+  prestador: Prisma.PrestadorCreateNestedOneWithoutAgendamentosDePrestadoresInput
   unidadeDeAtendimento: Prisma.LocalCreateNestedOneWithoutAgendamentosInput
 }
 
@@ -700,7 +700,7 @@ export type AgendamentoDePrestadorCreateWithoutUnidadeDeAtendimentoInput = {
   observacoes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  prestador: Prisma.PrestadorCreateNestedOneWithoutAgendamentosInput
+  prestador: Prisma.PrestadorCreateNestedOneWithoutAgendamentosDePrestadoresInput
   criadoPor?: Prisma.UsuarioCreateNestedOneWithoutAgendamentosCriadosInput
 }
 
@@ -810,7 +810,7 @@ export type AgendamentoDePrestadorUpdateWithoutCriadoPorInput = {
   observacoes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  prestador?: Prisma.PrestadorUpdateOneRequiredWithoutAgendamentosNestedInput
+  prestador?: Prisma.PrestadorUpdateOneRequiredWithoutAgendamentosDePrestadoresNestedInput
   unidadeDeAtendimento?: Prisma.LocalUpdateOneRequiredWithoutAgendamentosNestedInput
 }
 
@@ -857,7 +857,7 @@ export type AgendamentoDePrestadorUpdateWithoutUnidadeDeAtendimentoInput = {
   observacoes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  prestador?: Prisma.PrestadorUpdateOneRequiredWithoutAgendamentosNestedInput
+  prestador?: Prisma.PrestadorUpdateOneRequiredWithoutAgendamentosDePrestadoresNestedInput
   criadoPor?: Prisma.UsuarioUpdateOneWithoutAgendamentosCriadosNestedInput
 }
 

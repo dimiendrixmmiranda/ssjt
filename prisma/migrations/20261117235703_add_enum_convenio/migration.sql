@@ -1,0 +1,2 @@
+-- CreateEnum
+CREATE TYPE "Convenio" AS ENUM ('REDE_MUNICIPAL', 'REDE_REFERENCIADA');

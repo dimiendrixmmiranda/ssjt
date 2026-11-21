@@ -29,6 +29,9 @@ export default function Page() {
     const { locais } = useLocais()
     const { prestadores, carregando } = usePrestadores()
     const { agendamentoDePrestadores, buscarAgendamentoDePrestadores } = useAgendamentoDePrestadores()
+    
+    const locaisNoMunicipio = locais.filter(local => local.atendimentoDentroOuForaDoMunicipio === 'DENTRO_DO_MUNICIPIO')
+
     const [dialogAgenda, setDialogAgenda] = useState(false)
     const [dataSelecionada, setDataSelecionada] = useState<Date | null>(new Date())
     const [localSelecionado, setLocalSelecionado] = useState<Local | null>(null)
@@ -524,7 +527,7 @@ export default function Page() {
                 <div>
                     <ul className="grid grid-cols-2 gap-4 3xl:grid-cols-3">
                         {
-                            locais.map((local) => {
+                            locaisNoMunicipio.map((local) => {
                                 return (
                                     <li key={local.id} className="rounded-lg border border-verde-escuro p-4 flex flex-col gap-2 relative">
                                         <div className="text-6xl">
@@ -567,7 +570,6 @@ export default function Page() {
             <Dialog header={localSelecionado?.nome} visible={dialogAgenda} className="max-w-[1000px] w-full" onHide={() => { setDialogAgenda(false); setDataSelecionada(new Date()) }}>
                 <div className="grid grid-cols-2 gap-4 mt-2">
                     <div className="flex h-full">
-
                         <Calendario
                             eventos={eventosCalendario}
                             dataSelecionada={dataSelecionada}

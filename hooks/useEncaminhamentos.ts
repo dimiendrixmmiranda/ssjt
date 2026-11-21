@@ -1,7 +1,7 @@
 
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import type { Prisma } from '@/generated/prisma/client'
 
 export type EncaminhamentoComRelacoes =
@@ -12,7 +12,11 @@ export type EncaminhamentoComRelacoes =
             medicoSolicitante: true
             especialidadeDoPrestador: true
             especialidadeEncaminhada: true
-            procedimento: true
+            procedimento: {
+                include: {
+                    membros: true
+                }
+            }
             membroProcedimento: true
             prestadorExecutante: true
         }
@@ -23,13 +27,20 @@ export function useEncaminhamentos() {
         useState<EncaminhamentoComRelacoes[]>([])
 
     const [carregandoEncaminhamentos, setCarregandoEncaminhamentos] =
-        useState(true)
+        useState(false)
 
-    const buscarEncaminhamentos = useCallback(async () => {
+    const buscarEncaminhamentos = useCallback(async (
+        filtros?: Record<string, string>
+    ) => {
         try {
             setCarregandoEncaminhamentos(true)
 
-            const resposta = await fetch('/api/criar-encaminhamento')
+            const parametros = new URLSearchParams(filtros)
+
+            const resposta = await fetch(
+                `/api/criar-encaminhamento?${parametros.toString()}`
+            )
+
             const resultado = await resposta.json()
 
             if (!resposta.ok) {
@@ -49,10 +60,6 @@ export function useEncaminhamentos() {
             setCarregandoEncaminhamentos(false)
         }
     }, [])
-
-    useEffect(() => {
-        buscarEncaminhamentos()
-    }, [buscarEncaminhamentos])
 
     return {
         encaminhamentos,

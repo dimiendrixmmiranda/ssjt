@@ -1591,7 +1591,9 @@ export const EncaminhamentoScalarFieldEnum = {
   dataDoRetorno: 'dataDoRetorno',
   dataDeSaida: 'dataDeSaida',
   dataDeAgendamentoLocal: 'dataDeAgendamentoLocal',
+  horarioDeAgendamento: 'horarioDeAgendamento',
   prestadorExecutanteId: 'prestadorExecutanteId',
+  localDeAtendimentoId: 'localDeAtendimentoId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

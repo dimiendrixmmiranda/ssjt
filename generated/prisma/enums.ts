@@ -273,6 +273,14 @@ export const TipoDeAtendimentoDoPrestador = {
 export type TipoDeAtendimentoDoPrestador = (typeof TipoDeAtendimentoDoPrestador)[keyof typeof TipoDeAtendimentoDoPrestador]
 
 
+export const Convenio = {
+  REDE_MUNICIPAL: 'REDE_MUNICIPAL',
+  REDE_REFERENCIADA: 'REDE_REFERENCIADA'
+} as const
+
+export type Convenio = (typeof Convenio)[keyof typeof Convenio]
+
+
 export const SituacaoDeEncaminhamento = {
   URGENTE: 'URGENTE',
   POUCO_URGENTE: 'POUCO_URGENTE',

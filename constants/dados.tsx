@@ -1,6 +1,6 @@
 'use client'
 import { Local } from "@/generated/prisma/browser"
-import { AtendimentoDentroOuForaDoMunicipio, CampoDeBusca, CategoriaEspecialidade, Deficiencia, EstadoCivil, FatorRH, GrauDeEscolaridade, LadoDoCorpo, PossibilidadeDeRetorno, Raca, Sexo, SituacaoDeEncaminhamento, StatusDeAgendamento, TipoDeAtendimentoDoPrestador, TipoDeConsulta, TipoDeConta, TipoDeLocal, TipoDeLogradouro, TipoSanguineo, UF, Zona } from "@/generated/prisma/enums"
+import { AtendimentoDentroOuForaDoMunicipio, CampoDeBusca, CategoriaEspecialidade, Convenio, Deficiencia, EstadoCivil, FatorRH, GrauDeEscolaridade, LadoDoCorpo, PossibilidadeDeRetorno, Raca, Sexo, SituacaoDeEncaminhamento, StatusDeAgendamento, TipoDeAtendimentoDoPrestador, TipoDeConsulta, TipoDeConta, TipoDeLocal, TipoDeLogradouro, TipoSanguineo, UF, Zona } from "@/generated/prisma/enums"
 export const opcoesDeTipoDeLocal = [
     {
         valor: '',
@@ -239,6 +239,16 @@ export const opcoesLadoDoCorpo = [
         label: tipo.replaceAll('_', ' ').toLowerCase()
     }))
 ]
+export const opcoesDeConvenio = [
+    {
+        valor: '',
+        label: "Selecione"
+    },
+    ...Object.values(Convenio).map(tipo => ({
+        valor: tipo,
+        label: tipo.replaceAll('_', ' ').toLowerCase()
+    }))
+]
 
 export const normalizarTexto = (texto: string) =>
     texto
@@ -247,6 +257,50 @@ export const normalizarTexto = (texto: string) =>
         .toLowerCase()
         .replace(/\s+/g, " ")
         .trim()
+
+export const OPCOES_HORARIOS_DE_MANHA = [
+    '07:30',
+    '07:35',
+    '07:40',
+    '07:45',
+    '07:50',
+    '07:55',
+    '08:00',
+    '08:05',
+    '08:10',
+    '08:15',
+    '08:20',
+    '08:25',
+    '08:30',
+    '08:35',
+    '08:40',
+    '08:45',
+    '08:50',
+    '08:55',
+    '09:00',
+]
+
+export const OPCOES_HORARIOS_DE_TARDE = [
+    '13:00',
+    '13:05',
+    '13:10',
+    '13:15',
+    '13:20',
+    '13:25',
+    '13:30',
+    '13:35',
+    '13:40',
+    '13:45',
+    '13:50',
+    '13:55',
+    '14:00',
+    '14:05',
+    '14:10',
+    '14:15',
+    '14:20',
+    '14:25',
+    '14:30',
+]
 
 export const CORES_PRESTADORES = [
     "#2563EB", // Azul
