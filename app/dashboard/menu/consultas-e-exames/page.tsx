@@ -35,6 +35,7 @@ import FormIncluirAgendamento from "@/components/formularios/FormularioIncluirAg
 import DocumentoRequisicaoProcedimentos from "@/components/pdf/requisicoes/procedimentos/DocumentoRequisicaoDeProcedimentos";
 import { pdf } from "@react-pdf/renderer"
 import { gerarCodigoDeBarras } from "@/utils/gerarCodigoDeBarras";
+import DocumentoRequisicaoConsultas from "@/components/pdf/requisicoes/consultas/DocumentoRequisicaoDeConsultas";
 
 type AcaoPaciente =
     | "agendamento"
@@ -586,10 +587,17 @@ export default function Page() {
         setMenuContexto(null)
 
         if (acao === "requisicaoExames") {
+            if (urlRequisicao) {
+                URL.revokeObjectURL(urlRequisicao)
+            }
+
+            setUrlRequisicao(null)
+
             setDialog({
                 tipo: acao,
                 agendamento
             })
+
             return
         }
 
@@ -620,14 +628,28 @@ export default function Page() {
                 String(dialog?.agendamento.id)
             )
 
-            console.log(codigoDeBarras)
+            console.log(dialog?.agendamento)
 
             setGerandoRequisicao(true)
+            let documento
 
-            const documento = (
-                <DocumentoRequisicaoProcedimentos encaminhamento={dialog?.agendamento} codigoDeBarras={codigoDeBarras} />
-            )
+            if (dialog?.agendamento?.tipo === "PROCEDIMENTO") {
+                documento = (
+                    <DocumentoRequisicaoProcedimentos
+                        encaminhamento={dialog.agendamento}
+                        codigoDeBarras={codigoDeBarras}
+                    />
+                )
+            }
 
+            if (dialog?.agendamento?.tipo === "CONSULTA") {
+                documento = (
+                    <DocumentoRequisicaoConsultas
+                        encaminhamento={dialog.agendamento}
+                        codigoDeBarras={codigoDeBarras}
+                    />
+                )
+            }
             const blob = await pdf(documento).toBlob()
             const url = URL.createObjectURL(blob)
 
@@ -1711,7 +1733,14 @@ export default function Page() {
                                     : "Ação"
                 }
                 visible={dialog !== null}
-                onHide={() => setDialog(null)}
+                onHide={() => {
+                    if (urlRequisicao) {
+                        URL.revokeObjectURL(urlRequisicao)
+                    }
+
+                    setUrlRequisicao(null)
+                    setDialog(null)
+                }}
                 className="w-full max-w-[1000px]"
             >
                 {dialog?.tipo === "agendamento" && (

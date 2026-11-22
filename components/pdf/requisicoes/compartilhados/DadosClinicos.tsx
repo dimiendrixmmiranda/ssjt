@@ -81,7 +81,7 @@ export default function DadosClinicos({
                     <Text style={styles.label}>Investigação/Diagnostico:</Text>
                     <Text style={styles.valor}>
                         {
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ornare nunc neque, non commodo lorem finibus eu. Pellentesque finibus sem sit amet quam dignissim, sed pulvinar nibh laoreet. Phasellus tortor urna, posuere vitae finibus ut, commodo a magna. Nunc sed elit massa. Integer tincidunt congue elit et malesuada. Suspendisse dictum pharetra quam, nec cursus sem congue nec. Donec eleifend, purus non molestie volutpat, urna nulla pulvinar orci, at pharetra enim erat vitae leo. Nam porta quam tellus, ac ultricies purus facilisis ac. Morbi ultrices neque sed hendrerit faucibus. "
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ornare nunc neque, non commodo lorem finibus eu. Pellentesque finibus sem sit amet quam dignissim, sed pulvinar nibh laoreet. Phasellus tortor urna, posuere vitae finibus ut, commodo a magna. Nunc sed elit massa. Integer tincidunt congue elit et malesuada. Suspendisse dictum pharetra quam, nec cursus sem congue nec."
                         }
                     </Text>
                 </View>

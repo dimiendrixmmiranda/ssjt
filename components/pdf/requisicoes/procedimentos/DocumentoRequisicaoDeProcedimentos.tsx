@@ -12,6 +12,7 @@ import CabecalhoInstitucional from "../compartilhados/CabecalhoInstitucional"
 import InformacoesPaciente from "../compartilhados/InformacoesDoPaciente"
 import InformacoesDoSolicitante from "../compartilhados/InformacoesDoSolicitante"
 import DadosClinicos from "../compartilhados/DadosClinicos"
+import { LuSiren } from "react-icons/lu"
 
 interface DocumentoRequisicaoProcedimentosProps {
     encaminhamento: any
@@ -106,7 +107,52 @@ const styles = StyleSheet.create({
     },
     containerAssinatura: {
         // marginTop: 30
-    }
+    },
+    avisoDocumentos: {
+        marginTop: "auto",
+        padding: 10,
+        borderWidth: 1,
+        borderColor: "#D6A400",
+        borderStyle: "solid",
+        borderRadius: 4,
+        backgroundColor: "#FFF9E6",
+        position: 'relative'
+    },
+
+    tituloAviso: {
+        fontSize: 12,
+        fontWeight: "bold",
+        color: "#8A5700",
+        textAlign: "center",
+        borderBottomWidth: 1,
+        borderBottomColor: "#D6A400",
+        paddingBottom: 4
+    },
+
+    subtituloAviso: {
+        fontSize: 9,
+        fontWeight: "bold",
+        color: "#7A4B00",
+        marginBottom: 4,
+        marginTop: 6,
+    },
+
+    listaDocumentos: {
+        fontSize: 9,
+        color: "#333333",
+        marginLeft: 8,
+        marginBottom: 2,
+    },
+    documentosLinha: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        gap: 20,
+        marginTop: 6,
+    },
+    secaoDocumentos: {
+        flex: 1,
+        marginBottom: 4,
+    },
 })
 
 export default function DocumentoRequisicaoProcedimentos({ encaminhamento, codigoDeBarras }: DocumentoRequisicaoProcedimentosProps) {
@@ -163,19 +209,18 @@ export default function DocumentoRequisicaoProcedimentos({ encaminhamento, codig
                                     height: 30,
                                 }}
                             />
-
                             <Text style={styles.valor}>
                                 {encaminhamento.id}
                             </Text>
                         </View>
                         <View style={styles.assinaturaDoCliente}>
-                            <Text style={{ width: "80%", borderBottomWidth: 1, borderColor: '#000', borderBottomStyle: 'solid', paddingTop: 55}} />
+                            <Text style={{ width: "80%", borderBottomWidth: 1, borderColor: '#000', borderBottomStyle: 'solid', paddingTop: 55 }} />
                             <Text style={{ justifyContent: "center", fontSize: 9, display: 'flex', justifySelf: 'center', alignItems: 'center' }}>
                                 Assinatura do Cliente
                             </Text>
                         </View>
                         <View style={styles.medicoSolicitante}>
-                            <Text style={{ width: "80%", borderBottomWidth: 1, borderColor: '#000', borderBottomStyle: 'solid', paddingTop: 55}} />
+                            <Text style={{ width: "80%", borderBottomWidth: 1, borderColor: '#000', borderBottomStyle: 'solid', paddingTop: 55 }} />
                             <Text style={styles.valor}>
                                 Solicitante:{encaminhamento?.medicoSolicitante?.nome}
                             </Text>
@@ -185,6 +230,83 @@ export default function DocumentoRequisicaoProcedimentos({ encaminhamento, codig
                         </View>
                     </View>
                 </View>
+
+                {/* Avisos caso necessario */}
+
+                {/* Tomografia */}
+                {encaminhamento?.procedimento?.codigo === "483" && (
+                    <View style={styles.avisoDocumentos}>
+                        <Text style={styles.tituloAviso}>
+                            ATENÇÃO — DOCUMENTOS NECESSÁRIOS PARA ANEXAR AO PEDIDO DE TOMOGRAFIA
+                        </Text>
+
+                        <View style={styles.documentosLinha}>
+                            <View style={styles.secaoDocumentos}>
+                                <Text style={styles.subtituloAviso}>
+                                    Documentos do paciente
+                                </Text>
+
+                                <Text style={styles.listaDocumentos}>• RG</Text>
+                                <Text style={styles.listaDocumentos}>• CPF</Text>
+                                <Text style={styles.listaDocumentos}>• Cartão do SUS</Text>
+                                <Text style={styles.listaDocumentos}>
+                                    • Comprovante de residência, quando solicitado
+                                </Text>
+                            </View>
+
+                            <View style={styles.secaoDocumentos}>
+                                <Text style={styles.subtituloAviso}>
+                                    Em caso de paciente menor de idade
+                                </Text>
+
+                                <Text style={styles.listaDocumentos}>
+                                    • RG do responsável
+                                </Text>
+
+                                <Text style={styles.listaDocumentos}>
+                                    • CPF do responsável
+                                </Text>
+                            </View>
+                        </View>
+                    </View>
+                )}
+                {/* Ressonancia */}
+                {encaminhamento?.procedimento?.codigo === "228" && (
+                    <View style={styles.avisoDocumentos}>
+                        <Text style={styles.tituloAviso}>
+                            ATENÇÃO — DOCUMENTOS NECESSÁRIOS PARA ANEXAR AO PEDIDO DE RESSONÂNCIA
+                        </Text>
+
+                        <View style={styles.documentosLinha}>
+                            <View style={styles.secaoDocumentos}>
+                                <Text style={styles.subtituloAviso}>
+                                    Documentos do paciente
+                                </Text>
+
+                                <Text style={styles.listaDocumentos}>• RG</Text>
+                                <Text style={styles.listaDocumentos}>• CPF</Text>
+                                <Text style={styles.listaDocumentos}>• Cartão do SUS</Text>
+                                <Text style={styles.listaDocumentos}>
+                                    • Comprovante de residência, quando solicitado
+                                </Text>
+                            </View>
+
+                            <View style={styles.secaoDocumentos}>
+                                <Text style={styles.subtituloAviso}>
+                                    Em caso de paciente menor de idade
+                                </Text>
+
+                                <Text style={styles.listaDocumentos}>
+                                    • RG do responsável
+                                </Text>
+
+                                <Text style={styles.listaDocumentos}>
+                                    • CPF do responsável
+                                </Text>
+                            </View>
+                        </View>
+                    </View>
+                )}
             </Page>
         </Document>
     )
