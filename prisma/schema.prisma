@@ -227,6 +227,7 @@ model Local {
   id           Int       @id @default(autoincrement())
 
   nome         String
+  cnes  String        @default("N/A")
   tipoDeLocal  TipoDeLocal
   atendimentoDentroOuForaDoMunicipio AtendimentoDentroOuForaDoMunicipio
   quantidadeDeSalas Int
@@ -334,6 +335,7 @@ model Prestador {
   id    Int           @id @default(autoincrement())
   nome  String
   tipo  TipoDoPrestador
+  crm  String        @default("N/A")
   telefone String
   email String
   cor   String        @unique @db.VarChar(7)
@@ -497,8 +499,7 @@ model Paciente {
 
 
 model Encaminhamento {
-  id Int @id @default(autoincrement())
-
+  id Int @id
   tipo TipoDeEncaminhamento
 
   pacienteId Int
@@ -555,6 +556,9 @@ model Encaminhamento {
   // Local onde será realizado o atendimento
   localDeAtendimentoId Int?
   localDeAtendimento Local? @relation("LocalDeAtendimentoEncaminhamento", fields: [localDeAtendimentoId], references: [id])
+
+  cid String?
+  dadosClinicos String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

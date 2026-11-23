@@ -25,6 +25,7 @@ export default function Page() {
     const { locais, buscarLocais } = useLocais();
 
     const [nomeDoLocal, setNomeDoLocal] = useState('')
+    const [cnes, setCnes] = useState('')
     const [tipoDeLocal, setTipoDeLocal] = useState('')
     const [atendimentoDentroOuForaDoMunicipio, setAtendimentoDentroOuForaDoMunicipio] = useState('')
     const [quantidadeDeSalas, setQuantidadeDeSalas] = useState('')
@@ -219,6 +220,7 @@ export default function Page() {
                     },
                     body: JSON.stringify({
                         nome: nomeDoLocal,
+                        cnes,
                         tipoDeLocal,
                         atendimentoDentroOuForaDoMunicipio,
                         quantidadeDeSalas: Number(quantidadeDeSalas),
@@ -278,6 +280,7 @@ export default function Page() {
                 },
                 body: JSON.stringify({
                     nome: nomeDoLocal,
+                    cnes,
                     tipoDeLocal,
                     atendimentoDentroOuForaDoMunicipio,
                     quantidadeDeSalas: Number(quantidadeDeSalas),
@@ -346,6 +349,7 @@ export default function Page() {
                     <form className="p-4 border-2 border-verde-escuro rounded-lg flex flex-col gap-4" onSubmit={handleSubmit}>
                         <div className="grid grid-cols-2 gap-4">
                             <InputTexto icone={<HiOutlinePencilAlt />} id="nomeDoLocal" label="Nome do Local" nome="nomeDoLocal" placeholder="Digite o nome do local..." setValor={setNomeDoLocal} valor={nomeDoLocal} estiloPersonalizado="col-span-2" />
+                            <InputTexto icone={<HiOutlinePencilAlt />} id="cnes" label="Informe o CNES" nome="cnes" placeholder="Digite o CNES do local..." setValor={setCnes} valor={cnes} estiloPersonalizado="col-span-2" />
                             <InputSelect icone={<MdOutlineLocationCity />} id="tipoDeLocal" label="Tipo de Local" nome="tipoDeLocal" setValor={setTipoDeLocal} valor={tipoDeLocal} opcoes={opcoesDeTipoDeLocal} />
                             <div className="grid grid-cols-3 gap-4">
                                 <div className={`${atendimentoDentroOuForaDoMunicipio === "DENTRO_DO_MUNICIPIO" ? 'col-span-2' : 'col-span-3'}`}>
@@ -425,6 +429,7 @@ export default function Page() {
                                     <tr className="border-b-2 border-verde-escuro">
                                         <th className="w-[250px] p-2">Nome do Local</th>
                                         <th className="w-[200px] p-2">Tipo do Local</th>
+                                        <th className="w-[150px] p-2">CNES</th>
                                         <th className="w-[200px] p-2">Atendimento</th>
                                         <th className="w-[100px] p-2">Salas</th>
                                         <th className="w-[150px] p-2">Nome da Cidade</th>
@@ -442,6 +447,7 @@ export default function Page() {
                                             <tr key={local.id} className="border-b border-gray-300">
                                                 <td className="p-2 break-words">{local.nome}</td>
                                                 <td className="p-2 break-words capitalize">{local.tipoDeLocal.replaceAll('_', ' ').toLowerCase()}</td>
+                                                <td className="p-2 break-words capitalize">{local.cnes}</td>
                                                 <td className="p-2 break-words capitalize">
                                                     {local.atendimentoDentroOuForaDoMunicipio.replaceAll('_', ' ').toLowerCase()}
                                                 </td>
@@ -466,6 +472,7 @@ export default function Page() {
                                                             setDialogAtualizarLocal(true)
 
                                                             setNomeDoLocal(local.nome)
+                                                            setCnes(local.cnes)
                                                             setTipoDeLocal(local.tipoDeLocal)
                                                             setAtendimentoDentroOuForaDoMunicipio(local.atendimentoDentroOuForaDoMunicipio)
                                                             setCidade(local.cidade)
@@ -546,6 +553,7 @@ export default function Page() {
                 <form className="p-4 border-2 border-verde-escuro rounded-lg flex flex-col gap-4" onSubmit={handleSubmitAtualizar}>
                     <div className="grid grid-cols-2 gap-4">
                         <InputTexto icone={<HiOutlinePencilAlt />} id="nomeDoLocal" label="Nome do Local" nome="nomeDoLocal" placeholder="Digite o nome do local..." setValor={setNomeDoLocal} valor={nomeDoLocal} estiloPersonalizado="col-span-2" />
+                        <InputTexto icone={<HiOutlinePencilAlt />} id="cnes" label="Informe o CNES" nome="cnes" placeholder="Digite o CNES do local..." setValor={setCnes} valor={cnes} estiloPersonalizado="col-span-2" />
                         <InputSelect icone={<MdOutlineLocationCity />} id="tipoDeLocal" label="Tipo de Local" nome="tipoDeLocal" setValor={setTipoDeLocal} valor={tipoDeLocal} opcoes={opcoesDeTipoDeLocal} />
                         <InputSelect icone={<GrMapLocation />} id="atendimentoDentroOuForaDoMunicipio" label="Atendimento dentro ou fora do município" nome="atendimentoDentroOuForaDoMunicipio" setValor={setAtendimentoDentroOuForaDoMunicipio} valor={atendimentoDentroOuForaDoMunicipio} opcoes={opcoesDeAtendimentoDentroOuForaDoMunicipio} />
 

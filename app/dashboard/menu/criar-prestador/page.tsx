@@ -26,6 +26,7 @@ export default function Page() {
 
     const [tipo, setTipo] = useState<TipoDoPrestador>(TipoDoPrestador.MEDICO)
     const [nomeDoPrestador, setNomeDoPrestador] = useState('')
+    const [CRM, setCRM] = useState("")
 
     const [buscarEspecialidade, setBuscarEspecialidade] = useState('')
     const [especialidadesSelecionadas, setEspecialidadesSelecionadas] = useState<typeof especialidades>([])
@@ -121,6 +122,7 @@ export default function Page() {
 
     const [nomeEdicao, setNomeEdicao] = useState("")
     const [corEdicao, setCorEdicao] = useState("")
+    const [crmEdicao, setCRMEdicao] = useState("")
     const [especialidadesEdicao, setEspecialidadesEdicao] = useState<number[]>([])
     const [procedimentosEdicao, setProcedimentosEdicao] = useState<number[]>([])
 
@@ -139,6 +141,7 @@ export default function Page() {
                 body: JSON.stringify({
                     nome: nomeDoPrestador.trim(),
                     tipo,
+                    crm: CRM,
                     cor: corSelecionada,
                     telefone,
                     email,
@@ -258,6 +261,7 @@ export default function Page() {
 
         setNomeEdicao(prestador.nome)
         setCorEdicao(prestador.cor)
+        setCRMEdicao(prestador.crm)
         setTelefone(prestador.telefone)
         setEmail(prestador.email)
         // setObservacoes(prestador)
@@ -367,6 +371,16 @@ export default function Page() {
                     body: JSON.stringify({
                         nome: nomeEdicao.trim(),
                         cor: corEdicao,
+                        crm: crmEdicao,
+                        telefone,
+                        email,
+
+                        tipoDeAtendimento: tipoDeAtendimentoEdicao,
+
+                        localId:
+                            tipoDeAtendimentoEdicao === TipoDeAtendimentoDoPrestador.ITINERANTE
+                                ? null
+                                : Number(localDeAtendimentoEdicao),
 
                         especialidadesIds:
                             prestadorSelecionado.tipo === "MEDICO"
@@ -448,7 +462,10 @@ export default function Page() {
                                 <p>Prestador de Serviços Médicos</p>
                             </button>
                         </div>
-                        <InputTexto icone={<TbAmbulance />} id="nomeDoPrestador" label="Nome da prestador" nome="nomeDoPrestador" placeholder="Digite o nome do prestador..." setValor={setNomeDoPrestador} valor={nomeDoPrestador} />
+                        <div className="grid grid-cols-2 gap-4">
+                            <InputTexto icone={<TbAmbulance />} id="nomeDoPrestador" label="Nome da prestador" nome="nomeDoPrestador" placeholder="Digite o nome do prestador..." setValor={setNomeDoPrestador} valor={nomeDoPrestador} />
+                            <InputTexto icone={<TbAmbulance />} id="CRM" label="CRM do Prestador" nome="CRM" placeholder="Digite o CRM do prestador..." setValor={setCRM} valor={CRM} />
+                        </div>
                         <InputSelect
                             icone={<MdOutlineHomeRepairService />}
                             id="tipoDeAtendimentoDoPrestador"
@@ -714,6 +731,8 @@ export default function Page() {
                                         <th className="w-[250px] p-2">Nome do prestador</th>
                                         <th className="w-[180px] p-2 text-center">Tipo</th>
                                         <th className="w-[240px] p-2">Especialidade/Procedimento</th>
+                                        <th className="w-[140px] p-2">CRM</th>
+                                        <th className="w-[200px] p-2">Tipo de Atendimento</th>
                                         <th className="w-[120px] p-2">Telefone</th>
                                         <th className="w-[180px] p-2">Email</th>
                                         <th className="w-[120px] p-2 text-center">Ações</th>
@@ -728,7 +747,6 @@ export default function Page() {
                                                 <tr key={prestador.id} className="border-b border-gray-300">
                                                     <td className="p-2">{prestador.nome}</td>
                                                     <td className="p-2 capitalize text-center">{prestador.tipo.replaceAll('_', ' ').toLowerCase()}</td>
-
                                                     <td className="my-auto">
                                                         {
                                                             prestador.especialidades.length > 0 ? (
@@ -758,6 +776,8 @@ export default function Page() {
                                                             )
                                                         }
                                                     </td>
+                                                    <td className="p-2">{prestador.crm}</td>
+                                                    <td className="p-2">{prestador.tipoDeAtendimento}</td>
                                                     <td className="p-2">{prestador.telefone}</td>
                                                     <td className="p-2 truncate">{prestador.email}</td>
                                                     <td className="p-2">
@@ -869,6 +889,9 @@ export default function Page() {
                         setValor={setNomeEdicao}
                         valor={nomeEdicao}
                     />
+
+                    <InputTexto icone={<TbAmbulance />} id="CRMEdicao" label="CRM do Prestador" nome="CRMEdicao" placeholder="Digite o CRM do prestador..." setValor={setCRMEdicao} valor={crmEdicao} />
+
                     <InputSelect
                         icone={<MdOutlineHomeRepairService />}
                         id="tipoDeAtendimentoEdicao"

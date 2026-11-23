@@ -77,6 +77,8 @@ export type EncaminhamentoMinAggregateOutputType = {
   horarioDeAgendamento: string | null
   prestadorExecutanteId: number | null
   localDeAtendimentoId: number | null
+  cid: string | null
+  dadosClinicos: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -106,6 +108,8 @@ export type EncaminhamentoMaxAggregateOutputType = {
   horarioDeAgendamento: string | null
   prestadorExecutanteId: number | null
   localDeAtendimentoId: number | null
+  cid: string | null
+  dadosClinicos: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -135,6 +139,8 @@ export type EncaminhamentoCountAggregateOutputType = {
   horarioDeAgendamento: number
   prestadorExecutanteId: number
   localDeAtendimentoId: number
+  cid: number
+  dadosClinicos: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -192,6 +198,8 @@ export type EncaminhamentoMinAggregateInputType = {
   horarioDeAgendamento?: true
   prestadorExecutanteId?: true
   localDeAtendimentoId?: true
+  cid?: true
+  dadosClinicos?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -221,6 +229,8 @@ export type EncaminhamentoMaxAggregateInputType = {
   horarioDeAgendamento?: true
   prestadorExecutanteId?: true
   localDeAtendimentoId?: true
+  cid?: true
+  dadosClinicos?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -250,6 +260,8 @@ export type EncaminhamentoCountAggregateInputType = {
   horarioDeAgendamento?: true
   prestadorExecutanteId?: true
   localDeAtendimentoId?: true
+  cid?: true
+  dadosClinicos?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -366,6 +378,8 @@ export type EncaminhamentoGroupByOutputType = {
   horarioDeAgendamento: string | null
   prestadorExecutanteId: number | null
   localDeAtendimentoId: number | null
+  cid: string | null
+  dadosClinicos: string | null
   createdAt: Date
   updatedAt: Date
   _count: EncaminhamentoCountAggregateOutputType | null
@@ -418,6 +432,8 @@ export type EncaminhamentoWhereInput = {
   horarioDeAgendamento?: Prisma.StringNullableFilter<"Encaminhamento"> | string | null
   prestadorExecutanteId?: Prisma.IntNullableFilter<"Encaminhamento"> | number | null
   localDeAtendimentoId?: Prisma.IntNullableFilter<"Encaminhamento"> | number | null
+  cid?: Prisma.StringNullableFilter<"Encaminhamento"> | string | null
+  dadosClinicos?: Prisma.StringNullableFilter<"Encaminhamento"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Encaminhamento"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Encaminhamento"> | Date | string
   paciente?: Prisma.XOR<Prisma.PacienteScalarRelationFilter, Prisma.PacienteWhereInput>
@@ -456,6 +472,8 @@ export type EncaminhamentoOrderByWithRelationInput = {
   horarioDeAgendamento?: Prisma.SortOrderInput | Prisma.SortOrder
   prestadorExecutanteId?: Prisma.SortOrderInput | Prisma.SortOrder
   localDeAtendimentoId?: Prisma.SortOrderInput | Prisma.SortOrder
+  cid?: Prisma.SortOrderInput | Prisma.SortOrder
+  dadosClinicos?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   paciente?: Prisma.PacienteOrderByWithRelationInput
@@ -497,6 +515,8 @@ export type EncaminhamentoWhereUniqueInput = Prisma.AtLeast<{
   horarioDeAgendamento?: Prisma.StringNullableFilter<"Encaminhamento"> | string | null
   prestadorExecutanteId?: Prisma.IntNullableFilter<"Encaminhamento"> | number | null
   localDeAtendimentoId?: Prisma.IntNullableFilter<"Encaminhamento"> | number | null
+  cid?: Prisma.StringNullableFilter<"Encaminhamento"> | string | null
+  dadosClinicos?: Prisma.StringNullableFilter<"Encaminhamento"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Encaminhamento"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Encaminhamento"> | Date | string
   paciente?: Prisma.XOR<Prisma.PacienteScalarRelationFilter, Prisma.PacienteWhereInput>
@@ -535,6 +555,8 @@ export type EncaminhamentoOrderByWithAggregationInput = {
   horarioDeAgendamento?: Prisma.SortOrderInput | Prisma.SortOrder
   prestadorExecutanteId?: Prisma.SortOrderInput | Prisma.SortOrder
   localDeAtendimentoId?: Prisma.SortOrderInput | Prisma.SortOrder
+  cid?: Prisma.SortOrderInput | Prisma.SortOrder
+  dadosClinicos?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.EncaminhamentoCountOrderByAggregateInput
@@ -572,6 +594,8 @@ export type EncaminhamentoScalarWhereWithAggregatesInput = {
   horarioDeAgendamento?: Prisma.StringNullableWithAggregatesFilter<"Encaminhamento"> | string | null
   prestadorExecutanteId?: Prisma.IntNullableWithAggregatesFilter<"Encaminhamento"> | number | null
   localDeAtendimentoId?: Prisma.IntNullableWithAggregatesFilter<"Encaminhamento"> | number | null
+  cid?: Prisma.StringNullableWithAggregatesFilter<"Encaminhamento"> | string | null
+  dadosClinicos?: Prisma.StringNullableWithAggregatesFilter<"Encaminhamento"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Encaminhamento"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Encaminhamento"> | Date | string
 }
@@ -591,6 +615,8 @@ export type EncaminhamentoCreateInput = {
   dataDeSaida?: Date | string | null
   dataDeAgendamentoLocal?: Date | string | null
   horarioDeAgendamento?: string | null
+  cid?: string | null
+  dadosClinicos?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   paciente: Prisma.PacienteCreateNestedOneWithoutEncaminhamentosInput
@@ -629,6 +655,8 @@ export type EncaminhamentoUncheckedCreateInput = {
   horarioDeAgendamento?: string | null
   prestadorExecutanteId?: number | null
   localDeAtendimentoId?: number | null
+  cid?: string | null
+  dadosClinicos?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -648,6 +676,8 @@ export type EncaminhamentoUpdateInput = {
   dataDeSaida?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dataDeAgendamentoLocal?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   horarioDeAgendamento?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dadosClinicos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paciente?: Prisma.PacienteUpdateOneRequiredWithoutEncaminhamentosNestedInput
@@ -686,6 +716,8 @@ export type EncaminhamentoUncheckedUpdateInput = {
   horarioDeAgendamento?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prestadorExecutanteId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   localDeAtendimentoId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  cid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dadosClinicos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -715,6 +747,8 @@ export type EncaminhamentoCreateManyInput = {
   horarioDeAgendamento?: string | null
   prestadorExecutanteId?: number | null
   localDeAtendimentoId?: number | null
+  cid?: string | null
+  dadosClinicos?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -734,6 +768,8 @@ export type EncaminhamentoUpdateManyMutationInput = {
   dataDeSaida?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dataDeAgendamentoLocal?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   horarioDeAgendamento?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dadosClinicos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -763,6 +799,8 @@ export type EncaminhamentoUncheckedUpdateManyInput = {
   horarioDeAgendamento?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prestadorExecutanteId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   localDeAtendimentoId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  cid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dadosClinicos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -802,6 +840,8 @@ export type EncaminhamentoCountOrderByAggregateInput = {
   horarioDeAgendamento?: Prisma.SortOrder
   prestadorExecutanteId?: Prisma.SortOrder
   localDeAtendimentoId?: Prisma.SortOrder
+  cid?: Prisma.SortOrder
+  dadosClinicos?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -844,6 +884,8 @@ export type EncaminhamentoMaxOrderByAggregateInput = {
   horarioDeAgendamento?: Prisma.SortOrder
   prestadorExecutanteId?: Prisma.SortOrder
   localDeAtendimentoId?: Prisma.SortOrder
+  cid?: Prisma.SortOrder
+  dadosClinicos?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -873,6 +915,8 @@ export type EncaminhamentoMinOrderByAggregateInput = {
   horarioDeAgendamento?: Prisma.SortOrder
   prestadorExecutanteId?: Prisma.SortOrder
   localDeAtendimentoId?: Prisma.SortOrder
+  cid?: Prisma.SortOrder
+  dadosClinicos?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -1303,6 +1347,8 @@ export type EncaminhamentoCreateWithoutUnidadeDeOrigemInput = {
   dataDeSaida?: Date | string | null
   dataDeAgendamentoLocal?: Date | string | null
   horarioDeAgendamento?: string | null
+  cid?: string | null
+  dadosClinicos?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   paciente: Prisma.PacienteCreateNestedOneWithoutEncaminhamentosInput
@@ -1339,6 +1385,8 @@ export type EncaminhamentoUncheckedCreateWithoutUnidadeDeOrigemInput = {
   horarioDeAgendamento?: string | null
   prestadorExecutanteId?: number | null
   localDeAtendimentoId?: number | null
+  cid?: string | null
+  dadosClinicos?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1368,6 +1416,8 @@ export type EncaminhamentoCreateWithoutLocalDeAtendimentoInput = {
   dataDeSaida?: Date | string | null
   dataDeAgendamentoLocal?: Date | string | null
   horarioDeAgendamento?: string | null
+  cid?: string | null
+  dadosClinicos?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   paciente: Prisma.PacienteCreateNestedOneWithoutEncaminhamentosInput
@@ -1404,6 +1454,8 @@ export type EncaminhamentoUncheckedCreateWithoutLocalDeAtendimentoInput = {
   dataDeAgendamentoLocal?: Date | string | null
   horarioDeAgendamento?: string | null
   prestadorExecutanteId?: number | null
+  cid?: string | null
+  dadosClinicos?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1462,6 +1514,8 @@ export type EncaminhamentoScalarWhereInput = {
   horarioDeAgendamento?: Prisma.StringNullableFilter<"Encaminhamento"> | string | null
   prestadorExecutanteId?: Prisma.IntNullableFilter<"Encaminhamento"> | number | null
   localDeAtendimentoId?: Prisma.IntNullableFilter<"Encaminhamento"> | number | null
+  cid?: Prisma.StringNullableFilter<"Encaminhamento"> | string | null
+  dadosClinicos?: Prisma.StringNullableFilter<"Encaminhamento"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Encaminhamento"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Encaminhamento"> | Date | string
 }
@@ -1497,6 +1551,8 @@ export type EncaminhamentoCreateWithoutEspecialidadeDoPrestadorInput = {
   dataDeSaida?: Date | string | null
   dataDeAgendamentoLocal?: Date | string | null
   horarioDeAgendamento?: string | null
+  cid?: string | null
+  dadosClinicos?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   paciente: Prisma.PacienteCreateNestedOneWithoutEncaminhamentosInput
@@ -1533,6 +1589,8 @@ export type EncaminhamentoUncheckedCreateWithoutEspecialidadeDoPrestadorInput = 
   horarioDeAgendamento?: string | null
   prestadorExecutanteId?: number | null
   localDeAtendimentoId?: number | null
+  cid?: string | null
+  dadosClinicos?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1562,6 +1620,8 @@ export type EncaminhamentoCreateWithoutEspecialidadeEncaminhadaInput = {
   dataDeSaida?: Date | string | null
   dataDeAgendamentoLocal?: Date | string | null
   horarioDeAgendamento?: string | null
+  cid?: string | null
+  dadosClinicos?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   paciente: Prisma.PacienteCreateNestedOneWithoutEncaminhamentosInput
@@ -1598,6 +1658,8 @@ export type EncaminhamentoUncheckedCreateWithoutEspecialidadeEncaminhadaInput = 
   horarioDeAgendamento?: string | null
   prestadorExecutanteId?: number | null
   localDeAtendimentoId?: number | null
+  cid?: string | null
+  dadosClinicos?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1659,6 +1721,8 @@ export type EncaminhamentoCreateWithoutProcedimentoInput = {
   dataDeSaida?: Date | string | null
   dataDeAgendamentoLocal?: Date | string | null
   horarioDeAgendamento?: string | null
+  cid?: string | null
+  dadosClinicos?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   paciente: Prisma.PacienteCreateNestedOneWithoutEncaminhamentosInput
@@ -1695,6 +1759,8 @@ export type EncaminhamentoUncheckedCreateWithoutProcedimentoInput = {
   horarioDeAgendamento?: string | null
   prestadorExecutanteId?: number | null
   localDeAtendimentoId?: number | null
+  cid?: string | null
+  dadosClinicos?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1740,6 +1806,8 @@ export type EncaminhamentoCreateWithoutMembroProcedimentoInput = {
   dataDeSaida?: Date | string | null
   dataDeAgendamentoLocal?: Date | string | null
   horarioDeAgendamento?: string | null
+  cid?: string | null
+  dadosClinicos?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   paciente: Prisma.PacienteCreateNestedOneWithoutEncaminhamentosInput
@@ -1776,6 +1844,8 @@ export type EncaminhamentoUncheckedCreateWithoutMembroProcedimentoInput = {
   horarioDeAgendamento?: string | null
   prestadorExecutanteId?: number | null
   localDeAtendimentoId?: number | null
+  cid?: string | null
+  dadosClinicos?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1821,6 +1891,8 @@ export type EncaminhamentoCreateWithoutMedicoSolicitanteInput = {
   dataDeSaida?: Date | string | null
   dataDeAgendamentoLocal?: Date | string | null
   horarioDeAgendamento?: string | null
+  cid?: string | null
+  dadosClinicos?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   paciente: Prisma.PacienteCreateNestedOneWithoutEncaminhamentosInput
@@ -1857,6 +1929,8 @@ export type EncaminhamentoUncheckedCreateWithoutMedicoSolicitanteInput = {
   horarioDeAgendamento?: string | null
   prestadorExecutanteId?: number | null
   localDeAtendimentoId?: number | null
+  cid?: string | null
+  dadosClinicos?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1886,6 +1960,8 @@ export type EncaminhamentoCreateWithoutPrestadorExecutanteInput = {
   dataDeSaida?: Date | string | null
   dataDeAgendamentoLocal?: Date | string | null
   horarioDeAgendamento?: string | null
+  cid?: string | null
+  dadosClinicos?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   paciente: Prisma.PacienteCreateNestedOneWithoutEncaminhamentosInput
@@ -1922,6 +1998,8 @@ export type EncaminhamentoUncheckedCreateWithoutPrestadorExecutanteInput = {
   dataDeAgendamentoLocal?: Date | string | null
   horarioDeAgendamento?: string | null
   localDeAtendimentoId?: number | null
+  cid?: string | null
+  dadosClinicos?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1983,6 +2061,8 @@ export type EncaminhamentoCreateWithoutPacienteInput = {
   dataDeSaida?: Date | string | null
   dataDeAgendamentoLocal?: Date | string | null
   horarioDeAgendamento?: string | null
+  cid?: string | null
+  dadosClinicos?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   unidadeDeOrigem: Prisma.LocalCreateNestedOneWithoutEncaminhamentosDeOrigemInput
@@ -2019,6 +2099,8 @@ export type EncaminhamentoUncheckedCreateWithoutPacienteInput = {
   horarioDeAgendamento?: string | null
   prestadorExecutanteId?: number | null
   localDeAtendimentoId?: number | null
+  cid?: string | null
+  dadosClinicos?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -2073,6 +2155,8 @@ export type EncaminhamentoCreateManyUnidadeDeOrigemInput = {
   horarioDeAgendamento?: string | null
   prestadorExecutanteId?: number | null
   localDeAtendimentoId?: number | null
+  cid?: string | null
+  dadosClinicos?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -2101,6 +2185,8 @@ export type EncaminhamentoCreateManyLocalDeAtendimentoInput = {
   dataDeAgendamentoLocal?: Date | string | null
   horarioDeAgendamento?: string | null
   prestadorExecutanteId?: number | null
+  cid?: string | null
+  dadosClinicos?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -2120,6 +2206,8 @@ export type EncaminhamentoUpdateWithoutUnidadeDeOrigemInput = {
   dataDeSaida?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dataDeAgendamentoLocal?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   horarioDeAgendamento?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dadosClinicos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paciente?: Prisma.PacienteUpdateOneRequiredWithoutEncaminhamentosNestedInput
@@ -2156,6 +2244,8 @@ export type EncaminhamentoUncheckedUpdateWithoutUnidadeDeOrigemInput = {
   horarioDeAgendamento?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prestadorExecutanteId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   localDeAtendimentoId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  cid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dadosClinicos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2184,6 +2274,8 @@ export type EncaminhamentoUncheckedUpdateManyWithoutUnidadeDeOrigemInput = {
   horarioDeAgendamento?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prestadorExecutanteId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   localDeAtendimentoId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  cid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dadosClinicos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2203,6 +2295,8 @@ export type EncaminhamentoUpdateWithoutLocalDeAtendimentoInput = {
   dataDeSaida?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dataDeAgendamentoLocal?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   horarioDeAgendamento?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dadosClinicos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paciente?: Prisma.PacienteUpdateOneRequiredWithoutEncaminhamentosNestedInput
@@ -2239,6 +2333,8 @@ export type EncaminhamentoUncheckedUpdateWithoutLocalDeAtendimentoInput = {
   dataDeAgendamentoLocal?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   horarioDeAgendamento?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prestadorExecutanteId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  cid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dadosClinicos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2267,6 +2363,8 @@ export type EncaminhamentoUncheckedUpdateManyWithoutLocalDeAtendimentoInput = {
   dataDeAgendamentoLocal?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   horarioDeAgendamento?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prestadorExecutanteId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  cid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dadosClinicos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2295,6 +2393,8 @@ export type EncaminhamentoCreateManyEspecialidadeDoPrestadorInput = {
   horarioDeAgendamento?: string | null
   prestadorExecutanteId?: number | null
   localDeAtendimentoId?: number | null
+  cid?: string | null
+  dadosClinicos?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -2323,6 +2423,8 @@ export type EncaminhamentoCreateManyEspecialidadeEncaminhadaInput = {
   horarioDeAgendamento?: string | null
   prestadorExecutanteId?: number | null
   localDeAtendimentoId?: number | null
+  cid?: string | null
+  dadosClinicos?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -2342,6 +2444,8 @@ export type EncaminhamentoUpdateWithoutEspecialidadeDoPrestadorInput = {
   dataDeSaida?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dataDeAgendamentoLocal?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   horarioDeAgendamento?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dadosClinicos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paciente?: Prisma.PacienteUpdateOneRequiredWithoutEncaminhamentosNestedInput
@@ -2378,6 +2482,8 @@ export type EncaminhamentoUncheckedUpdateWithoutEspecialidadeDoPrestadorInput = 
   horarioDeAgendamento?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prestadorExecutanteId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   localDeAtendimentoId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  cid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dadosClinicos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2406,6 +2512,8 @@ export type EncaminhamentoUncheckedUpdateManyWithoutEspecialidadeDoPrestadorInpu
   horarioDeAgendamento?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prestadorExecutanteId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   localDeAtendimentoId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  cid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dadosClinicos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2425,6 +2533,8 @@ export type EncaminhamentoUpdateWithoutEspecialidadeEncaminhadaInput = {
   dataDeSaida?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dataDeAgendamentoLocal?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   horarioDeAgendamento?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dadosClinicos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paciente?: Prisma.PacienteUpdateOneRequiredWithoutEncaminhamentosNestedInput
@@ -2461,6 +2571,8 @@ export type EncaminhamentoUncheckedUpdateWithoutEspecialidadeEncaminhadaInput = 
   horarioDeAgendamento?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prestadorExecutanteId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   localDeAtendimentoId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  cid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dadosClinicos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2489,6 +2601,8 @@ export type EncaminhamentoUncheckedUpdateManyWithoutEspecialidadeEncaminhadaInpu
   horarioDeAgendamento?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prestadorExecutanteId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   localDeAtendimentoId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  cid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dadosClinicos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2517,6 +2631,8 @@ export type EncaminhamentoCreateManyProcedimentoInput = {
   horarioDeAgendamento?: string | null
   prestadorExecutanteId?: number | null
   localDeAtendimentoId?: number | null
+  cid?: string | null
+  dadosClinicos?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -2536,6 +2652,8 @@ export type EncaminhamentoUpdateWithoutProcedimentoInput = {
   dataDeSaida?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dataDeAgendamentoLocal?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   horarioDeAgendamento?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dadosClinicos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paciente?: Prisma.PacienteUpdateOneRequiredWithoutEncaminhamentosNestedInput
@@ -2572,6 +2690,8 @@ export type EncaminhamentoUncheckedUpdateWithoutProcedimentoInput = {
   horarioDeAgendamento?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prestadorExecutanteId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   localDeAtendimentoId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  cid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dadosClinicos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2600,6 +2720,8 @@ export type EncaminhamentoUncheckedUpdateManyWithoutProcedimentoInput = {
   horarioDeAgendamento?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prestadorExecutanteId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   localDeAtendimentoId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  cid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dadosClinicos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2628,6 +2750,8 @@ export type EncaminhamentoCreateManyMembroProcedimentoInput = {
   horarioDeAgendamento?: string | null
   prestadorExecutanteId?: number | null
   localDeAtendimentoId?: number | null
+  cid?: string | null
+  dadosClinicos?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -2647,6 +2771,8 @@ export type EncaminhamentoUpdateWithoutMembroProcedimentoInput = {
   dataDeSaida?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dataDeAgendamentoLocal?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   horarioDeAgendamento?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dadosClinicos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paciente?: Prisma.PacienteUpdateOneRequiredWithoutEncaminhamentosNestedInput
@@ -2683,6 +2809,8 @@ export type EncaminhamentoUncheckedUpdateWithoutMembroProcedimentoInput = {
   horarioDeAgendamento?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prestadorExecutanteId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   localDeAtendimentoId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  cid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dadosClinicos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2711,6 +2839,8 @@ export type EncaminhamentoUncheckedUpdateManyWithoutMembroProcedimentoInput = {
   horarioDeAgendamento?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prestadorExecutanteId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   localDeAtendimentoId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  cid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dadosClinicos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2739,6 +2869,8 @@ export type EncaminhamentoCreateManyMedicoSolicitanteInput = {
   horarioDeAgendamento?: string | null
   prestadorExecutanteId?: number | null
   localDeAtendimentoId?: number | null
+  cid?: string | null
+  dadosClinicos?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -2767,6 +2899,8 @@ export type EncaminhamentoCreateManyPrestadorExecutanteInput = {
   dataDeAgendamentoLocal?: Date | string | null
   horarioDeAgendamento?: string | null
   localDeAtendimentoId?: number | null
+  cid?: string | null
+  dadosClinicos?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -2786,6 +2920,8 @@ export type EncaminhamentoUpdateWithoutMedicoSolicitanteInput = {
   dataDeSaida?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dataDeAgendamentoLocal?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   horarioDeAgendamento?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dadosClinicos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paciente?: Prisma.PacienteUpdateOneRequiredWithoutEncaminhamentosNestedInput
@@ -2822,6 +2958,8 @@ export type EncaminhamentoUncheckedUpdateWithoutMedicoSolicitanteInput = {
   horarioDeAgendamento?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prestadorExecutanteId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   localDeAtendimentoId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  cid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dadosClinicos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2850,6 +2988,8 @@ export type EncaminhamentoUncheckedUpdateManyWithoutMedicoSolicitanteInput = {
   horarioDeAgendamento?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prestadorExecutanteId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   localDeAtendimentoId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  cid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dadosClinicos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2869,6 +3009,8 @@ export type EncaminhamentoUpdateWithoutPrestadorExecutanteInput = {
   dataDeSaida?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dataDeAgendamentoLocal?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   horarioDeAgendamento?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dadosClinicos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paciente?: Prisma.PacienteUpdateOneRequiredWithoutEncaminhamentosNestedInput
@@ -2905,6 +3047,8 @@ export type EncaminhamentoUncheckedUpdateWithoutPrestadorExecutanteInput = {
   dataDeAgendamentoLocal?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   horarioDeAgendamento?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   localDeAtendimentoId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  cid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dadosClinicos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2933,6 +3077,8 @@ export type EncaminhamentoUncheckedUpdateManyWithoutPrestadorExecutanteInput = {
   dataDeAgendamentoLocal?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   horarioDeAgendamento?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   localDeAtendimentoId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  cid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dadosClinicos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2961,6 +3107,8 @@ export type EncaminhamentoCreateManyPacienteInput = {
   horarioDeAgendamento?: string | null
   prestadorExecutanteId?: number | null
   localDeAtendimentoId?: number | null
+  cid?: string | null
+  dadosClinicos?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -2980,6 +3128,8 @@ export type EncaminhamentoUpdateWithoutPacienteInput = {
   dataDeSaida?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dataDeAgendamentoLocal?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   horarioDeAgendamento?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dadosClinicos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   unidadeDeOrigem?: Prisma.LocalUpdateOneRequiredWithoutEncaminhamentosDeOrigemNestedInput
@@ -3016,6 +3166,8 @@ export type EncaminhamentoUncheckedUpdateWithoutPacienteInput = {
   horarioDeAgendamento?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prestadorExecutanteId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   localDeAtendimentoId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  cid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dadosClinicos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -3044,6 +3196,8 @@ export type EncaminhamentoUncheckedUpdateManyWithoutPacienteInput = {
   horarioDeAgendamento?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prestadorExecutanteId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   localDeAtendimentoId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  cid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dadosClinicos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -3075,6 +3229,8 @@ export type EncaminhamentoSelect<ExtArgs extends runtime.Types.Extensions.Intern
   horarioDeAgendamento?: boolean
   prestadorExecutanteId?: boolean
   localDeAtendimentoId?: boolean
+  cid?: boolean
+  dadosClinicos?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   paciente?: boolean | Prisma.PacienteDefaultArgs<ExtArgs>
@@ -3113,6 +3269,8 @@ export type EncaminhamentoSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   horarioDeAgendamento?: boolean
   prestadorExecutanteId?: boolean
   localDeAtendimentoId?: boolean
+  cid?: boolean
+  dadosClinicos?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   paciente?: boolean | Prisma.PacienteDefaultArgs<ExtArgs>
@@ -3151,6 +3309,8 @@ export type EncaminhamentoSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   horarioDeAgendamento?: boolean
   prestadorExecutanteId?: boolean
   localDeAtendimentoId?: boolean
+  cid?: boolean
+  dadosClinicos?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   paciente?: boolean | Prisma.PacienteDefaultArgs<ExtArgs>
@@ -3189,11 +3349,13 @@ export type EncaminhamentoSelectScalar = {
   horarioDeAgendamento?: boolean
   prestadorExecutanteId?: boolean
   localDeAtendimentoId?: boolean
+  cid?: boolean
+  dadosClinicos?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type EncaminhamentoOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tipo" | "pacienteId" | "unidadeDeOrigemId" | "dataDeEntrada" | "statusDeAgendamento" | "medicoSolicitanteId" | "especialidadeDoPrestadorId" | "categoria" | "tipoDeConsulta" | "especialidadeEncaminhadaId" | "tipoDeCirurgia" | "procedimentoId" | "membroProcedimentoId" | "lado" | "situacao" | "encaminhamentoRemarcado" | "condicaoDeRetorno" | "dataDoRetorno" | "dataDeSaida" | "dataDeAgendamentoLocal" | "horarioDeAgendamento" | "prestadorExecutanteId" | "localDeAtendimentoId" | "createdAt" | "updatedAt", ExtArgs["result"]["encaminhamento"]>
+export type EncaminhamentoOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tipo" | "pacienteId" | "unidadeDeOrigemId" | "dataDeEntrada" | "statusDeAgendamento" | "medicoSolicitanteId" | "especialidadeDoPrestadorId" | "categoria" | "tipoDeConsulta" | "especialidadeEncaminhadaId" | "tipoDeCirurgia" | "procedimentoId" | "membroProcedimentoId" | "lado" | "situacao" | "encaminhamentoRemarcado" | "condicaoDeRetorno" | "dataDoRetorno" | "dataDeSaida" | "dataDeAgendamentoLocal" | "horarioDeAgendamento" | "prestadorExecutanteId" | "localDeAtendimentoId" | "cid" | "dadosClinicos" | "createdAt" | "updatedAt", ExtArgs["result"]["encaminhamento"]>
 export type EncaminhamentoInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   paciente?: boolean | Prisma.PacienteDefaultArgs<ExtArgs>
   unidadeDeOrigem?: boolean | Prisma.LocalDefaultArgs<ExtArgs>
@@ -3266,6 +3428,8 @@ export type $EncaminhamentoPayload<ExtArgs extends runtime.Types.Extensions.Inte
     horarioDeAgendamento: string | null
     prestadorExecutanteId: number | null
     localDeAtendimentoId: number | null
+    cid: string | null
+    dadosClinicos: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["encaminhamento"]>
@@ -3724,6 +3888,8 @@ export interface EncaminhamentoFieldRefs {
   readonly horarioDeAgendamento: Prisma.FieldRef<"Encaminhamento", 'String'>
   readonly prestadorExecutanteId: Prisma.FieldRef<"Encaminhamento", 'Int'>
   readonly localDeAtendimentoId: Prisma.FieldRef<"Encaminhamento", 'Int'>
+  readonly cid: Prisma.FieldRef<"Encaminhamento", 'String'>
+  readonly dadosClinicos: Prisma.FieldRef<"Encaminhamento", 'String'>
   readonly createdAt: Prisma.FieldRef<"Encaminhamento", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Encaminhamento", 'DateTime'>
 }

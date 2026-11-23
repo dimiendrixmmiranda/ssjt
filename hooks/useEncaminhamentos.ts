@@ -7,6 +7,7 @@ import type { Prisma } from '@/generated/prisma/client'
 export type EncaminhamentoComRelacoes =
     Prisma.EncaminhamentoGetPayload<{
         include: {
+            id: true,
             paciente: true
             unidadeDeOrigem: true
             medicoSolicitante: true

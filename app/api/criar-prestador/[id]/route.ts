@@ -24,6 +24,7 @@ export async function PATCH(request: Request, { params }: Contexto) {
         const {
             nome,
             cor,
+            crm,
             telefone,
             email,
             tipoDeAtendimento,
@@ -199,6 +200,7 @@ export async function PATCH(request: Request, { params }: Contexto) {
             data: {
                 nome: nome.trim(),
                 cor,
+                crm,
                 telefone,
                 email,
                 tipoDeAtendimento,

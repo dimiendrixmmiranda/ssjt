@@ -64,6 +64,21 @@ export async function POST(request: NextRequest) {
             )
         }
 
+        let idAleatorio = 0
+        let idExistente = true
+
+        while (idExistente) {
+            idAleatorio = Math.floor(1000000 + Math.random() * 9000000)
+
+            const encaminhamentoExistente = await prisma.encaminhamento.findUnique({
+                where: {
+                    id: idAleatorio
+                }
+            })
+
+            idExistente = !!encaminhamentoExistente
+        }
+
         const dados = await request.json()
 
         const {
@@ -331,6 +346,7 @@ export async function POST(request: NextRequest) {
         // Criar encaminhamento
         const encaminhamento = await prisma.encaminhamento.create({
             data: {
+                id: idAleatorio,
                 tipo,
                 pacienteId: pacienteIdNum,
                 unidadeDeOrigemId: unidadeDeOrigemIdNum,

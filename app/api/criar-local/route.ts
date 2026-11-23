@@ -50,6 +50,7 @@ export async function POST(request: Request) {
 
         const {
             nome,
+            cnes,
             tipoDeLocal,
             atendimentoDentroOuForaDoMunicipio,
             quantidadeDeSalas,
@@ -87,6 +88,7 @@ export async function POST(request: Request) {
         const novoLocal = await prisma.local.create({
             data: {
                 nome,
+                cnes,
                 tipoDeLocal,
                 atendimentoDentroOuForaDoMunicipio,
                 quantidadeDeSalas,

@@ -40,6 +40,7 @@ export type PrestadorMinAggregateOutputType = {
   id: number | null
   nome: string | null
   tipo: $Enums.TipoDoPrestador | null
+  crm: string | null
   telefone: string | null
   email: string | null
   cor: string | null
@@ -54,6 +55,7 @@ export type PrestadorMaxAggregateOutputType = {
   id: number | null
   nome: string | null
   tipo: $Enums.TipoDoPrestador | null
+  crm: string | null
   telefone: string | null
   email: string | null
   cor: string | null
@@ -68,6 +70,7 @@ export type PrestadorCountAggregateOutputType = {
   id: number
   nome: number
   tipo: number
+  crm: number
   telefone: number
   email: number
   cor: number
@@ -94,6 +97,7 @@ export type PrestadorMinAggregateInputType = {
   id?: true
   nome?: true
   tipo?: true
+  crm?: true
   telefone?: true
   email?: true
   cor?: true
@@ -108,6 +112,7 @@ export type PrestadorMaxAggregateInputType = {
   id?: true
   nome?: true
   tipo?: true
+  crm?: true
   telefone?: true
   email?: true
   cor?: true
@@ -122,6 +127,7 @@ export type PrestadorCountAggregateInputType = {
   id?: true
   nome?: true
   tipo?: true
+  crm?: true
   telefone?: true
   email?: true
   cor?: true
@@ -223,6 +229,7 @@ export type PrestadorGroupByOutputType = {
   id: number
   nome: string
   tipo: $Enums.TipoDoPrestador
+  crm: string
   telefone: string
   email: string
   cor: string
@@ -260,6 +267,7 @@ export type PrestadorWhereInput = {
   id?: Prisma.IntFilter<"Prestador"> | number
   nome?: Prisma.StringFilter<"Prestador"> | string
   tipo?: Prisma.EnumTipoDoPrestadorFilter<"Prestador"> | $Enums.TipoDoPrestador
+  crm?: Prisma.StringFilter<"Prestador"> | string
   telefone?: Prisma.StringFilter<"Prestador"> | string
   email?: Prisma.StringFilter<"Prestador"> | string
   cor?: Prisma.StringFilter<"Prestador"> | string
@@ -280,6 +288,7 @@ export type PrestadorOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   nome?: Prisma.SortOrder
   tipo?: Prisma.SortOrder
+  crm?: Prisma.SortOrder
   telefone?: Prisma.SortOrder
   email?: Prisma.SortOrder
   cor?: Prisma.SortOrder
@@ -304,6 +313,7 @@ export type PrestadorWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.PrestadorWhereInput | Prisma.PrestadorWhereInput[]
   nome?: Prisma.StringFilter<"Prestador"> | string
   tipo?: Prisma.EnumTipoDoPrestadorFilter<"Prestador"> | $Enums.TipoDoPrestador
+  crm?: Prisma.StringFilter<"Prestador"> | string
   telefone?: Prisma.StringFilter<"Prestador"> | string
   email?: Prisma.StringFilter<"Prestador"> | string
   tipoDeAtendimento?: Prisma.EnumTipoDeAtendimentoDoPrestadorFilter<"Prestador"> | $Enums.TipoDeAtendimentoDoPrestador
@@ -323,6 +333,7 @@ export type PrestadorOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   nome?: Prisma.SortOrder
   tipo?: Prisma.SortOrder
+  crm?: Prisma.SortOrder
   telefone?: Prisma.SortOrder
   email?: Prisma.SortOrder
   cor?: Prisma.SortOrder
@@ -345,6 +356,7 @@ export type PrestadorScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<"Prestador"> | number
   nome?: Prisma.StringWithAggregatesFilter<"Prestador"> | string
   tipo?: Prisma.EnumTipoDoPrestadorWithAggregatesFilter<"Prestador"> | $Enums.TipoDoPrestador
+  crm?: Prisma.StringWithAggregatesFilter<"Prestador"> | string
   telefone?: Prisma.StringWithAggregatesFilter<"Prestador"> | string
   email?: Prisma.StringWithAggregatesFilter<"Prestador"> | string
   cor?: Prisma.StringWithAggregatesFilter<"Prestador"> | string
@@ -358,6 +370,7 @@ export type PrestadorScalarWhereWithAggregatesInput = {
 export type PrestadorCreateInput = {
   nome: string
   tipo: $Enums.TipoDoPrestador
+  crm?: string
   telefone: string
   email: string
   cor: string
@@ -377,6 +390,7 @@ export type PrestadorUncheckedCreateInput = {
   id?: number
   nome: string
   tipo: $Enums.TipoDoPrestador
+  crm?: string
   telefone: string
   email: string
   cor: string
@@ -395,6 +409,7 @@ export type PrestadorUncheckedCreateInput = {
 export type PrestadorUpdateInput = {
   nome?: Prisma.StringFieldUpdateOperationsInput | string
   tipo?: Prisma.EnumTipoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDoPrestador
+  crm?: Prisma.StringFieldUpdateOperationsInput | string
   telefone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   cor?: Prisma.StringFieldUpdateOperationsInput | string
@@ -414,6 +429,7 @@ export type PrestadorUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   nome?: Prisma.StringFieldUpdateOperationsInput | string
   tipo?: Prisma.EnumTipoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDoPrestador
+  crm?: Prisma.StringFieldUpdateOperationsInput | string
   telefone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   cor?: Prisma.StringFieldUpdateOperationsInput | string
@@ -433,6 +449,7 @@ export type PrestadorCreateManyInput = {
   id?: number
   nome: string
   tipo: $Enums.TipoDoPrestador
+  crm?: string
   telefone: string
   email: string
   cor: string
@@ -446,6 +463,7 @@ export type PrestadorCreateManyInput = {
 export type PrestadorUpdateManyMutationInput = {
   nome?: Prisma.StringFieldUpdateOperationsInput | string
   tipo?: Prisma.EnumTipoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDoPrestador
+  crm?: Prisma.StringFieldUpdateOperationsInput | string
   telefone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   cor?: Prisma.StringFieldUpdateOperationsInput | string
@@ -459,6 +477,7 @@ export type PrestadorUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   nome?: Prisma.StringFieldUpdateOperationsInput | string
   tipo?: Prisma.EnumTipoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDoPrestador
+  crm?: Prisma.StringFieldUpdateOperationsInput | string
   telefone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   cor?: Prisma.StringFieldUpdateOperationsInput | string
@@ -483,6 +502,7 @@ export type PrestadorCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   nome?: Prisma.SortOrder
   tipo?: Prisma.SortOrder
+  crm?: Prisma.SortOrder
   telefone?: Prisma.SortOrder
   email?: Prisma.SortOrder
   cor?: Prisma.SortOrder
@@ -502,6 +522,7 @@ export type PrestadorMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   nome?: Prisma.SortOrder
   tipo?: Prisma.SortOrder
+  crm?: Prisma.SortOrder
   telefone?: Prisma.SortOrder
   email?: Prisma.SortOrder
   cor?: Prisma.SortOrder
@@ -516,6 +537,7 @@ export type PrestadorMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   nome?: Prisma.SortOrder
   tipo?: Prisma.SortOrder
+  crm?: Prisma.SortOrder
   telefone?: Prisma.SortOrder
   email?: Prisma.SortOrder
   cor?: Prisma.SortOrder
@@ -668,6 +690,7 @@ export type PrestadorUpdateOneWithoutEncaminhamentosExecutadosNestedInput = {
 export type PrestadorCreateWithoutLocalInput = {
   nome: string
   tipo: $Enums.TipoDoPrestador
+  crm?: string
   telefone: string
   email: string
   cor: string
@@ -686,6 +709,7 @@ export type PrestadorUncheckedCreateWithoutLocalInput = {
   id?: number
   nome: string
   tipo: $Enums.TipoDoPrestador
+  crm?: string
   telefone: string
   email: string
   cor: string
@@ -733,6 +757,7 @@ export type PrestadorScalarWhereInput = {
   id?: Prisma.IntFilter<"Prestador"> | number
   nome?: Prisma.StringFilter<"Prestador"> | string
   tipo?: Prisma.EnumTipoDoPrestadorFilter<"Prestador"> | $Enums.TipoDoPrestador
+  crm?: Prisma.StringFilter<"Prestador"> | string
   telefone?: Prisma.StringFilter<"Prestador"> | string
   email?: Prisma.StringFilter<"Prestador"> | string
   cor?: Prisma.StringFilter<"Prestador"> | string
@@ -746,6 +771,7 @@ export type PrestadorScalarWhereInput = {
 export type PrestadorCreateWithoutEspecialidadesInput = {
   nome: string
   tipo: $Enums.TipoDoPrestador
+  crm?: string
   telefone: string
   email: string
   cor: string
@@ -764,6 +790,7 @@ export type PrestadorUncheckedCreateWithoutEspecialidadesInput = {
   id?: number
   nome: string
   tipo: $Enums.TipoDoPrestador
+  crm?: string
   telefone: string
   email: string
   cor: string
@@ -797,6 +824,7 @@ export type PrestadorUpdateToOneWithWhereWithoutEspecialidadesInput = {
 export type PrestadorUpdateWithoutEspecialidadesInput = {
   nome?: Prisma.StringFieldUpdateOperationsInput | string
   tipo?: Prisma.EnumTipoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDoPrestador
+  crm?: Prisma.StringFieldUpdateOperationsInput | string
   telefone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   cor?: Prisma.StringFieldUpdateOperationsInput | string
@@ -815,6 +843,7 @@ export type PrestadorUncheckedUpdateWithoutEspecialidadesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   nome?: Prisma.StringFieldUpdateOperationsInput | string
   tipo?: Prisma.EnumTipoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDoPrestador
+  crm?: Prisma.StringFieldUpdateOperationsInput | string
   telefone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   cor?: Prisma.StringFieldUpdateOperationsInput | string
@@ -832,6 +861,7 @@ export type PrestadorUncheckedUpdateWithoutEspecialidadesInput = {
 export type PrestadorCreateWithoutProcedimentosInput = {
   nome: string
   tipo: $Enums.TipoDoPrestador
+  crm?: string
   telefone: string
   email: string
   cor: string
@@ -850,6 +880,7 @@ export type PrestadorUncheckedCreateWithoutProcedimentosInput = {
   id?: number
   nome: string
   tipo: $Enums.TipoDoPrestador
+  crm?: string
   telefone: string
   email: string
   cor: string
@@ -883,6 +914,7 @@ export type PrestadorUpdateToOneWithWhereWithoutProcedimentosInput = {
 export type PrestadorUpdateWithoutProcedimentosInput = {
   nome?: Prisma.StringFieldUpdateOperationsInput | string
   tipo?: Prisma.EnumTipoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDoPrestador
+  crm?: Prisma.StringFieldUpdateOperationsInput | string
   telefone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   cor?: Prisma.StringFieldUpdateOperationsInput | string
@@ -901,6 +933,7 @@ export type PrestadorUncheckedUpdateWithoutProcedimentosInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   nome?: Prisma.StringFieldUpdateOperationsInput | string
   tipo?: Prisma.EnumTipoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDoPrestador
+  crm?: Prisma.StringFieldUpdateOperationsInput | string
   telefone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   cor?: Prisma.StringFieldUpdateOperationsInput | string
@@ -918,6 +951,7 @@ export type PrestadorUncheckedUpdateWithoutProcedimentosInput = {
 export type PrestadorCreateWithoutAgendamentosDePrestadoresInput = {
   nome: string
   tipo: $Enums.TipoDoPrestador
+  crm?: string
   telefone: string
   email: string
   cor: string
@@ -936,6 +970,7 @@ export type PrestadorUncheckedCreateWithoutAgendamentosDePrestadoresInput = {
   id?: number
   nome: string
   tipo: $Enums.TipoDoPrestador
+  crm?: string
   telefone: string
   email: string
   cor: string
@@ -969,6 +1004,7 @@ export type PrestadorUpdateToOneWithWhereWithoutAgendamentosDePrestadoresInput =
 export type PrestadorUpdateWithoutAgendamentosDePrestadoresInput = {
   nome?: Prisma.StringFieldUpdateOperationsInput | string
   tipo?: Prisma.EnumTipoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDoPrestador
+  crm?: Prisma.StringFieldUpdateOperationsInput | string
   telefone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   cor?: Prisma.StringFieldUpdateOperationsInput | string
@@ -987,6 +1023,7 @@ export type PrestadorUncheckedUpdateWithoutAgendamentosDePrestadoresInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   nome?: Prisma.StringFieldUpdateOperationsInput | string
   tipo?: Prisma.EnumTipoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDoPrestador
+  crm?: Prisma.StringFieldUpdateOperationsInput | string
   telefone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   cor?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1004,6 +1041,7 @@ export type PrestadorUncheckedUpdateWithoutAgendamentosDePrestadoresInput = {
 export type PrestadorCreateWithoutEncaminhamentosSolicitadosInput = {
   nome: string
   tipo: $Enums.TipoDoPrestador
+  crm?: string
   telefone: string
   email: string
   cor: string
@@ -1022,6 +1060,7 @@ export type PrestadorUncheckedCreateWithoutEncaminhamentosSolicitadosInput = {
   id?: number
   nome: string
   tipo: $Enums.TipoDoPrestador
+  crm?: string
   telefone: string
   email: string
   cor: string
@@ -1044,6 +1083,7 @@ export type PrestadorCreateOrConnectWithoutEncaminhamentosSolicitadosInput = {
 export type PrestadorCreateWithoutEncaminhamentosExecutadosInput = {
   nome: string
   tipo: $Enums.TipoDoPrestador
+  crm?: string
   telefone: string
   email: string
   cor: string
@@ -1062,6 +1102,7 @@ export type PrestadorUncheckedCreateWithoutEncaminhamentosExecutadosInput = {
   id?: number
   nome: string
   tipo: $Enums.TipoDoPrestador
+  crm?: string
   telefone: string
   email: string
   cor: string
@@ -1095,6 +1136,7 @@ export type PrestadorUpdateToOneWithWhereWithoutEncaminhamentosSolicitadosInput 
 export type PrestadorUpdateWithoutEncaminhamentosSolicitadosInput = {
   nome?: Prisma.StringFieldUpdateOperationsInput | string
   tipo?: Prisma.EnumTipoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDoPrestador
+  crm?: Prisma.StringFieldUpdateOperationsInput | string
   telefone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   cor?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1113,6 +1155,7 @@ export type PrestadorUncheckedUpdateWithoutEncaminhamentosSolicitadosInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   nome?: Prisma.StringFieldUpdateOperationsInput | string
   tipo?: Prisma.EnumTipoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDoPrestador
+  crm?: Prisma.StringFieldUpdateOperationsInput | string
   telefone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   cor?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1141,6 +1184,7 @@ export type PrestadorUpdateToOneWithWhereWithoutEncaminhamentosExecutadosInput =
 export type PrestadorUpdateWithoutEncaminhamentosExecutadosInput = {
   nome?: Prisma.StringFieldUpdateOperationsInput | string
   tipo?: Prisma.EnumTipoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDoPrestador
+  crm?: Prisma.StringFieldUpdateOperationsInput | string
   telefone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   cor?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1159,6 +1203,7 @@ export type PrestadorUncheckedUpdateWithoutEncaminhamentosExecutadosInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   nome?: Prisma.StringFieldUpdateOperationsInput | string
   tipo?: Prisma.EnumTipoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDoPrestador
+  crm?: Prisma.StringFieldUpdateOperationsInput | string
   telefone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   cor?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1177,6 +1222,7 @@ export type PrestadorCreateManyLocalInput = {
   id?: number
   nome: string
   tipo: $Enums.TipoDoPrestador
+  crm?: string
   telefone: string
   email: string
   cor: string
@@ -1189,6 +1235,7 @@ export type PrestadorCreateManyLocalInput = {
 export type PrestadorUpdateWithoutLocalInput = {
   nome?: Prisma.StringFieldUpdateOperationsInput | string
   tipo?: Prisma.EnumTipoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDoPrestador
+  crm?: Prisma.StringFieldUpdateOperationsInput | string
   telefone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   cor?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1207,6 +1254,7 @@ export type PrestadorUncheckedUpdateWithoutLocalInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   nome?: Prisma.StringFieldUpdateOperationsInput | string
   tipo?: Prisma.EnumTipoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDoPrestador
+  crm?: Prisma.StringFieldUpdateOperationsInput | string
   telefone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   cor?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1225,6 +1273,7 @@ export type PrestadorUncheckedUpdateManyWithoutLocalInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   nome?: Prisma.StringFieldUpdateOperationsInput | string
   tipo?: Prisma.EnumTipoDoPrestadorFieldUpdateOperationsInput | $Enums.TipoDoPrestador
+  crm?: Prisma.StringFieldUpdateOperationsInput | string
   telefone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   cor?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1305,6 +1354,7 @@ export type PrestadorSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   id?: boolean
   nome?: boolean
   tipo?: boolean
+  crm?: boolean
   telefone?: boolean
   email?: boolean
   cor?: boolean
@@ -1326,6 +1376,7 @@ export type PrestadorSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   id?: boolean
   nome?: boolean
   tipo?: boolean
+  crm?: boolean
   telefone?: boolean
   email?: boolean
   cor?: boolean
@@ -1341,6 +1392,7 @@ export type PrestadorSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   id?: boolean
   nome?: boolean
   tipo?: boolean
+  crm?: boolean
   telefone?: boolean
   email?: boolean
   cor?: boolean
@@ -1356,6 +1408,7 @@ export type PrestadorSelectScalar = {
   id?: boolean
   nome?: boolean
   tipo?: boolean
+  crm?: boolean
   telefone?: boolean
   email?: boolean
   cor?: boolean
@@ -1366,7 +1419,7 @@ export type PrestadorSelectScalar = {
   updatedAt?: boolean
 }
 
-export type PrestadorOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nome" | "tipo" | "telefone" | "email" | "cor" | "tipoDeAtendimento" | "localId" | "ativo" | "createdAt" | "updatedAt", ExtArgs["result"]["prestador"]>
+export type PrestadorOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nome" | "tipo" | "crm" | "telefone" | "email" | "cor" | "tipoDeAtendimento" | "localId" | "ativo" | "createdAt" | "updatedAt", ExtArgs["result"]["prestador"]>
 export type PrestadorInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   especialidades?: boolean | Prisma.Prestador$especialidadesArgs<ExtArgs>
   procedimentos?: boolean | Prisma.Prestador$procedimentosArgs<ExtArgs>
@@ -1397,6 +1450,7 @@ export type $PrestadorPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     id: number
     nome: string
     tipo: $Enums.TipoDoPrestador
+    crm: string
     telefone: string
     email: string
     cor: string
@@ -1837,6 +1891,7 @@ export interface PrestadorFieldRefs {
   readonly id: Prisma.FieldRef<"Prestador", 'Int'>
   readonly nome: Prisma.FieldRef<"Prestador", 'String'>
   readonly tipo: Prisma.FieldRef<"Prestador", 'TipoDoPrestador'>
+  readonly crm: Prisma.FieldRef<"Prestador", 'String'>
   readonly telefone: Prisma.FieldRef<"Prestador", 'String'>
   readonly email: Prisma.FieldRef<"Prestador", 'String'>
   readonly cor: Prisma.FieldRef<"Prestador", 'String'>

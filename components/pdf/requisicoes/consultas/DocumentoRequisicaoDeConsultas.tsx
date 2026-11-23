@@ -212,7 +212,7 @@ export default function DocumentoRequisicaoConsultas({ encaminhamento, codigoDeB
                         <View style={styles.campo}>
                             <Text style={styles.label}>Subspecialidade:</Text>
                             <Text style={styles.valor}>
-                                {encaminhamento?.situacao || "Não Informado"}
+                                {encaminhamento?.categoria || "Não Informado"}
                             </Text>
                         </View>
                         <View style={styles.campo}>

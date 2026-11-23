@@ -1,12 +1,12 @@
 'use client'
 import { BsBuilding, BsCalendar2Date, BsCalendar2Week } from "react-icons/bs";
 import Template from "../Template";
-import { FaHandHoldingMedical, FaRegCalendarAlt, FaRegTrashAlt } from "react-icons/fa";
+import { FaHandHoldingMedical, FaRegCalendarAlt, FaRegClock, FaRegTrashAlt } from "react-icons/fa";
 import { useState } from "react";
 import { Dialog } from "primereact/dialog";
 import { useLocais } from "@/hooks/useListaDeLocais";
 import InputSelect from "@/components/inputs/InputSelect";
-import { MdOutlineLocationCity } from "react-icons/md";
+import { MdLocationOn, MdMedicalInformation, MdOutlineDoorFront, MdOutlineLocationCity } from "react-icons/md";
 import { AgendamentoDePrestador, Local, PeriodoDeAtendimento, TipoDoPrestador } from "@/generated/prisma/browser";
 import { AiOutlineClear } from "react-icons/ai";
 import { HiSaveAs } from "react-icons/hi";
@@ -29,9 +29,10 @@ export default function Page() {
     const { locais } = useLocais()
     const { prestadores, carregando } = usePrestadores()
     const { agendamentoDePrestadores, buscarAgendamentoDePrestadores } = useAgendamentoDePrestadores()
-    
+
     const locaisNoMunicipio = locais.filter(local => local.atendimentoDentroOuForaDoMunicipio === 'DENTRO_DO_MUNICIPIO')
 
+    const [dialogAgendaGeral, setDialogAgendaGeral] = useState(false)
     const [dialogAgenda, setDialogAgenda] = useState(false)
     const [dataSelecionada, setDataSelecionada] = useState<Date | null>(new Date())
     const [localSelecionado, setLocalSelecionado] = useState<Local | null>(null)
@@ -380,6 +381,13 @@ export default function Page() {
             profissional: agendamento.prestador.nome,
         }));
 
+    const eventosCalendarioTotal = (agendamentoDePrestadores ?? [])
+        .map((agendamento) => ({
+            data: String(agendamento.data).slice(0, 10),
+            cor: agendamento.prestador.cor,
+            profissional: agendamento.prestador.nome,
+        }));
+
     const buscarUsuarioPorId = (usuarioId: string) => {
         return usuarios.find((usuario) => usuario.id === usuarioId);
     };
@@ -512,6 +520,20 @@ export default function Page() {
         }
     }
 
+    const filtroPorDiaAgendaGeralDePrestadores = agendamentoDePrestadores.filter(
+        agendamento => {
+            const dataBanco = String(agendamento.data).slice(0, 10)
+
+            const ano = dataSelecionada!.getFullYear()
+            const mes = String(dataSelecionada!.getMonth() + 1).padStart(2, "0")
+            const dia = String(dataSelecionada!.getDate()).padStart(2, "0")
+
+            const dataSelecionadaFormatada = `${ano}-${mes}-${dia}`
+
+            return dataBanco === dataSelecionadaFormatada
+        }
+    )
+
     return (
         <Template>
             <div className="text-verde-escuro flex flex-col gap-4 max-h-[100vh] overflow-y-scroll p-4">
@@ -526,6 +548,32 @@ export default function Page() {
                 </div>
                 <div>
                     <ul className="grid grid-cols-2 gap-4 3xl:grid-cols-3">
+                        <li className="rounded-lg border border-verde-escuro p-4 flex flex-col gap-2 relative">
+                            <div className="text-6xl">
+                                <BsBuilding />
+                            </div>
+                            <h2 className="font-bold text-xl">Agenda Geral de Prestadores</h2>
+                            <span className="max-w-[400px]">Consulte a agenda geral dos prestadores que realizam atendimentos no município.</span>
+                            <p className="mt-auto">
+                                <button className="underline text-lg flex items-center gap-2"
+                                    onClick={() => {
+                                        setDialogGerarPdfAgendaDePrestadores(true)
+                                        // setLocalSelecionado(local)
+                                    }}>
+                                    <p>Gerar PDF da agenda</p>
+                                    <RiExternalLinkFill />
+                                </button>
+                            </p>
+                            <button
+                                className="flex items-center justify-center gap-2 bg-white border border-verde-escuro cursor-pointer transition-all duration-300 font-bold text-lg py-2 rounded-lg hover:bg-verde-escuro hover:text-white"
+                                onClick={() => {
+                                    setDialogAgendaGeral(true)
+                                }}
+                            >
+                                <FaRegCalendarAlt />
+                                <p>Ver Agenda</p>
+                            </button>
+                        </li>
                         {
                             locaisNoMunicipio.map((local) => {
                                 return (
@@ -567,6 +615,72 @@ export default function Page() {
                     </ul>
                 </div>
             </div>
+
+            {/* Dialog todos os agendamentos do municipio */}
+            <Dialog header={"Agenda Geral de Prestadores"} visible={dialogAgendaGeral} className="max-w-[1000px] w-full" onHide={() => { setDialogAgendaGeral(false); setDataSelecionada(new Date()) }}>
+                <div className="grid grid-cols-2 gap-4">
+                    <div className="flex h-full">
+                        <Calendario
+                            eventos={eventosCalendarioTotal}
+                            dataSelecionada={dataSelecionada}
+                            onSelecionarData={setDataSelecionada}
+                        />
+                    </div>
+                    <div className="bg-white rounded-xl shadow-sm border overflow-hidden w-full overflow-y-scroll">
+                        {
+                            filtroPorDiaAgendaGeralDePrestadores.length <= 0 ? (
+                                <div className="p-4">
+                                    <h2>Nenhum agendamento nesse dia</h2>
+                                </div>
+                            ) : (
+                                <div className="flex flex-col gap-2">
+                                    <h2 className="font-bold text-xl bg-blue-950 text-white p-4">Atendimento no dia {formatarData(dataSelecionada!)}</h2>
+                                    <ul className="flex flex-col gap-2 p-4">
+                                        {
+                                            filtroPorDiaAgendaGeralDePrestadores.map((agendamentoPrestador, i) => {
+                                                return (
+                                                    <li key={i} className="shadow-sm rounded-lg p-2 overflow-hidden relative border text-black" style={{ borderColor: agendamentoPrestador.prestador.cor }}>
+                                                        <div className={`w-1 h-full absolute top-0 left-0`} style={{ backgroundColor: agendamentoPrestador.prestador.cor }} />
+                                                        <div className="flex items-center gap-2 border-b pb-2">
+                                                            <div className="rounded-lg p-2 text-2xl w-fit text-white" style={{ backgroundColor: `${agendamentoPrestador.prestador.cor}` }}>
+                                                                <MdMedicalInformation />
+                                                            </div>
+                                                            <div className="flex flex-col">
+                                                                <h3 className="font-bold text-xl">{agendamentoPrestador.prestador.nome}</h3>
+                                                                <p className="-mt-1.5">{agendamentoPrestador.prestador.especialidades.map(esp => esp.especialidade.nome)}</p>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex flex-col gap-2 mt-2">
+                                                            <div className="flex items-center">
+                                                                <MdLocationOn className="text-2xl" />
+                                                                <p className="font-semibold">{agendamentoPrestador.unidadeDeAtendimento.nome}</p>
+                                                            </div>
+                                                            <div className="flex justify-between">
+                                                                <div className="flex items-center gap-1">
+                                                                    <FaRegClock className="text-2xl" />
+                                                                    <p>{agendamentoPrestador.periodo}</p>
+                                                                </div>
+                                                                <div className="flex items-center gap-1">
+                                                                    <MdOutlineDoorFront className="text-2xl" />
+                                                                    <p>{agendamentoPrestador.salaNumero}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                )
+                                            })
+                                        }
+                                    </ul>
+                                </div>
+                            )
+                        }
+                    </div>
+                    <div className="col-span-2">
+                        Busca aqui
+                    </div>
+                </div>
+            </Dialog>
+
             <Dialog header={localSelecionado?.nome} visible={dialogAgenda} className="max-w-[1000px] w-full" onHide={() => { setDialogAgenda(false); setDataSelecionada(new Date()) }}>
                 <div className="grid grid-cols-2 gap-4 mt-2">
                     <div className="flex h-full">

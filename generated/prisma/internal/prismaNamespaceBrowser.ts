@@ -101,6 +101,7 @@ export type UsuarioScalarFieldEnum = (typeof UsuarioScalarFieldEnum)[keyof typeo
 export const LocalScalarFieldEnum = {
   id: 'id',
   nome: 'nome',
+  cnes: 'cnes',
   tipoDeLocal: 'tipoDeLocal',
   atendimentoDentroOuForaDoMunicipio: 'atendimentoDentroOuForaDoMunicipio',
   quantidadeDeSalas: 'quantidadeDeSalas',
@@ -173,6 +174,7 @@ export const PrestadorScalarFieldEnum = {
   id: 'id',
   nome: 'nome',
   tipo: 'tipo',
+  crm: 'crm',
   telefone: 'telefone',
   email: 'email',
   cor: 'cor',
@@ -320,6 +322,8 @@ export const EncaminhamentoScalarFieldEnum = {
   horarioDeAgendamento: 'horarioDeAgendamento',
   prestadorExecutanteId: 'prestadorExecutanteId',
   localDeAtendimentoId: 'localDeAtendimentoId',
+  cid: 'cid',
+  dadosClinicos: 'dadosClinicos',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

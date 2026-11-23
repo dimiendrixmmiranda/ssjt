@@ -815,8 +815,8 @@ export default function Page() {
                                         onMouseLeave={finalizarArraste}
                                         className="w-full overflow-x-auto pb-2 h-full cursor-grab"
                                     >
-                                        <div className="min-w-[2880px]">
-                                            <ul className="grid grid-cols-[50px_100px_200px_230px_200px_300px__200px_200px_200px_200px_200px_200px_200px_200px_200px] w-full font-bold border-b">
+                                        <div className="min-w-[3340px]">
+                                            <ul className="grid grid-cols-[50px_100px_200px_230px_230px_230px_200px_300px__200px_200px_200px_200px_200px_200px_200px_200px_200px] w-full font-bold border-b">
                                                 <li className="flex justify-center items-center py-2 bg-red-500 text-white border border-zinc-900">
                                                     <TbUrgent className="text-2xl font-bold" />
                                                 </li>
@@ -828,6 +828,12 @@ export default function Page() {
                                                 </li>
                                                 <li className="flex justify-center items-center py-2 border border-zinc-900 bg-verde-escuro text-white">
                                                     <p>Nome</p>
+                                                </li>
+                                                <li className="flex justify-center items-center py-2 border border-zinc-900 bg-verde-escuro text-white">
+                                                    <p>Nome da Mãe</p>
+                                                </li>
+                                                <li className="flex justify-center items-center py-2 border border-zinc-900 bg-verde-escuro text-white">
+                                                    <p>Codigo IDS</p>
                                                 </li>
                                                 <li className="flex justify-center items-center py-2 border border-zinc-900 bg-verde-escuro text-white">
                                                     <p>Data de Nascimento</p>
@@ -883,7 +889,7 @@ export default function Page() {
                                                                                 })
                                                                             }}
                                                                             className={`
-                                                                                grid grid-cols-[50px_100px_200px_230px_200px_300px__200px_200px_200px_200px_200px_200px_200px_200px_200px] w-full border-b items-center cursor-pointer border-l border-r border-zinc-700 pt-2 pb-1 text-black
+                                                                                grid grid-cols-[50px_100px_200px_230px_230px_230px_200px_300px__200px_200px_200px_200px_200px_200px_200px_200px_200px] w-full border-b items-center cursor-pointer border-l border-r border-zinc-700 pt-2 pb-1 text-black
                                                                                 ${encaminhamento.tipo === 'CONSULTA' && encaminhamento.categoria === 'NORMAL' ? 'bg-green-200' : ''}
                                                                                 ${encaminhamento.tipo === 'CONSULTA' && encaminhamento.categoria === 'TFD' ? 'bg-blue-200' : ''}
                                                                                 ${encaminhamento.tipo === 'PROCEDIMENTO' ? 'bg-orange-200' : ''}
@@ -933,12 +939,7 @@ export default function Page() {
 
                                                                             </div>
                                                                             <div className="flex justify-center items-center relative">
-                                                                                <p className="cursor-auto">{encaminhamento.paciente.codigoIDS}</p>
-                                                                                <div className="absolute -top-2 right-0">
-                                                                                    <button>
-                                                                                        <MdCopyAll />
-                                                                                    </button>
-                                                                                </div>
+                                                                                <p className="cursor-auto">{encaminhamento.id}</p>
                                                                             </div>
                                                                             <div className="flex justify-center items-center">
                                                                                 <p>
@@ -947,6 +948,17 @@ export default function Page() {
                                                                             </div>
                                                                             <div className="flex justify-center items-center">
                                                                                 <p>{encaminhamento.paciente.nomeDoPaciente}</p>
+                                                                            </div>
+                                                                            <div className="flex justify-center items-center">
+                                                                                <p>{encaminhamento.paciente.nomeDaMae}</p>
+                                                                            </div>
+                                                                            <div className="flex justify-center items-center relative">
+                                                                                <p>{encaminhamento.paciente.codigoIDS}</p>
+                                                                                <div className="absolute -top-2 right-0">
+                                                                                    <button>
+                                                                                        <MdCopyAll />
+                                                                                    </button>
+                                                                                </div>
                                                                             </div>
                                                                             <div className="flex justify-center items-center">
                                                                                 <p>

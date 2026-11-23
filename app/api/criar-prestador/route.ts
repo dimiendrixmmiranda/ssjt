@@ -39,6 +39,7 @@ export async function POST(request: Request) {
         const {
             nome,
             tipo,
+            crm,
             cor,
             telefone,
             email,
@@ -223,6 +224,7 @@ export async function POST(request: Request) {
             data: {
                 nome: nome.trim(),
                 tipo,
+                crm,
                 cor,
                 telefone,
                 email,

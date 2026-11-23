@@ -35,6 +35,7 @@ export async function PUT(request: Request, { params }: Params) {
 
         const {
             nome,
+            cnes,
             tipoDeLocal,
             atendimentoDentroOuForaDoMunicipio,
             quantidadeDeSalas,
@@ -88,6 +89,7 @@ export async function PUT(request: Request, { params }: Params) {
             where: { id: idLocal },
             data: {
                 nome: nome.trim(),
+                cnes,
                 tipoDeLocal,
                 atendimentoDentroOuForaDoMunicipio,
                 quantidadeDeSalas,

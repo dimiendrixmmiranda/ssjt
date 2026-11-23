@@ -39,6 +39,7 @@ export type LocalSumAggregateOutputType = {
 export type LocalMinAggregateOutputType = {
   id: number | null
   nome: string | null
+  cnes: string | null
   tipoDeLocal: $Enums.TipoDeLocal | null
   atendimentoDentroOuForaDoMunicipio: $Enums.AtendimentoDentroOuForaDoMunicipio | null
   quantidadeDeSalas: number | null
@@ -59,6 +60,7 @@ export type LocalMinAggregateOutputType = {
 export type LocalMaxAggregateOutputType = {
   id: number | null
   nome: string | null
+  cnes: string | null
   tipoDeLocal: $Enums.TipoDeLocal | null
   atendimentoDentroOuForaDoMunicipio: $Enums.AtendimentoDentroOuForaDoMunicipio | null
   quantidadeDeSalas: number | null
@@ -79,6 +81,7 @@ export type LocalMaxAggregateOutputType = {
 export type LocalCountAggregateOutputType = {
   id: number
   nome: number
+  cnes: number
   tipoDeLocal: number
   atendimentoDentroOuForaDoMunicipio: number
   quantidadeDeSalas: number
@@ -111,6 +114,7 @@ export type LocalSumAggregateInputType = {
 export type LocalMinAggregateInputType = {
   id?: true
   nome?: true
+  cnes?: true
   tipoDeLocal?: true
   atendimentoDentroOuForaDoMunicipio?: true
   quantidadeDeSalas?: true
@@ -131,6 +135,7 @@ export type LocalMinAggregateInputType = {
 export type LocalMaxAggregateInputType = {
   id?: true
   nome?: true
+  cnes?: true
   tipoDeLocal?: true
   atendimentoDentroOuForaDoMunicipio?: true
   quantidadeDeSalas?: true
@@ -151,6 +156,7 @@ export type LocalMaxAggregateInputType = {
 export type LocalCountAggregateInputType = {
   id?: true
   nome?: true
+  cnes?: true
   tipoDeLocal?: true
   atendimentoDentroOuForaDoMunicipio?: true
   quantidadeDeSalas?: true
@@ -258,6 +264,7 @@ export type LocalGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
 export type LocalGroupByOutputType = {
   id: number
   nome: string
+  cnes: string
   tipoDeLocal: $Enums.TipoDeLocal
   atendimentoDentroOuForaDoMunicipio: $Enums.AtendimentoDentroOuForaDoMunicipio
   quantidadeDeSalas: number
@@ -301,6 +308,7 @@ export type LocalWhereInput = {
   NOT?: Prisma.LocalWhereInput | Prisma.LocalWhereInput[]
   id?: Prisma.IntFilter<"Local"> | number
   nome?: Prisma.StringFilter<"Local"> | string
+  cnes?: Prisma.StringFilter<"Local"> | string
   tipoDeLocal?: Prisma.EnumTipoDeLocalFilter<"Local"> | $Enums.TipoDeLocal
   atendimentoDentroOuForaDoMunicipio?: Prisma.EnumAtendimentoDentroOuForaDoMunicipioFilter<"Local"> | $Enums.AtendimentoDentroOuForaDoMunicipio
   quantidadeDeSalas?: Prisma.IntFilter<"Local"> | number
@@ -327,6 +335,7 @@ export type LocalWhereInput = {
 export type LocalOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   nome?: Prisma.SortOrder
+  cnes?: Prisma.SortOrder
   tipoDeLocal?: Prisma.SortOrder
   atendimentoDentroOuForaDoMunicipio?: Prisma.SortOrder
   quantidadeDeSalas?: Prisma.SortOrder
@@ -356,6 +365,7 @@ export type LocalWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.LocalWhereInput[]
   NOT?: Prisma.LocalWhereInput | Prisma.LocalWhereInput[]
   nome?: Prisma.StringFilter<"Local"> | string
+  cnes?: Prisma.StringFilter<"Local"> | string
   tipoDeLocal?: Prisma.EnumTipoDeLocalFilter<"Local"> | $Enums.TipoDeLocal
   atendimentoDentroOuForaDoMunicipio?: Prisma.EnumAtendimentoDentroOuForaDoMunicipioFilter<"Local"> | $Enums.AtendimentoDentroOuForaDoMunicipio
   quantidadeDeSalas?: Prisma.IntFilter<"Local"> | number
@@ -382,6 +392,7 @@ export type LocalWhereUniqueInput = Prisma.AtLeast<{
 export type LocalOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   nome?: Prisma.SortOrder
+  cnes?: Prisma.SortOrder
   tipoDeLocal?: Prisma.SortOrder
   atendimentoDentroOuForaDoMunicipio?: Prisma.SortOrder
   quantidadeDeSalas?: Prisma.SortOrder
@@ -410,6 +421,7 @@ export type LocalScalarWhereWithAggregatesInput = {
   NOT?: Prisma.LocalScalarWhereWithAggregatesInput | Prisma.LocalScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Local"> | number
   nome?: Prisma.StringWithAggregatesFilter<"Local"> | string
+  cnes?: Prisma.StringWithAggregatesFilter<"Local"> | string
   tipoDeLocal?: Prisma.EnumTipoDeLocalWithAggregatesFilter<"Local"> | $Enums.TipoDeLocal
   atendimentoDentroOuForaDoMunicipio?: Prisma.EnumAtendimentoDentroOuForaDoMunicipioWithAggregatesFilter<"Local"> | $Enums.AtendimentoDentroOuForaDoMunicipio
   quantidadeDeSalas?: Prisma.IntWithAggregatesFilter<"Local"> | number
@@ -429,6 +441,7 @@ export type LocalScalarWhereWithAggregatesInput = {
 
 export type LocalCreateInput = {
   nome: string
+  cnes?: string
   tipoDeLocal: $Enums.TipoDeLocal
   atendimentoDentroOuForaDoMunicipio: $Enums.AtendimentoDentroOuForaDoMunicipio
   quantidadeDeSalas: number
@@ -455,6 +468,7 @@ export type LocalCreateInput = {
 export type LocalUncheckedCreateInput = {
   id?: number
   nome: string
+  cnes?: string
   tipoDeLocal: $Enums.TipoDeLocal
   atendimentoDentroOuForaDoMunicipio: $Enums.AtendimentoDentroOuForaDoMunicipio
   quantidadeDeSalas: number
@@ -480,6 +494,7 @@ export type LocalUncheckedCreateInput = {
 
 export type LocalUpdateInput = {
   nome?: Prisma.StringFieldUpdateOperationsInput | string
+  cnes?: Prisma.StringFieldUpdateOperationsInput | string
   tipoDeLocal?: Prisma.EnumTipoDeLocalFieldUpdateOperationsInput | $Enums.TipoDeLocal
   atendimentoDentroOuForaDoMunicipio?: Prisma.EnumAtendimentoDentroOuForaDoMunicipioFieldUpdateOperationsInput | $Enums.AtendimentoDentroOuForaDoMunicipio
   quantidadeDeSalas?: Prisma.IntFieldUpdateOperationsInput | number
@@ -506,6 +521,7 @@ export type LocalUpdateInput = {
 export type LocalUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   nome?: Prisma.StringFieldUpdateOperationsInput | string
+  cnes?: Prisma.StringFieldUpdateOperationsInput | string
   tipoDeLocal?: Prisma.EnumTipoDeLocalFieldUpdateOperationsInput | $Enums.TipoDeLocal
   atendimentoDentroOuForaDoMunicipio?: Prisma.EnumAtendimentoDentroOuForaDoMunicipioFieldUpdateOperationsInput | $Enums.AtendimentoDentroOuForaDoMunicipio
   quantidadeDeSalas?: Prisma.IntFieldUpdateOperationsInput | number
@@ -532,6 +548,7 @@ export type LocalUncheckedUpdateInput = {
 export type LocalCreateManyInput = {
   id?: number
   nome: string
+  cnes?: string
   tipoDeLocal: $Enums.TipoDeLocal
   atendimentoDentroOuForaDoMunicipio: $Enums.AtendimentoDentroOuForaDoMunicipio
   quantidadeDeSalas: number
@@ -551,6 +568,7 @@ export type LocalCreateManyInput = {
 
 export type LocalUpdateManyMutationInput = {
   nome?: Prisma.StringFieldUpdateOperationsInput | string
+  cnes?: Prisma.StringFieldUpdateOperationsInput | string
   tipoDeLocal?: Prisma.EnumTipoDeLocalFieldUpdateOperationsInput | $Enums.TipoDeLocal
   atendimentoDentroOuForaDoMunicipio?: Prisma.EnumAtendimentoDentroOuForaDoMunicipioFieldUpdateOperationsInput | $Enums.AtendimentoDentroOuForaDoMunicipio
   quantidadeDeSalas?: Prisma.IntFieldUpdateOperationsInput | number
@@ -571,6 +589,7 @@ export type LocalUpdateManyMutationInput = {
 export type LocalUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   nome?: Prisma.StringFieldUpdateOperationsInput | string
+  cnes?: Prisma.StringFieldUpdateOperationsInput | string
   tipoDeLocal?: Prisma.EnumTipoDeLocalFieldUpdateOperationsInput | $Enums.TipoDeLocal
   atendimentoDentroOuForaDoMunicipio?: Prisma.EnumAtendimentoDentroOuForaDoMunicipioFieldUpdateOperationsInput | $Enums.AtendimentoDentroOuForaDoMunicipio
   quantidadeDeSalas?: Prisma.IntFieldUpdateOperationsInput | number
@@ -596,6 +615,7 @@ export type LocalNullableScalarRelationFilter = {
 export type LocalCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   nome?: Prisma.SortOrder
+  cnes?: Prisma.SortOrder
   tipoDeLocal?: Prisma.SortOrder
   atendimentoDentroOuForaDoMunicipio?: Prisma.SortOrder
   quantidadeDeSalas?: Prisma.SortOrder
@@ -621,6 +641,7 @@ export type LocalAvgOrderByAggregateInput = {
 export type LocalMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   nome?: Prisma.SortOrder
+  cnes?: Prisma.SortOrder
   tipoDeLocal?: Prisma.SortOrder
   atendimentoDentroOuForaDoMunicipio?: Prisma.SortOrder
   quantidadeDeSalas?: Prisma.SortOrder
@@ -641,6 +662,7 @@ export type LocalMaxOrderByAggregateInput = {
 export type LocalMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   nome?: Prisma.SortOrder
+  cnes?: Prisma.SortOrder
   tipoDeLocal?: Prisma.SortOrder
   atendimentoDentroOuForaDoMunicipio?: Prisma.SortOrder
   quantidadeDeSalas?: Prisma.SortOrder
@@ -776,6 +798,7 @@ export type LocalUpdateOneWithoutEncaminhamentosDeAtendimentoNestedInput = {
 
 export type LocalCreateWithoutUsuariosInput = {
   nome: string
+  cnes?: string
   tipoDeLocal: $Enums.TipoDeLocal
   atendimentoDentroOuForaDoMunicipio: $Enums.AtendimentoDentroOuForaDoMunicipio
   quantidadeDeSalas: number
@@ -801,6 +824,7 @@ export type LocalCreateWithoutUsuariosInput = {
 export type LocalUncheckedCreateWithoutUsuariosInput = {
   id?: number
   nome: string
+  cnes?: string
   tipoDeLocal: $Enums.TipoDeLocal
   atendimentoDentroOuForaDoMunicipio: $Enums.AtendimentoDentroOuForaDoMunicipio
   quantidadeDeSalas: number
@@ -841,6 +865,7 @@ export type LocalUpdateToOneWithWhereWithoutUsuariosInput = {
 
 export type LocalUpdateWithoutUsuariosInput = {
   nome?: Prisma.StringFieldUpdateOperationsInput | string
+  cnes?: Prisma.StringFieldUpdateOperationsInput | string
   tipoDeLocal?: Prisma.EnumTipoDeLocalFieldUpdateOperationsInput | $Enums.TipoDeLocal
   atendimentoDentroOuForaDoMunicipio?: Prisma.EnumAtendimentoDentroOuForaDoMunicipioFieldUpdateOperationsInput | $Enums.AtendimentoDentroOuForaDoMunicipio
   quantidadeDeSalas?: Prisma.IntFieldUpdateOperationsInput | number
@@ -866,6 +891,7 @@ export type LocalUpdateWithoutUsuariosInput = {
 export type LocalUncheckedUpdateWithoutUsuariosInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   nome?: Prisma.StringFieldUpdateOperationsInput | string
+  cnes?: Prisma.StringFieldUpdateOperationsInput | string
   tipoDeLocal?: Prisma.EnumTipoDeLocalFieldUpdateOperationsInput | $Enums.TipoDeLocal
   atendimentoDentroOuForaDoMunicipio?: Prisma.EnumAtendimentoDentroOuForaDoMunicipioFieldUpdateOperationsInput | $Enums.AtendimentoDentroOuForaDoMunicipio
   quantidadeDeSalas?: Prisma.IntFieldUpdateOperationsInput | number
@@ -890,6 +916,7 @@ export type LocalUncheckedUpdateWithoutUsuariosInput = {
 
 export type LocalCreateWithoutPrestadoresInput = {
   nome: string
+  cnes?: string
   tipoDeLocal: $Enums.TipoDeLocal
   atendimentoDentroOuForaDoMunicipio: $Enums.AtendimentoDentroOuForaDoMunicipio
   quantidadeDeSalas: number
@@ -915,6 +942,7 @@ export type LocalCreateWithoutPrestadoresInput = {
 export type LocalUncheckedCreateWithoutPrestadoresInput = {
   id?: number
   nome: string
+  cnes?: string
   tipoDeLocal: $Enums.TipoDeLocal
   atendimentoDentroOuForaDoMunicipio: $Enums.AtendimentoDentroOuForaDoMunicipio
   quantidadeDeSalas: number
@@ -955,6 +983,7 @@ export type LocalUpdateToOneWithWhereWithoutPrestadoresInput = {
 
 export type LocalUpdateWithoutPrestadoresInput = {
   nome?: Prisma.StringFieldUpdateOperationsInput | string
+  cnes?: Prisma.StringFieldUpdateOperationsInput | string
   tipoDeLocal?: Prisma.EnumTipoDeLocalFieldUpdateOperationsInput | $Enums.TipoDeLocal
   atendimentoDentroOuForaDoMunicipio?: Prisma.EnumAtendimentoDentroOuForaDoMunicipioFieldUpdateOperationsInput | $Enums.AtendimentoDentroOuForaDoMunicipio
   quantidadeDeSalas?: Prisma.IntFieldUpdateOperationsInput | number
@@ -980,6 +1009,7 @@ export type LocalUpdateWithoutPrestadoresInput = {
 export type LocalUncheckedUpdateWithoutPrestadoresInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   nome?: Prisma.StringFieldUpdateOperationsInput | string
+  cnes?: Prisma.StringFieldUpdateOperationsInput | string
   tipoDeLocal?: Prisma.EnumTipoDeLocalFieldUpdateOperationsInput | $Enums.TipoDeLocal
   atendimentoDentroOuForaDoMunicipio?: Prisma.EnumAtendimentoDentroOuForaDoMunicipioFieldUpdateOperationsInput | $Enums.AtendimentoDentroOuForaDoMunicipio
   quantidadeDeSalas?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1004,6 +1034,7 @@ export type LocalUncheckedUpdateWithoutPrestadoresInput = {
 
 export type LocalCreateWithoutAgendamentosInput = {
   nome: string
+  cnes?: string
   tipoDeLocal: $Enums.TipoDeLocal
   atendimentoDentroOuForaDoMunicipio: $Enums.AtendimentoDentroOuForaDoMunicipio
   quantidadeDeSalas: number
@@ -1029,6 +1060,7 @@ export type LocalCreateWithoutAgendamentosInput = {
 export type LocalUncheckedCreateWithoutAgendamentosInput = {
   id?: number
   nome: string
+  cnes?: string
   tipoDeLocal: $Enums.TipoDeLocal
   atendimentoDentroOuForaDoMunicipio: $Enums.AtendimentoDentroOuForaDoMunicipio
   quantidadeDeSalas: number
@@ -1069,6 +1101,7 @@ export type LocalUpdateToOneWithWhereWithoutAgendamentosInput = {
 
 export type LocalUpdateWithoutAgendamentosInput = {
   nome?: Prisma.StringFieldUpdateOperationsInput | string
+  cnes?: Prisma.StringFieldUpdateOperationsInput | string
   tipoDeLocal?: Prisma.EnumTipoDeLocalFieldUpdateOperationsInput | $Enums.TipoDeLocal
   atendimentoDentroOuForaDoMunicipio?: Prisma.EnumAtendimentoDentroOuForaDoMunicipioFieldUpdateOperationsInput | $Enums.AtendimentoDentroOuForaDoMunicipio
   quantidadeDeSalas?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1094,6 +1127,7 @@ export type LocalUpdateWithoutAgendamentosInput = {
 export type LocalUncheckedUpdateWithoutAgendamentosInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   nome?: Prisma.StringFieldUpdateOperationsInput | string
+  cnes?: Prisma.StringFieldUpdateOperationsInput | string
   tipoDeLocal?: Prisma.EnumTipoDeLocalFieldUpdateOperationsInput | $Enums.TipoDeLocal
   atendimentoDentroOuForaDoMunicipio?: Prisma.EnumAtendimentoDentroOuForaDoMunicipioFieldUpdateOperationsInput | $Enums.AtendimentoDentroOuForaDoMunicipio
   quantidadeDeSalas?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1118,6 +1152,7 @@ export type LocalUncheckedUpdateWithoutAgendamentosInput = {
 
 export type LocalCreateWithoutPacientesInput = {
   nome: string
+  cnes?: string
   tipoDeLocal: $Enums.TipoDeLocal
   atendimentoDentroOuForaDoMunicipio: $Enums.AtendimentoDentroOuForaDoMunicipio
   quantidadeDeSalas: number
@@ -1143,6 +1178,7 @@ export type LocalCreateWithoutPacientesInput = {
 export type LocalUncheckedCreateWithoutPacientesInput = {
   id?: number
   nome: string
+  cnes?: string
   tipoDeLocal: $Enums.TipoDeLocal
   atendimentoDentroOuForaDoMunicipio: $Enums.AtendimentoDentroOuForaDoMunicipio
   quantidadeDeSalas: number
@@ -1183,6 +1219,7 @@ export type LocalUpdateToOneWithWhereWithoutPacientesInput = {
 
 export type LocalUpdateWithoutPacientesInput = {
   nome?: Prisma.StringFieldUpdateOperationsInput | string
+  cnes?: Prisma.StringFieldUpdateOperationsInput | string
   tipoDeLocal?: Prisma.EnumTipoDeLocalFieldUpdateOperationsInput | $Enums.TipoDeLocal
   atendimentoDentroOuForaDoMunicipio?: Prisma.EnumAtendimentoDentroOuForaDoMunicipioFieldUpdateOperationsInput | $Enums.AtendimentoDentroOuForaDoMunicipio
   quantidadeDeSalas?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1208,6 +1245,7 @@ export type LocalUpdateWithoutPacientesInput = {
 export type LocalUncheckedUpdateWithoutPacientesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   nome?: Prisma.StringFieldUpdateOperationsInput | string
+  cnes?: Prisma.StringFieldUpdateOperationsInput | string
   tipoDeLocal?: Prisma.EnumTipoDeLocalFieldUpdateOperationsInput | $Enums.TipoDeLocal
   atendimentoDentroOuForaDoMunicipio?: Prisma.EnumAtendimentoDentroOuForaDoMunicipioFieldUpdateOperationsInput | $Enums.AtendimentoDentroOuForaDoMunicipio
   quantidadeDeSalas?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1232,6 +1270,7 @@ export type LocalUncheckedUpdateWithoutPacientesInput = {
 
 export type LocalCreateWithoutEncaminhamentosDeOrigemInput = {
   nome: string
+  cnes?: string
   tipoDeLocal: $Enums.TipoDeLocal
   atendimentoDentroOuForaDoMunicipio: $Enums.AtendimentoDentroOuForaDoMunicipio
   quantidadeDeSalas: number
@@ -1257,6 +1296,7 @@ export type LocalCreateWithoutEncaminhamentosDeOrigemInput = {
 export type LocalUncheckedCreateWithoutEncaminhamentosDeOrigemInput = {
   id?: number
   nome: string
+  cnes?: string
   tipoDeLocal: $Enums.TipoDeLocal
   atendimentoDentroOuForaDoMunicipio: $Enums.AtendimentoDentroOuForaDoMunicipio
   quantidadeDeSalas: number
@@ -1286,6 +1326,7 @@ export type LocalCreateOrConnectWithoutEncaminhamentosDeOrigemInput = {
 
 export type LocalCreateWithoutEncaminhamentosDeAtendimentoInput = {
   nome: string
+  cnes?: string
   tipoDeLocal: $Enums.TipoDeLocal
   atendimentoDentroOuForaDoMunicipio: $Enums.AtendimentoDentroOuForaDoMunicipio
   quantidadeDeSalas: number
@@ -1311,6 +1352,7 @@ export type LocalCreateWithoutEncaminhamentosDeAtendimentoInput = {
 export type LocalUncheckedCreateWithoutEncaminhamentosDeAtendimentoInput = {
   id?: number
   nome: string
+  cnes?: string
   tipoDeLocal: $Enums.TipoDeLocal
   atendimentoDentroOuForaDoMunicipio: $Enums.AtendimentoDentroOuForaDoMunicipio
   quantidadeDeSalas: number
@@ -1351,6 +1393,7 @@ export type LocalUpdateToOneWithWhereWithoutEncaminhamentosDeOrigemInput = {
 
 export type LocalUpdateWithoutEncaminhamentosDeOrigemInput = {
   nome?: Prisma.StringFieldUpdateOperationsInput | string
+  cnes?: Prisma.StringFieldUpdateOperationsInput | string
   tipoDeLocal?: Prisma.EnumTipoDeLocalFieldUpdateOperationsInput | $Enums.TipoDeLocal
   atendimentoDentroOuForaDoMunicipio?: Prisma.EnumAtendimentoDentroOuForaDoMunicipioFieldUpdateOperationsInput | $Enums.AtendimentoDentroOuForaDoMunicipio
   quantidadeDeSalas?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1376,6 +1419,7 @@ export type LocalUpdateWithoutEncaminhamentosDeOrigemInput = {
 export type LocalUncheckedUpdateWithoutEncaminhamentosDeOrigemInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   nome?: Prisma.StringFieldUpdateOperationsInput | string
+  cnes?: Prisma.StringFieldUpdateOperationsInput | string
   tipoDeLocal?: Prisma.EnumTipoDeLocalFieldUpdateOperationsInput | $Enums.TipoDeLocal
   atendimentoDentroOuForaDoMunicipio?: Prisma.EnumAtendimentoDentroOuForaDoMunicipioFieldUpdateOperationsInput | $Enums.AtendimentoDentroOuForaDoMunicipio
   quantidadeDeSalas?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1411,6 +1455,7 @@ export type LocalUpdateToOneWithWhereWithoutEncaminhamentosDeAtendimentoInput = 
 
 export type LocalUpdateWithoutEncaminhamentosDeAtendimentoInput = {
   nome?: Prisma.StringFieldUpdateOperationsInput | string
+  cnes?: Prisma.StringFieldUpdateOperationsInput | string
   tipoDeLocal?: Prisma.EnumTipoDeLocalFieldUpdateOperationsInput | $Enums.TipoDeLocal
   atendimentoDentroOuForaDoMunicipio?: Prisma.EnumAtendimentoDentroOuForaDoMunicipioFieldUpdateOperationsInput | $Enums.AtendimentoDentroOuForaDoMunicipio
   quantidadeDeSalas?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1436,6 +1481,7 @@ export type LocalUpdateWithoutEncaminhamentosDeAtendimentoInput = {
 export type LocalUncheckedUpdateWithoutEncaminhamentosDeAtendimentoInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   nome?: Prisma.StringFieldUpdateOperationsInput | string
+  cnes?: Prisma.StringFieldUpdateOperationsInput | string
   tipoDeLocal?: Prisma.EnumTipoDeLocalFieldUpdateOperationsInput | $Enums.TipoDeLocal
   atendimentoDentroOuForaDoMunicipio?: Prisma.EnumAtendimentoDentroOuForaDoMunicipioFieldUpdateOperationsInput | $Enums.AtendimentoDentroOuForaDoMunicipio
   quantidadeDeSalas?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1537,6 +1583,7 @@ export type LocalCountOutputTypeCountPrestadoresArgs<ExtArgs extends runtime.Typ
 export type LocalSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   nome?: boolean
+  cnes?: boolean
   tipoDeLocal?: boolean
   atendimentoDentroOuForaDoMunicipio?: boolean
   quantidadeDeSalas?: boolean
@@ -1564,6 +1611,7 @@ export type LocalSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
 export type LocalSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   nome?: boolean
+  cnes?: boolean
   tipoDeLocal?: boolean
   atendimentoDentroOuForaDoMunicipio?: boolean
   quantidadeDeSalas?: boolean
@@ -1584,6 +1632,7 @@ export type LocalSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type LocalSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   nome?: boolean
+  cnes?: boolean
   tipoDeLocal?: boolean
   atendimentoDentroOuForaDoMunicipio?: boolean
   quantidadeDeSalas?: boolean
@@ -1604,6 +1653,7 @@ export type LocalSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type LocalSelectScalar = {
   id?: boolean
   nome?: boolean
+  cnes?: boolean
   tipoDeLocal?: boolean
   atendimentoDentroOuForaDoMunicipio?: boolean
   quantidadeDeSalas?: boolean
@@ -1621,7 +1671,7 @@ export type LocalSelectScalar = {
   updatedAt?: boolean
 }
 
-export type LocalOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nome" | "tipoDeLocal" | "atendimentoDentroOuForaDoMunicipio" | "quantidadeDeSalas" | "ativo" | "cidade" | "cep" | "uf" | "rua" | "numero" | "bairro" | "complemento" | "telefone1" | "email" | "createdAt" | "updatedAt", ExtArgs["result"]["local"]>
+export type LocalOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nome" | "cnes" | "tipoDeLocal" | "atendimentoDentroOuForaDoMunicipio" | "quantidadeDeSalas" | "ativo" | "cidade" | "cep" | "uf" | "rua" | "numero" | "bairro" | "complemento" | "telefone1" | "email" | "createdAt" | "updatedAt", ExtArgs["result"]["local"]>
 export type LocalInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   usuarios?: boolean | Prisma.Local$usuariosArgs<ExtArgs>
   agendamentos?: boolean | Prisma.Local$agendamentosArgs<ExtArgs>
@@ -1647,6 +1697,7 @@ export type $LocalPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     nome: string
+    cnes: string
     tipoDeLocal: $Enums.TipoDeLocal
     atendimentoDentroOuForaDoMunicipio: $Enums.AtendimentoDentroOuForaDoMunicipio
     quantidadeDeSalas: number
@@ -2093,6 +2144,7 @@ export interface Prisma__LocalClient<T, Null = never, ExtArgs extends runtime.Ty
 export interface LocalFieldRefs {
   readonly id: Prisma.FieldRef<"Local", 'Int'>
   readonly nome: Prisma.FieldRef<"Local", 'String'>
+  readonly cnes: Prisma.FieldRef<"Local", 'String'>
   readonly tipoDeLocal: Prisma.FieldRef<"Local", 'TipoDeLocal'>
   readonly atendimentoDentroOuForaDoMunicipio: Prisma.FieldRef<"Local", 'AtendimentoDentroOuForaDoMunicipio'>
   readonly quantidadeDeSalas: Prisma.FieldRef<"Local", 'Int'>
