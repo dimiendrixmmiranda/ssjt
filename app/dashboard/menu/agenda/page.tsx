@@ -91,7 +91,7 @@ export default function Page() {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    data: formatarData(dataSelecionada!),
+                    data: formatarDataISO(dataSelecionada!),
                     prestadorId: prestadorAtual!.id,
                     unidadeDeAtendimentoId: unidadeDeAtendimento!.id,
                     periodo: periodoDeAtendimento,
@@ -251,10 +251,20 @@ export default function Page() {
     }
 
     // Formata a data sem sofrer alteração de fuso horário
-    function formatarData(data: Date): string {
+    // Formato ISO: YYYY-MM-DD (banco de dados e API)
+    function formatarDataISO(data: Date): string {
         const ano = data.getFullYear()
         const mes = String(data.getMonth() + 1).padStart(2, "0")
         const dia = String(data.getDate()).padStart(2, "0")
+
+        return `${ano}-${mes}-${dia}`
+    }
+
+    // Formato brasileiro: DD/MM/YYYY (exibição)
+    function formatarDataBR(data: Date): string {
+        const dia = String(data.getDate()).padStart(2, "0")
+        const mes = String(data.getMonth() + 1).padStart(2, "0")
+        const ano = data.getFullYear()
 
         return `${dia}/${mes}/${ano}`
     }
@@ -330,7 +340,7 @@ export default function Page() {
             if (!localSelecionado || !dataSelecionada) return false
 
             const dataAgendamento = String(agendamento.data).slice(0, 10)
-            const dataAtual = formatarData(dataSelecionada)
+            const dataAtual = formatarDataISO(dataSelecionada)
 
             return (
                 agendamento.unidadeDeAtendimentoId === localSelecionado.id &&
@@ -357,8 +367,7 @@ export default function Page() {
                 .toISOString()
                 .slice(0, 10)
 
-            const dataAtual = formatarData(dataSelecionada)
-
+            const dataAtual = formatarDataISO(dataSelecionada)
             return (
                 agendamento.unidadeDeAtendimentoId === localSelecionado.id &&
                 dataAgendamento === dataAtual
@@ -672,7 +681,9 @@ export default function Page() {
                                 </div>
                             ) : (
                                 <div className="flex flex-col gap-2">
-                                    <h2 className="font-bold text-xl bg-blue-950 text-white p-4 text-center">Atendimento no dia {formatarData(dataSelecionada!)}</h2>
+                                    <h2 className="font-bold text-xl bg-blue-950 text-white p-4 text-center">
+                                        Atendimento no dia {formatarDataBR(dataSelecionada!)}
+                                    </h2>
                                     <ul className="flex flex-col gap-2 p-4">
                                         {
                                             filtroPorDiaAgendaGeralDePrestadores.map((agendamentoPrestador, i) => {
