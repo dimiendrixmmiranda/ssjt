@@ -136,12 +136,15 @@ export default function Page() {
 
             await buscarUsuarios()
 
-            setTituloResultado("Cadastro realizado!");
-            setMensagemResultado("O usuário foi cadastrado com sucesso.");
-            setDialogResultado(true);
+            setDialogConfirmacao(false)
+            limparFormulario()
 
-            limparFormulario();
-
+            setTimeout(() => {
+                setTituloResultado("Cadastro realizado!")
+                setMensagemResultado("O usuário foi cadastrado com sucesso.")
+                setDialogResultado(true)
+            }, 200)
+            
         } catch (erro) {
             console.error("Erro ao cadastrar usuário:", erro);
 

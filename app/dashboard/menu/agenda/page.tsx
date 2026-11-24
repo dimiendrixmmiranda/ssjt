@@ -21,6 +21,7 @@ import InputData from "@/components/inputs/InputData";
 import { LinhaAgendaPDF } from "@/components/pdf/TabelaAgenda";
 import { DocumentoAgenda } from "@/components/pdf/DocumentoAgenda";
 import { CalendarioPeriodo } from "@/components/agenda/CalendarioPeriodo";
+import { GiMagnifyingGlass } from "react-icons/gi";
 
 export default function Page() {
     type AgendamentoDaAgenda = (typeof agendamentoDePrestadores)[number]
@@ -255,7 +256,7 @@ export default function Page() {
         const mes = String(data.getMonth() + 1).padStart(2, "0")
         const dia = String(data.getDate()).padStart(2, "0")
 
-        return `${ano}-${mes}-${dia}`
+        return `${dia}/${mes}/${ano}`
     }
 
     // Valida os campos e abre a confirmação
@@ -534,6 +535,43 @@ export default function Page() {
         }
     )
 
+    const [buscarPrestadorGeral, setBuscarPrestadorGeral] = useState('')
+    const agendamentosFiltradosGeral = agendamentoDePrestadores.filter((agendamento) => {
+        const busca = buscarPrestadorGeral
+            .trim()
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+
+        if (!busca) return true
+
+        const nomePrestador = agendamento.prestador.nome
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+
+        const especialidades = agendamento.prestador.especialidades
+            .map(esp => esp.especialidade.nome)
+            .join(" ")
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+
+        const procedimentos = agendamento.prestador.procedimentos
+            .map(proc => proc.procedimento.nome)
+            .join(" ")
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+
+        return (
+            nomePrestador.includes(busca) ||
+            especialidades.includes(busca) ||
+            procedimentos.includes(busca)
+        )
+    })
+
+
     return (
         <Template>
             <div className="text-verde-escuro flex flex-col gap-4 max-h-[100vh] overflow-y-scroll p-4">
@@ -618,7 +656,7 @@ export default function Page() {
 
             {/* Dialog todos os agendamentos do municipio */}
             <Dialog header={"Agenda Geral de Prestadores"} visible={dialogAgendaGeral} className="max-w-[1000px] w-full" onHide={() => { setDialogAgendaGeral(false); setDataSelecionada(new Date()) }}>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-4 w-full min-w-0 overflow-hidden">
                     <div className="flex h-full">
                         <Calendario
                             eventos={eventosCalendarioTotal}
@@ -626,15 +664,15 @@ export default function Page() {
                             onSelecionarData={setDataSelecionada}
                         />
                     </div>
-                    <div className="bg-white rounded-xl shadow-sm border overflow-hidden w-full overflow-y-scroll">
+                    <div className="bg-white rounded-xl shadow-sm border overflow-hidden w-full overflow-y-scroll barra-de-rolagem-1">
                         {
                             filtroPorDiaAgendaGeralDePrestadores.length <= 0 ? (
-                                <div className="p-4">
-                                    <h2>Nenhum agendamento nesse dia</h2>
+                                <div className="p-4 w-full h-full flex justify-center items-center">
+                                    <h2 className="font-bold text-6xl text-center">Nenhum agendamento nesse dia!</h2>
                                 </div>
                             ) : (
                                 <div className="flex flex-col gap-2">
-                                    <h2 className="font-bold text-xl bg-blue-950 text-white p-4">Atendimento no dia {formatarData(dataSelecionada!)}</h2>
+                                    <h2 className="font-bold text-xl bg-blue-950 text-white p-4 text-center">Atendimento no dia {formatarData(dataSelecionada!)}</h2>
                                     <ul className="flex flex-col gap-2 p-4">
                                         {
                                             filtroPorDiaAgendaGeralDePrestadores.map((agendamentoPrestador, i) => {
@@ -655,10 +693,21 @@ export default function Page() {
                                                                 <MdLocationOn className="text-2xl" />
                                                                 <p className="font-semibold">{agendamentoPrestador.unidadeDeAtendimento.nome}</p>
                                                             </div>
-                                                            <div className="flex justify-between">
+                                                            <div className="flex items-center gap-4">
                                                                 <div className="flex items-center gap-1">
                                                                     <FaRegClock className="text-2xl" />
                                                                     <p>{agendamentoPrestador.periodo}</p>
+                                                                </div>
+                                                                <div className="flex items-center gap-1 ml-auto">
+                                                                    <p>
+                                                                        {new Date(agendamentoPrestador.data)
+                                                                            .toLocaleDateString("pt-BR", {
+                                                                                day: "2-digit",
+                                                                                month: "long",
+                                                                                year: "numeric",
+                                                                            })
+                                                                            .replace(/^./, letra => letra.toUpperCase())}
+                                                                    </p>
                                                                 </div>
                                                                 <div className="flex items-center gap-1">
                                                                     <MdOutlineDoorFront className="text-2xl" />
@@ -675,8 +724,69 @@ export default function Page() {
                             )
                         }
                     </div>
-                    <div className="col-span-2">
-                        Busca aqui
+                    <div className="bg-white rounded-xl shadow-sm border w-full min-w-0 col-span-2 p-4 flex flex-col gap-4 h-[380px] min-h-0 overflow-y-auto overflow-x-hidden barra-de-rolagem-1">
+                        <div className="relative">
+                            <GiMagnifyingGlass className="absolute top-[50%] left-2 text-2xl text-black" style={{ transform: 'translate(0,-50%)' }} />
+                            <input className="border border-verde bg-verde/20 text-black p-2 text-lg rounded-lg w-full pl-10" placeholder="Buscar por nome do prestador ou especialidade..." type="search" name="buscarPrestadorGeral" id="buscarPrestadorGeral" value={buscarPrestadorGeral} onChange={(e) => setBuscarPrestadorGeral(e.target.value)} />
+                        </div>
+                        <ul className="flex flex-col gap-2">
+                            {
+                                agendamentosFiltradosGeral.map((agendamentoPrestador, i) => {
+                                    return (
+                                        <li key={i} className="shadow-sm rounded-lg p-2 px-4 overflow-hidden relative border text-black" style={{ borderColor: agendamentoPrestador.prestador.cor }}>
+                                            <div className={`w-1 h-full absolute top-0 left-0`} style={{ backgroundColor: agendamentoPrestador.prestador.cor }} />
+                                            <div className="flex items-center gap-2 border-b pb-2">
+                                                <div className="rounded-lg p-2 text-2xl w-fit text-white" style={{ backgroundColor: `${agendamentoPrestador.prestador.cor}` }}>
+                                                    <MdMedicalInformation />
+                                                </div>
+                                                <div className="flex flex-col">
+                                                    <h3 className="font-bold text-xl">{agendamentoPrestador.prestador.nome}</h3>
+                                                    <p className="-mt-1.5">{agendamentoPrestador.prestador.especialidades.map(esp => esp.especialidade.nome)}</p>
+                                                </div>
+                                                <div className="ml-auto">
+                                                    <button
+                                                        type="button"
+                                                        disabled={!agendamentoPrestador}
+                                                        className="rounded-lg border border-amber-600 text-amber-600 p-2 disabled:opacity-30 disabled:cursor-not-allowed"
+                                                        onClick={() => abrirEdicaoAgendamento(agendamentoPrestador!)}
+                                                    >
+                                                        <FiEdit />
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div className="flex flex-col gap-2 mt-2">
+                                                <div className="flex items-center">
+                                                    <MdLocationOn className="text-2xl" />
+                                                    <p className="font-semibold">{agendamentoPrestador.unidadeDeAtendimento.nome}</p>
+                                                </div>
+                                                <div className="flex items-center gap-4">
+                                                    <div>
+                                                        <p>
+                                                            {new Date(agendamentoPrestador.data)
+                                                                .toLocaleDateString("pt-BR", {
+                                                                    weekday: "long",
+                                                                    day: "2-digit",
+                                                                    month: "long",
+                                                                    year: "numeric",
+                                                                })
+                                                                .replace(/^./, letra => letra.toUpperCase())}
+                                                        </p>
+                                                    </div>
+                                                    <div className="flex items-center gap-1 ml-auto">
+                                                        <FaRegClock className="text-2xl" />
+                                                        <p>{agendamentoPrestador.periodo}</p>
+                                                    </div>
+                                                    <div className="flex items-center gap-1">
+                                                        <MdOutlineDoorFront className="text-2xl" />
+                                                        <p>{agendamentoPrestador.salaNumero}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    )
+                                })
+                            }
+                        </ul>
                     </div>
                 </div>
             </Dialog>
@@ -1257,7 +1367,7 @@ export default function Page() {
                     setDataDeFim('')
                 }}
             >
-                <div className="grid grid-cols-2 gap-4">
+                <div >
                     <CalendarioPeriodo
                         dataDeInicio={dataDeInicio}
                         dataDeFim={dataDeFim}

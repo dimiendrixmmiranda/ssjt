@@ -8,6 +8,7 @@ import { BsMoon } from "react-icons/bs"
 import { FaHome, FaProcedures, FaRegBell, FaUserPlus } from "react-icons/fa"
 import { FaUserDoctor, FaUserPen } from "react-icons/fa6"
 import { GoGear } from "react-icons/go"
+import { GrDocumentDownload } from "react-icons/gr"
 import { IoLogOutOutline } from "react-icons/io5"
 import { LuUserCog } from "react-icons/lu"
 import { RiServiceLine } from "react-icons/ri"
@@ -88,6 +89,12 @@ export default function Template({ children }: TemplateProps) {
                             <Link href={'/dashboard/menu/consultas-e-exames'} className={`flex items-center gap-2 font-bold text-xl p-2 px-4 rounded-lg border border-verde-escuro ${pathname === '/dashboard/menu/consultas-e-exames' ? "bg-white text-verde" : "bg-verde-escuro text-white"}`}>
                                 <FaUserPen />
                                 <p>Consultas e Exames</p>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href={'/dashboard/menu/documentos'} className={`flex items-center gap-2 font-bold text-xl p-2 px-4 rounded-lg border border-verde-escuro ${pathname === '/dashboard/menu/documentos' ? "bg-white text-verde" : "bg-verde-escuro text-white"}`}>
+                                <GrDocumentDownload />
+                                <p>Documentos</p>
                             </Link>
                         </li>
                     </ul>
