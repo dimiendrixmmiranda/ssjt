@@ -404,6 +404,7 @@ export default function Page() {
 
 
     const gerarPdfAgendaDePrestadores = async () => {
+
         if (!dataDeInicio || !dataDeFim) {
             console.error("Informe a data de início e a data de fim.")
             return
@@ -414,27 +415,25 @@ export default function Page() {
             return
         }
 
-        if (!localSelecionado) {
-            console.error("Nenhuma unidade de atendimento selecionada.")
-            return
-        }
+        // if (!localSelecionado) {
+        //     console.error("Nenhuma unidade de atendimento selecionada.")
+        //     return
+        // }
 
         // Filtra e ordena os agendamentos
         const agendamentosFiltrados = agendamentoDePrestadores
             .filter((agendamento) => {
                 const dataAgendamento = String(agendamento.data).slice(0, 10)
 
-                return (
-                    agendamento.unidadeDeAtendimentoId === localSelecionado.id &&
+                const correspondeAoPeriodo =
                     dataAgendamento >= dataDeInicio &&
                     dataAgendamento <= dataDeFim
-                )
-            })
-            .sort((a, b) => {
-                const dataA = String(a.data).slice(0, 10)
-                const dataB = String(b.data).slice(0, 10)
 
-                return dataA.localeCompare(dataB)
+                const correspondeAoLocal =
+                    localSelecionado === null ||
+                    agendamento.unidadeDeAtendimentoId === localSelecionado.id
+
+                return correspondeAoPeriodo && correspondeAoLocal
             })
 
         // Converte os dados para o formato esperado pelo PDF
@@ -467,7 +466,7 @@ export default function Page() {
 
             const documento = pdf(
                 <DocumentoAgenda
-                    nomeUnidade={localSelecionado.nome}
+                    nomeUnidade={localSelecionado?.nome ?? "Todas as Unidades de Saúde do Município"}
                     dataDeInicio={new Date(`${dataDeInicio}T12:00:00`)}
                     dataDeFim={new Date(`${dataDeFim}T12:00:00`)}
                     agendamentos={dadosPDF}
@@ -482,9 +481,9 @@ export default function Page() {
             const link = document.createElement("a")
 
             link.href = url
-            link.download = `agenda-${localSelecionado.nome
-                .toLowerCase()
-                .replace(/\s+/g, "-")}.pdf`
+            link.download = localSelecionado
+                ? `agenda-${localSelecionado.nome.toLowerCase().replace(/\s+/g, "-")}.pdf`
+                : "agenda-geral-do-municipio.pdf"
 
             document.body.appendChild(link)
             link.click()
@@ -545,6 +544,7 @@ export default function Page() {
     )
 
     const [buscarPrestadorGeral, setBuscarPrestadorGeral] = useState('')
+
     const agendamentosFiltradosGeral = agendamentoDePrestadores.filter((agendamento) => {
         const busca = buscarPrestadorGeral
             .trim()
@@ -605,7 +605,7 @@ export default function Page() {
                                 <button className="underline text-lg flex items-center gap-2"
                                     onClick={() => {
                                         setDialogGerarPdfAgendaDePrestadores(true)
-                                        // setLocalSelecionado(local)
+                                        setLocalSelecionado(null)
                                     }}>
                                     <p>Gerar PDF da agenda</p>
                                     <RiExternalLinkFill />
@@ -711,13 +711,20 @@ export default function Page() {
                                                                 </div>
                                                                 <div className="flex items-center gap-1 ml-auto">
                                                                     <p>
-                                                                        {new Date(agendamentoPrestador.data)
-                                                                            .toLocaleDateString("pt-BR", {
+                                                                        {(() => {
+                                                                            const data = String(agendamentoPrestador.data).slice(0, 10)
+                                                                            const [ano, mes, dia] = data.split("-")
+
+                                                                            return new Date(
+                                                                                Number(ano),
+                                                                                Number(mes) - 1,
+                                                                                Number(dia)
+                                                                            ).toLocaleDateString("pt-BR", {
                                                                                 day: "2-digit",
                                                                                 month: "long",
                                                                                 year: "numeric",
-                                                                            })
-                                                                            .replace(/^./, letra => letra.toUpperCase())}
+                                                                            }).replace(/^./, letra => letra.toUpperCase())
+                                                                        })()}
                                                                     </p>
                                                                 </div>
                                                                 <div className="flex items-center gap-1">
@@ -773,14 +780,20 @@ export default function Page() {
                                                 <div className="flex items-center gap-4">
                                                     <div>
                                                         <p>
-                                                            {new Date(agendamentoPrestador.data)
-                                                                .toLocaleDateString("pt-BR", {
-                                                                    weekday: "long",
+                                                            {(() => {
+                                                                const data = String(agendamentoPrestador.data).slice(0, 10)
+                                                                const [ano, mes, dia] = data.split("-")
+
+                                                                return new Date(
+                                                                    Number(ano),
+                                                                    Number(mes) - 1,
+                                                                    Number(dia)
+                                                                ).toLocaleDateString("pt-BR", {
                                                                     day: "2-digit",
                                                                     month: "long",
                                                                     year: "numeric",
-                                                                })
-                                                                .replace(/^./, letra => letra.toUpperCase())}
+                                                                }).replace(/^./, letra => letra.toUpperCase())
+                                                            })()}
                                                         </p>
                                                     </div>
                                                     <div className="flex items-center gap-1 ml-auto">
@@ -1369,7 +1382,8 @@ export default function Page() {
             </Dialog>
 
             <Dialog
-                header={`Gerar PDF do Agendamento do ${localSelecionado?.nome}`}
+                header={`Gerar PDF do Agendamento ${localSelecionado?.nome ? `do ${localSelecionado.nome}` : `de Todos os Locais`}`}
+                // header={`Gerar PDF do Agendamento do ${localSelecionado?.nome ? localSelecionado.nome: 'gera'}`}
                 visible={dialogGerarPdfAgendaDePrestadores}
                 className="max-w-[700px] w-full"
                 onHide={() => {
@@ -1378,7 +1392,7 @@ export default function Page() {
                     setDataDeFim('')
                 }}
             >
-                <div >
+                <div className="flex flex-col gap-4">
                     <CalendarioPeriodo
                         dataDeInicio={dataDeInicio}
                         dataDeFim={dataDeFim}

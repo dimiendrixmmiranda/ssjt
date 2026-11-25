@@ -478,6 +478,7 @@ export default function Page() {
             valorDaBusca: valor
         })
     }
+    
     const handleAlterarTipoDeAtendimento = (tipo: "TODOS" | "CONSULTA" | "PROCEDIMENTO" | "CIRURGIA-TFD") => {
         setTipoDeAtendimento(tipo)
     }
