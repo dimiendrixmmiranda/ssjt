@@ -601,6 +601,7 @@ export type EncaminhamentoScalarWhereWithAggregatesInput = {
 }
 
 export type EncaminhamentoCreateInput = {
+  id: number
   tipo: $Enums.TipoDeEncaminhamento
   dataDeEntrada: Date | string
   statusDeAgendamento?: $Enums.StatusDeAgendamento
@@ -631,7 +632,7 @@ export type EncaminhamentoCreateInput = {
 }
 
 export type EncaminhamentoUncheckedCreateInput = {
-  id?: number
+  id: number
   tipo: $Enums.TipoDeEncaminhamento
   pacienteId: number
   unidadeDeOrigemId: number
@@ -662,6 +663,7 @@ export type EncaminhamentoUncheckedCreateInput = {
 }
 
 export type EncaminhamentoUpdateInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
   tipo?: Prisma.EnumTipoDeEncaminhamentoFieldUpdateOperationsInput | $Enums.TipoDeEncaminhamento
   dataDeEntrada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   statusDeAgendamento?: Prisma.EnumStatusDeAgendamentoFieldUpdateOperationsInput | $Enums.StatusDeAgendamento
@@ -723,7 +725,7 @@ export type EncaminhamentoUncheckedUpdateInput = {
 }
 
 export type EncaminhamentoCreateManyInput = {
-  id?: number
+  id: number
   tipo: $Enums.TipoDeEncaminhamento
   pacienteId: number
   unidadeDeOrigemId: number
@@ -754,6 +756,7 @@ export type EncaminhamentoCreateManyInput = {
 }
 
 export type EncaminhamentoUpdateManyMutationInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
   tipo?: Prisma.EnumTipoDeEncaminhamentoFieldUpdateOperationsInput | $Enums.TipoDeEncaminhamento
   dataDeEntrada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   statusDeAgendamento?: Prisma.EnumStatusDeAgendamentoFieldUpdateOperationsInput | $Enums.StatusDeAgendamento
@@ -1333,6 +1336,7 @@ export type NullableEnumLadoDoCorpoFieldUpdateOperationsInput = {
 }
 
 export type EncaminhamentoCreateWithoutUnidadeDeOrigemInput = {
+  id: number
   tipo: $Enums.TipoDeEncaminhamento
   dataDeEntrada: Date | string
   statusDeAgendamento?: $Enums.StatusDeAgendamento
@@ -1362,7 +1366,7 @@ export type EncaminhamentoCreateWithoutUnidadeDeOrigemInput = {
 }
 
 export type EncaminhamentoUncheckedCreateWithoutUnidadeDeOrigemInput = {
-  id?: number
+  id: number
   tipo: $Enums.TipoDeEncaminhamento
   pacienteId: number
   dataDeEntrada: Date | string
@@ -1402,6 +1406,7 @@ export type EncaminhamentoCreateManyUnidadeDeOrigemInputEnvelope = {
 }
 
 export type EncaminhamentoCreateWithoutLocalDeAtendimentoInput = {
+  id: number
   tipo: $Enums.TipoDeEncaminhamento
   dataDeEntrada: Date | string
   statusDeAgendamento?: $Enums.StatusDeAgendamento
@@ -1431,7 +1436,7 @@ export type EncaminhamentoCreateWithoutLocalDeAtendimentoInput = {
 }
 
 export type EncaminhamentoUncheckedCreateWithoutLocalDeAtendimentoInput = {
-  id?: number
+  id: number
   tipo: $Enums.TipoDeEncaminhamento
   pacienteId: number
   unidadeDeOrigemId: number
@@ -1537,6 +1542,7 @@ export type EncaminhamentoUpdateManyWithWhereWithoutLocalDeAtendimentoInput = {
 }
 
 export type EncaminhamentoCreateWithoutEspecialidadeDoPrestadorInput = {
+  id: number
   tipo: $Enums.TipoDeEncaminhamento
   dataDeEntrada: Date | string
   statusDeAgendamento?: $Enums.StatusDeAgendamento
@@ -1566,7 +1572,7 @@ export type EncaminhamentoCreateWithoutEspecialidadeDoPrestadorInput = {
 }
 
 export type EncaminhamentoUncheckedCreateWithoutEspecialidadeDoPrestadorInput = {
-  id?: number
+  id: number
   tipo: $Enums.TipoDeEncaminhamento
   pacienteId: number
   unidadeDeOrigemId: number
@@ -1606,6 +1612,7 @@ export type EncaminhamentoCreateManyEspecialidadeDoPrestadorInputEnvelope = {
 }
 
 export type EncaminhamentoCreateWithoutEspecialidadeEncaminhadaInput = {
+  id: number
   tipo: $Enums.TipoDeEncaminhamento
   dataDeEntrada: Date | string
   statusDeAgendamento?: $Enums.StatusDeAgendamento
@@ -1635,7 +1642,7 @@ export type EncaminhamentoCreateWithoutEspecialidadeEncaminhadaInput = {
 }
 
 export type EncaminhamentoUncheckedCreateWithoutEspecialidadeEncaminhadaInput = {
-  id?: number
+  id: number
   tipo: $Enums.TipoDeEncaminhamento
   pacienteId: number
   unidadeDeOrigemId: number
@@ -1707,6 +1714,7 @@ export type EncaminhamentoUpdateManyWithWhereWithoutEspecialidadeEncaminhadaInpu
 }
 
 export type EncaminhamentoCreateWithoutProcedimentoInput = {
+  id: number
   tipo: $Enums.TipoDeEncaminhamento
   dataDeEntrada: Date | string
   statusDeAgendamento?: $Enums.StatusDeAgendamento
@@ -1736,7 +1744,7 @@ export type EncaminhamentoCreateWithoutProcedimentoInput = {
 }
 
 export type EncaminhamentoUncheckedCreateWithoutProcedimentoInput = {
-  id?: number
+  id: number
   tipo: $Enums.TipoDeEncaminhamento
   pacienteId: number
   unidadeDeOrigemId: number
@@ -1792,6 +1800,7 @@ export type EncaminhamentoUpdateManyWithWhereWithoutProcedimentoInput = {
 }
 
 export type EncaminhamentoCreateWithoutMembroProcedimentoInput = {
+  id: number
   tipo: $Enums.TipoDeEncaminhamento
   dataDeEntrada: Date | string
   statusDeAgendamento?: $Enums.StatusDeAgendamento
@@ -1821,7 +1830,7 @@ export type EncaminhamentoCreateWithoutMembroProcedimentoInput = {
 }
 
 export type EncaminhamentoUncheckedCreateWithoutMembroProcedimentoInput = {
-  id?: number
+  id: number
   tipo: $Enums.TipoDeEncaminhamento
   pacienteId: number
   unidadeDeOrigemId: number
@@ -1877,6 +1886,7 @@ export type EncaminhamentoUpdateManyWithWhereWithoutMembroProcedimentoInput = {
 }
 
 export type EncaminhamentoCreateWithoutMedicoSolicitanteInput = {
+  id: number
   tipo: $Enums.TipoDeEncaminhamento
   dataDeEntrada: Date | string
   statusDeAgendamento?: $Enums.StatusDeAgendamento
@@ -1906,7 +1916,7 @@ export type EncaminhamentoCreateWithoutMedicoSolicitanteInput = {
 }
 
 export type EncaminhamentoUncheckedCreateWithoutMedicoSolicitanteInput = {
-  id?: number
+  id: number
   tipo: $Enums.TipoDeEncaminhamento
   pacienteId: number
   unidadeDeOrigemId: number
@@ -1946,6 +1956,7 @@ export type EncaminhamentoCreateManyMedicoSolicitanteInputEnvelope = {
 }
 
 export type EncaminhamentoCreateWithoutPrestadorExecutanteInput = {
+  id: number
   tipo: $Enums.TipoDeEncaminhamento
   dataDeEntrada: Date | string
   statusDeAgendamento?: $Enums.StatusDeAgendamento
@@ -1975,7 +1986,7 @@ export type EncaminhamentoCreateWithoutPrestadorExecutanteInput = {
 }
 
 export type EncaminhamentoUncheckedCreateWithoutPrestadorExecutanteInput = {
-  id?: number
+  id: number
   tipo: $Enums.TipoDeEncaminhamento
   pacienteId: number
   unidadeDeOrigemId: number
@@ -2047,6 +2058,7 @@ export type EncaminhamentoUpdateManyWithWhereWithoutPrestadorExecutanteInput = {
 }
 
 export type EncaminhamentoCreateWithoutPacienteInput = {
+  id: number
   tipo: $Enums.TipoDeEncaminhamento
   dataDeEntrada: Date | string
   statusDeAgendamento?: $Enums.StatusDeAgendamento
@@ -2076,7 +2088,7 @@ export type EncaminhamentoCreateWithoutPacienteInput = {
 }
 
 export type EncaminhamentoUncheckedCreateWithoutPacienteInput = {
-  id?: number
+  id: number
   tipo: $Enums.TipoDeEncaminhamento
   unidadeDeOrigemId: number
   dataDeEntrada: Date | string
@@ -2132,7 +2144,7 @@ export type EncaminhamentoUpdateManyWithWhereWithoutPacienteInput = {
 }
 
 export type EncaminhamentoCreateManyUnidadeDeOrigemInput = {
-  id?: number
+  id: number
   tipo: $Enums.TipoDeEncaminhamento
   pacienteId: number
   dataDeEntrada: Date | string
@@ -2162,7 +2174,7 @@ export type EncaminhamentoCreateManyUnidadeDeOrigemInput = {
 }
 
 export type EncaminhamentoCreateManyLocalDeAtendimentoInput = {
-  id?: number
+  id: number
   tipo: $Enums.TipoDeEncaminhamento
   pacienteId: number
   unidadeDeOrigemId: number
@@ -2192,6 +2204,7 @@ export type EncaminhamentoCreateManyLocalDeAtendimentoInput = {
 }
 
 export type EncaminhamentoUpdateWithoutUnidadeDeOrigemInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
   tipo?: Prisma.EnumTipoDeEncaminhamentoFieldUpdateOperationsInput | $Enums.TipoDeEncaminhamento
   dataDeEntrada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   statusDeAgendamento?: Prisma.EnumStatusDeAgendamentoFieldUpdateOperationsInput | $Enums.StatusDeAgendamento
@@ -2281,6 +2294,7 @@ export type EncaminhamentoUncheckedUpdateManyWithoutUnidadeDeOrigemInput = {
 }
 
 export type EncaminhamentoUpdateWithoutLocalDeAtendimentoInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
   tipo?: Prisma.EnumTipoDeEncaminhamentoFieldUpdateOperationsInput | $Enums.TipoDeEncaminhamento
   dataDeEntrada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   statusDeAgendamento?: Prisma.EnumStatusDeAgendamentoFieldUpdateOperationsInput | $Enums.StatusDeAgendamento
@@ -2370,7 +2384,7 @@ export type EncaminhamentoUncheckedUpdateManyWithoutLocalDeAtendimentoInput = {
 }
 
 export type EncaminhamentoCreateManyEspecialidadeDoPrestadorInput = {
-  id?: number
+  id: number
   tipo: $Enums.TipoDeEncaminhamento
   pacienteId: number
   unidadeDeOrigemId: number
@@ -2400,7 +2414,7 @@ export type EncaminhamentoCreateManyEspecialidadeDoPrestadorInput = {
 }
 
 export type EncaminhamentoCreateManyEspecialidadeEncaminhadaInput = {
-  id?: number
+  id: number
   tipo: $Enums.TipoDeEncaminhamento
   pacienteId: number
   unidadeDeOrigemId: number
@@ -2430,6 +2444,7 @@ export type EncaminhamentoCreateManyEspecialidadeEncaminhadaInput = {
 }
 
 export type EncaminhamentoUpdateWithoutEspecialidadeDoPrestadorInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
   tipo?: Prisma.EnumTipoDeEncaminhamentoFieldUpdateOperationsInput | $Enums.TipoDeEncaminhamento
   dataDeEntrada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   statusDeAgendamento?: Prisma.EnumStatusDeAgendamentoFieldUpdateOperationsInput | $Enums.StatusDeAgendamento
@@ -2519,6 +2534,7 @@ export type EncaminhamentoUncheckedUpdateManyWithoutEspecialidadeDoPrestadorInpu
 }
 
 export type EncaminhamentoUpdateWithoutEspecialidadeEncaminhadaInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
   tipo?: Prisma.EnumTipoDeEncaminhamentoFieldUpdateOperationsInput | $Enums.TipoDeEncaminhamento
   dataDeEntrada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   statusDeAgendamento?: Prisma.EnumStatusDeAgendamentoFieldUpdateOperationsInput | $Enums.StatusDeAgendamento
@@ -2608,7 +2624,7 @@ export type EncaminhamentoUncheckedUpdateManyWithoutEspecialidadeEncaminhadaInpu
 }
 
 export type EncaminhamentoCreateManyProcedimentoInput = {
-  id?: number
+  id: number
   tipo: $Enums.TipoDeEncaminhamento
   pacienteId: number
   unidadeDeOrigemId: number
@@ -2638,6 +2654,7 @@ export type EncaminhamentoCreateManyProcedimentoInput = {
 }
 
 export type EncaminhamentoUpdateWithoutProcedimentoInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
   tipo?: Prisma.EnumTipoDeEncaminhamentoFieldUpdateOperationsInput | $Enums.TipoDeEncaminhamento
   dataDeEntrada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   statusDeAgendamento?: Prisma.EnumStatusDeAgendamentoFieldUpdateOperationsInput | $Enums.StatusDeAgendamento
@@ -2727,7 +2744,7 @@ export type EncaminhamentoUncheckedUpdateManyWithoutProcedimentoInput = {
 }
 
 export type EncaminhamentoCreateManyMembroProcedimentoInput = {
-  id?: number
+  id: number
   tipo: $Enums.TipoDeEncaminhamento
   pacienteId: number
   unidadeDeOrigemId: number
@@ -2757,6 +2774,7 @@ export type EncaminhamentoCreateManyMembroProcedimentoInput = {
 }
 
 export type EncaminhamentoUpdateWithoutMembroProcedimentoInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
   tipo?: Prisma.EnumTipoDeEncaminhamentoFieldUpdateOperationsInput | $Enums.TipoDeEncaminhamento
   dataDeEntrada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   statusDeAgendamento?: Prisma.EnumStatusDeAgendamentoFieldUpdateOperationsInput | $Enums.StatusDeAgendamento
@@ -2846,7 +2864,7 @@ export type EncaminhamentoUncheckedUpdateManyWithoutMembroProcedimentoInput = {
 }
 
 export type EncaminhamentoCreateManyMedicoSolicitanteInput = {
-  id?: number
+  id: number
   tipo: $Enums.TipoDeEncaminhamento
   pacienteId: number
   unidadeDeOrigemId: number
@@ -2876,7 +2894,7 @@ export type EncaminhamentoCreateManyMedicoSolicitanteInput = {
 }
 
 export type EncaminhamentoCreateManyPrestadorExecutanteInput = {
-  id?: number
+  id: number
   tipo: $Enums.TipoDeEncaminhamento
   pacienteId: number
   unidadeDeOrigemId: number
@@ -2906,6 +2924,7 @@ export type EncaminhamentoCreateManyPrestadorExecutanteInput = {
 }
 
 export type EncaminhamentoUpdateWithoutMedicoSolicitanteInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
   tipo?: Prisma.EnumTipoDeEncaminhamentoFieldUpdateOperationsInput | $Enums.TipoDeEncaminhamento
   dataDeEntrada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   statusDeAgendamento?: Prisma.EnumStatusDeAgendamentoFieldUpdateOperationsInput | $Enums.StatusDeAgendamento
@@ -2995,6 +3014,7 @@ export type EncaminhamentoUncheckedUpdateManyWithoutMedicoSolicitanteInput = {
 }
 
 export type EncaminhamentoUpdateWithoutPrestadorExecutanteInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
   tipo?: Prisma.EnumTipoDeEncaminhamentoFieldUpdateOperationsInput | $Enums.TipoDeEncaminhamento
   dataDeEntrada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   statusDeAgendamento?: Prisma.EnumStatusDeAgendamentoFieldUpdateOperationsInput | $Enums.StatusDeAgendamento
@@ -3084,7 +3104,7 @@ export type EncaminhamentoUncheckedUpdateManyWithoutPrestadorExecutanteInput = {
 }
 
 export type EncaminhamentoCreateManyPacienteInput = {
-  id?: number
+  id: number
   tipo: $Enums.TipoDeEncaminhamento
   unidadeDeOrigemId: number
   dataDeEntrada: Date | string
@@ -3114,6 +3134,7 @@ export type EncaminhamentoCreateManyPacienteInput = {
 }
 
 export type EncaminhamentoUpdateWithoutPacienteInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
   tipo?: Prisma.EnumTipoDeEncaminhamentoFieldUpdateOperationsInput | $Enums.TipoDeEncaminhamento
   dataDeEntrada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   statusDeAgendamento?: Prisma.EnumStatusDeAgendamentoFieldUpdateOperationsInput | $Enums.StatusDeAgendamento

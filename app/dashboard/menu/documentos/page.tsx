@@ -10,7 +10,7 @@ import { FaRegEye } from "react-icons/fa"
 import { Dialog } from "primereact/dialog"
 import InputSelect from "@/components/inputs/InputSelect"
 import { AiOutlineClear, AiOutlineSelect } from "react-icons/ai"
-import { opcoesDeLocais } from "@/constants/dados"
+import { normalizarTexto, opcoesDeLocais, opcoesDeRetorno } from "@/constants/dados"
 import { useLocais } from "@/hooks/useListaDeLocais"
 import { BsCardText } from "react-icons/bs"
 import InputTexto from "@/components/inputs/InputTexto"
@@ -26,8 +26,11 @@ import { TiEdit } from "react-icons/ti"
 import ProtocoloHospitalDoOlho from "@/components/pdf/documentosPDF/ProtocoloDeAgendamentoHospitalDoOlho"
 import VisualizadorPDF from "@/components/pdf/VisualizadorPDF"
 import { useMemo } from "react"
+import SolicitacaoDeRetorno from "@/components/pdf/documentosPDF/SolicitacaoDeRetorno"
+import { PrestadorComRelacoes, usePrestadores } from "@/hooks/usePrestadores"
 
 type TipoDocumento =
+    | "SOLICITACAO_DE_RETORNO"
     | "PROTOCOLO_AGENDAMENTO_HOSPITAL_DO_OLHO"
     | "PREPARO_DOUTORA_JESSIKA_PSIQUIATRA"
     | "ETIQUETA_DR_HECTOR_NEUROLOGIA"
@@ -38,8 +41,10 @@ type TipoDocumento =
 
 export default function Page() {
     const { locais } = useLocais()
+    const { prestadores } = usePrestadores()
 
     const opcoesUnidadesDoCliente = opcoesDeLocais(locais)
+    const medicos = prestadores.filter(prestador => prestador.tipo === 'MEDICO')
 
     const [buscarDocumento, setBuscarDocumento] = useState("")
     const [dialogDocumentoSelecionado, setDialogDocumentoSelecionado] = useState(false)
@@ -57,7 +62,90 @@ export default function Page() {
     const [horaDoAgendamento, setHoraDoAgendamento] = useState("")
     const [enderecoDoPaciente, setEnderecoDoPaciente] = useState("")
     const [agenteComunitario, setAgenteComunitario] = useState("")
+    const [especialidade, setEspecialidade] = useState("")
+    const [buscarEspecialidade, setBuscarEspecialidade] = useState('')
+    const [especialidadeSelecionada, setEspecialidadeSelecionada] = useState('')
 
+    const [medico, setMedico] = useState<PrestadorComRelacoes | null>(null)
+    const [buscarMedico, setBuscarMedico] = useState('')
+
+    const [medicoSelecionado, setMedicoSelecionado] = useState('')
+    const [nomeMedicoSelecionado, setNomeMedicoSelecionado] = useState('')
+
+    const [opcaoDeRetorno, setOpcaoDeRetorno] = useState('')
+    const [retornarEm, setRetornarEm] = useState("")
+    const [telefone, setTelefone] = useState("")
+
+    const especialidadesDisponiveis = useMemo(() => {
+        const especialidades = new Map<string, string>()
+
+        medicos.forEach(medico => {
+            medico.especialidades
+                .filter(item => item.especialidade.ativo)
+                .forEach(item => {
+                    especialidades.set(
+                        String(item.especialidade.id),
+                        item.especialidade.nome
+                    )
+                })
+        })
+
+        return Array.from(especialidades.entries()).map(([id, nome]) => ({
+            id,
+            nome
+        }))
+    }, [medicos])
+
+    const medicosDaEspecialidade = useMemo(() => {
+        if (!especialidadeSelecionada) return []
+
+        return medicos.filter(medico =>
+            medico.especialidades.some(item =>
+                item.especialidade.ativo &&
+                String(item.especialidade.id) === especialidadeSelecionada
+            )
+        )
+    }, [medicos, especialidadeSelecionada])
+
+    const opcoesMedicos = [
+        { valor: '', label: 'Selecione o médico' },
+        ...medicosDaEspecialidade.map(medico => ({
+            valor: String(medico.id),
+            label: medico.nome
+        }))
+    ]
+
+    const especialidadesFiltradas = especialidadesDisponiveis.filter(item =>
+        normalizarTexto(item.nome).includes(
+            normalizarTexto(buscarEspecialidade)
+        )
+    )
+
+    // Especialidades disponíveis entre todos os médicos ativos
+    const opcoesEspecialidadesMedicos = useMemo(() => {
+        const especialidades = new Map<string, string>()
+
+        medicos.forEach((medico) => {
+            medico.especialidades
+                .filter(item => item.especialidade.ativo)
+                .forEach(item => {
+                    especialidades.set(
+                        String(item.especialidade.id),
+                        item.especialidade.nome
+                    )
+                })
+        })
+
+        return [
+            { valor: '', label: 'Selecione' },
+            ...Array.from(especialidades.entries())
+                .sort((a, b) => a[1].localeCompare(b[1]))
+                .map(([id, nome]) => ({
+                    valor: id,
+                    label: nome
+                }))
+        ]
+    }, [medicos])
 
     const nomeLocalSelecionado = locais.find(
         (local) => String(local.id) === String(localDeAtendimento)
@@ -71,6 +159,12 @@ export default function Page() {
         "ETIQUETA_DR_MARIO_VASCULAR",
         "ETIQUETA_DR_MARIANA_DERMATO"
     ]
+
+    const medicosSolicitadosFiltrados = medicos.filter((medico) =>
+        normalizarTexto(medico.nome).includes(
+            normalizarTexto(buscarMedico)
+        )
+    )
 
     const documentoExigeDataEHora = documentosComDataEHora.includes(
         documentoSelecionado as TipoDocumento
@@ -119,6 +213,23 @@ export default function Page() {
             let nomeArquivo = ""
 
             switch (documentoSelecionado) {
+                case "SOLICITACAO_DE_RETORNO":
+                    documento = pdf(
+                        <SolicitacaoDeRetorno
+                            local={nomeLocalSelecionado}
+                            nomePaciente={nomeDoPaciente}
+                            dataDeNascimento={dataDeNascimentoDoPaciente}
+                            endereco={enderecoDoPaciente}
+                            telefone={telefone}
+                            especialidade={buscarEspecialidade}
+                            medico={nomeMedicoSelecionado}
+                            opcaoDeRetorno={opcaoDeRetorno}
+                            dataEmissao={new Date().toLocaleDateString("pt-BR")}
+                        />
+                    )
+
+                    nomeArquivo = `preparo-dra-jessika-${quantidade}-etiquetas.pdf`
+                    break
                 case "PROTOCOLO_AGENDAMENTO_HOSPITAL_DO_OLHO":
                     documento = pdf(
                         <ProtocoloHospitalDoOlho
@@ -225,7 +336,8 @@ export default function Page() {
             document.body.removeChild(link)
 
             setTimeout(() => URL.revokeObjectURL(url), 1000)
-
+            limparFormularioDocumento()
+            setDialogDocumentoSelecionado(false)
         } catch (erro) {
             console.error("Erro ao gerar documento:", erro)
             alert("Não foi possível gerar o PDF.")
@@ -236,6 +348,20 @@ export default function Page() {
         const quantidade = Math.max(1, Number(quantidadeDeEtiquetas) || 1)
 
         switch (documentoSelecionado) {
+            case "SOLICITACAO_DE_RETORNO":
+                return (
+                    <SolicitacaoDeRetorno
+                        local={nomeLocalSelecionado}
+                        nomePaciente={nomeDoPaciente}
+                        dataDeNascimento={dataDeNascimentoDoPaciente}
+                        endereco={enderecoDoPaciente}
+                        telefone={telefone}
+                        especialidade={buscarEspecialidade}
+                        medico={nomeMedicoSelecionado}
+                        opcaoDeRetorno={opcaoDeRetorno}
+                        dataEmissao={new Date().toLocaleDateString("pt-BR")}
+                    />
+                )
             case "PROTOCOLO_AGENDAMENTO_HOSPITAL_DO_OLHO":
                 return (
                     <ProtocoloHospitalDoOlho
@@ -321,7 +447,14 @@ export default function Page() {
         agenteComunitario,
         nomeLocalSelecionado,
         dataDaConsulta,
-        horarioDaConsulta
+        horarioDaConsulta,
+
+        telefone,
+        buscarEspecialidade,
+        especialidadeSelecionada,
+        medicoSelecionado,
+        nomeMedicoSelecionado,
+        opcaoDeRetorno
     ])
 
     return (
@@ -370,6 +503,40 @@ export default function Page() {
                     <div>
                         <ul className="flex flex-col gap-3 max-h-[75vh] overflow-y-scroll">
 
+                            {/* Solicitação de Retorno */}
+                            <li className="flex items-center gap-4 p-4 border border-verde rounded-lg">
+                                <div className="text-5xl">
+                                    <GrDocumentPdf />
+                                </div>
+
+                                <div>
+                                    <h4 className="font-bold text-2xl">
+                                        Solicitação de Retorno
+                                    </h4>
+                                    <span>
+                                        Solicitação de retorno para pacientes retornarem com o médico.
+                                    </span>
+                                </div>
+
+                                <div className="flex items-center gap-1 text-lg text-zinc-600 ml-auto">
+                                    <IoCalendarNumberOutline />
+                                    <span>24/11/2026</span>
+                                </div>
+
+                                <button
+                                    type="button"
+                                    className="flex items-center gap-2 p-2 rounded-2xl border border-verde font-semibold transition-all duration-300 hover:bg-verde/80 hover:text-white"
+                                    onClick={() => {
+                                        limparFormularioDocumento()
+                                        setDocumentoSelecionado("SOLICITACAO_DE_RETORNO")
+                                        setDialogDocumentoSelecionado(true)
+                                    }}
+                                >
+                                    <FaRegEye />
+                                    <p>Visualizar</p>
+                                </button>
+                            </li>
+
                             {/* Hospital do Olho */}
                             <li className="flex items-center gap-4 p-4 border border-verde rounded-lg">
                                 <div className="text-5xl">
@@ -403,6 +570,7 @@ export default function Page() {
                                     <p>Visualizar</p>
                                 </button>
                             </li>
+
                             {/* Jessika */}
                             <li className="flex items-center gap-4 p-4 border border-verde rounded-lg">
                                 <div className="text-5xl">
@@ -627,6 +795,128 @@ export default function Page() {
                     <div>
                         <form className="flex flex-col gap-3">
 
+                            {/* Solicitação de Retorno */}
+                            {
+                                documentoSelecionado === "SOLICITACAO_DE_RETORNO" && (
+                                    <>
+                                        <InputTexto
+                                            icone={<TiEdit />}
+                                            label="Nome do paciente"
+                                            id="nomeDoPaciente"
+                                            nome="nomeDoPaciente"
+                                            valor={nomeDoPaciente}
+                                            setValor={setNomeDoPaciente}
+                                            placeholder="Digite o nome completo do paciente..."
+                                        />
+                                        <InputTexto
+                                            icone={<TiEdit />}
+                                            label="Endereço"
+                                            id="enderecoDoPaciente"
+                                            nome="enderecoDoPaciente"
+                                            valor={enderecoDoPaciente}
+                                            setValor={setEnderecoDoPaciente}
+                                            placeholder="Digite o endereço do paciente..."
+                                        />
+
+                                        <div className="flex flex-col gap-1">
+                                            <label htmlFor="dataDeNascimentoDoPaciente" className="font-semibold">
+                                                Data de nascimento
+                                            </label>
+
+                                            <input
+                                                type="text"
+                                                id="dataDeNascimentoDoPaciente"
+                                                value={dataDeNascimentoDoPaciente}
+                                                onChange={(e) => setDataDeNascimentoDoPaciente(formatarData(e.target.value))}
+                                                placeholder="DD/MM/AAAA"
+                                                maxLength={10}
+                                                inputMode="numeric"
+                                                className="border border-verde rounded-lg p-2"
+                                            />
+                                        </div>
+
+                                        <div className="flex flex-col gap-1 relative">
+                                            <label className="font-semibold text-zinc-700">
+                                                Especialidade
+                                            </label>
+
+                                            <input
+                                                type="text"
+                                                value={buscarEspecialidade}
+                                                onChange={e => {
+                                                    setBuscarEspecialidade(e.target.value)
+                                                    setEspecialidadeSelecionada('')
+                                                    setMedicoSelecionado('')
+                                                }}
+                                                placeholder="Digite o nome da especialidade..."
+                                                autoComplete="off"
+                                                className="w-full border border-zinc-300 rounded-lg px-3 py-2 outline-none focus:border-verde"
+                                            />
+
+                                            {buscarEspecialidade.trim() !== '' && !especialidadeSelecionada && (
+                                                <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-white border rounded-lg shadow-lg max-h-52 overflow-y-auto">
+                                                    {especialidadesFiltradas.length > 0 ? (
+                                                        especialidadesFiltradas.map(item => (
+                                                            <button
+                                                                key={item.id}
+                                                                type="button"
+                                                                onClick={() => {
+                                                                    setEspecialidadeSelecionada(item.id)
+                                                                    setBuscarEspecialidade(item.nome)
+                                                                    setMedicoSelecionado('')
+                                                                }}
+                                                                className="w-full text-left px-4 py-3 hover:bg-green-50 border-b"
+                                                            >
+                                                                {item.nome}
+                                                            </button>
+                                                        ))
+                                                    ) : (
+                                                        <p className="px-4 py-3 text-sm text-zinc-500">
+                                                            Nenhuma especialidade encontrada.
+                                                        </p>
+                                                    )}
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <InputSelect
+                                            icone={<AiOutlineSelect />}
+                                            id="medicoSelecionado"
+                                            label="Médico solicitante"
+                                            nome="medicoSelecionado"
+                                            valor={medicoSelecionado}
+                                            setValor={(valor) => {
+                                                const id = String(valor)
+                                                const medicoEncontrado = medicosDaEspecialidade.find(
+                                                    prestador => String(prestador.id) === id
+                                                )
+                                                setMedicoSelecionado(id)
+                                                setNomeMedicoSelecionado(medicoEncontrado?.nome ?? '')
+                                            }}
+                                            opcoes={opcoesMedicos}
+                                        />
+
+                                        <InputTexto
+                                            icone={<TiEdit />}
+                                            label="Telefone"
+                                            id="telefone"
+                                            nome="telefone"
+                                            valor={telefone}
+                                            setValor={setTelefone}
+                                            placeholder="Digite o telefone do paciente..."
+                                        />
+                                        <InputSelect
+                                            icone={<AiOutlineSelect />}
+                                            id="opcoesDeRetorno"
+                                            label="Opções de Retorno"
+                                            nome="opcoesDeRetorno"
+                                            valor={opcaoDeRetorno}
+                                            setValor={(valor) => setOpcaoDeRetorno(String(valor))}
+                                            opcoes={opcoesDeRetorno}
+                                        />
+                                    </>
+                                )
+                            }
                             {/* Hospital do Olho */}
                             {documentoSelecionado === "PROTOCOLO_AGENDAMENTO_HOSPITAL_DO_OLHO" && (
                                 <>
@@ -709,6 +999,7 @@ export default function Page() {
                                     />
                                 </>
                             )}
+
                             {/* Unidade para Jessika */}
                             {documentoSelecionado === "PREPARO_DOUTORA_JESSIKA_PSIQUIATRA" && (
                                 <InputSelect
@@ -767,8 +1058,9 @@ export default function Page() {
                                     </div>
                                 </>
                             )}
+
                             {
-                                documentoSelecionado != "PROTOCOLO_AGENDAMENTO_HOSPITAL_DO_OLHO" && (
+                                documentoSelecionado != "PROTOCOLO_AGENDAMENTO_HOSPITAL_DO_OLHO" && documentoSelecionado != "SOLICITACAO_DE_RETORNO" && (
                                     <>
                                         {/* Quantidade */}
                                         <InputTexto
@@ -811,8 +1103,8 @@ export default function Page() {
 
                     {/* Visualização PDF */}
                     <div className="w-full h-[600px] border border-verde rounded-xl overflow-hidden">
-    <VisualizadorPDF documento={documentoParaVisualizar} />
-</div>
+                        <VisualizadorPDF documento={documentoParaVisualizar} />
+                    </div>
                 </div>
             </Dialog>
         </Template>

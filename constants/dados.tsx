@@ -239,6 +239,16 @@ export const opcoesLadoDoCorpo = [
         label: tipo.replaceAll('_', ' ').toLowerCase()
     }))
 ]
+export const opcoesDeRetorno = [
+    {
+        valor: '',
+        label: "Selecione"
+    },
+    ...Object.values(PossibilidadeDeRetorno).map(tipo => ({
+        valor: tipo,
+        label: tipo.replaceAll('_', ' ').toLowerCase()
+    }))
+]
 export const opcoesDeConvenio = [
     {
         valor: '',

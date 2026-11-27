@@ -282,6 +282,7 @@ enum PossibilidadeDeRetorno {
   REAVALIACAO_MEDICA
   SEM_NECESSIDADE
   COM_DETERMINADO_PERIODO
+  EXAMES_PRONTOS
 }
 
 model Especialidade {

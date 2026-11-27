@@ -296,7 +296,8 @@ export const PossibilidadeDeRetorno = {
   SE_NECESSARIO: 'SE_NECESSARIO',
   REAVALIACAO_MEDICA: 'REAVALIACAO_MEDICA',
   SEM_NECESSIDADE: 'SEM_NECESSIDADE',
-  COM_DETERMINADO_PERIODO: 'COM_DETERMINADO_PERIODO'
+  COM_DETERMINADO_PERIODO: 'COM_DETERMINADO_PERIODO',
+  EXAMES_PRONTOS: 'EXAMES_PRONTOS'
 } as const
 
 export type PossibilidadeDeRetorno = (typeof PossibilidadeDeRetorno)[keyof typeof PossibilidadeDeRetorno]
